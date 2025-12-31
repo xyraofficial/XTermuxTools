@@ -88,7 +88,11 @@ const AIChat: React.FC = () => {
     setIsLoading(true);
 
     try {
-      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+      const genAI = new GoogleGenAI(process.env.API_KEY || '');
+      const model = genAI.getGenerativeModel({ 
+        model: 'gemini-1.5-flash',
+        systemInstruction: `Anda adalah "X-Intelligence". Berikan jawaban teknis, singkat, dan gunakan Markdown.`,
+      });
       const parts: any[] = [{ text: userMessage }];
       if (currentImage) {
         parts.push({ inlineData: { mimeType: 'image/jpeg', data: currentImage.split(',')[1] } });
@@ -97,13 +101,10 @@ const AIChat: React.FC = () => {
       // Pesan model dimulai dengan content kosong, kursor tidak akan muncul jika content kosong
       setMessages(prev => [...prev, { role: 'model', content: '', isStreaming: true }]);
 
-      const streamResult = await ai.models.generateContentStream({
-        model: 'gemini-3-pro-preview',
+      const streamResult = await model.generateContentStream({
         contents: [{ role: 'user', parts }],
-        config: {
-          thinkingConfig: { thinkingBudget: 2000 },
-          tools: [{ googleSearch: {} }],
-          systemInstruction: `Anda adalah "X-Intelligence". Berikan jawaban teknis, singkat, dan gunakan Markdown.`,
+        generationConfig: {
+          maxOutputTokens: 2000,
         },
       });
 

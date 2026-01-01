@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Youtube, Mail, Facebook, ExternalLink, User, CheckCircle2, Star, Code, Heart, Smartphone, AlertTriangle, Shield, Hexagon, Camera, Calendar, Shield as SecurityShield, Edit2, Check, X, Bell, Moon, Sun } from 'lucide-react';
+import React, { useState } from 'react';
+import { Youtube, Mail, Facebook, ExternalLink, User, CheckCircle2, Star, Code, Heart, Smartphone, AlertTriangle, Shield, Hexagon, Camera, Calendar, Shield as SecurityShield, Edit2, Check, X } from 'lucide-react';
 import { APP_VERSION } from '../constants';
 
 const About: React.FC = () => {
@@ -118,10 +118,11 @@ const About: React.FC = () => {
                 The ultimate companion for Termux users. Comprehensive documentation, AI assistance, and package management.
             </p>
          </div>
+        </div>
       </div>
 
       {/* Features Grid */}
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-2 gap-3 max-w-2xl mx-auto">
          <div className="bg-zinc-900/50 border border-zinc-800 p-4 rounded-2xl flex flex-col items-center text-center gap-2">
             <Code size={20} className="text-blue-400" />
             <span className="text-xs font-bold text-zinc-300">2000+ Packages</span>
@@ -141,7 +142,7 @@ const About: React.FC = () => {
       </div>
 
       {/* Developer Section */}
-      <div>
+      <div className="max-w-2xl mx-auto">
         <h3 className="text-xs font-black text-zinc-600 uppercase tracking-widest mb-4 px-2">Connect with Developer</h3>
         
         <div className="bg-zinc-900 border border-zinc-800 rounded-[2rem] overflow-hidden">
@@ -217,7 +218,7 @@ const About: React.FC = () => {
       </div>
 
       {/* Legal & Privacy Section */}
-      <div>
+      <div className="max-w-2xl mx-auto">
         <h3 className="text-xs font-black text-zinc-600 uppercase tracking-widest mb-4 px-2">Legal & Privacy</h3>
         <div className="bg-zinc-900 border border-zinc-800 rounded-[2rem] p-6 space-y-6">
             <div>

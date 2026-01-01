@@ -13,6 +13,7 @@ export default async function handler(req: any, res: any) {
     }
     return res.status(405).end();
   } catch (err: any) {
+    console.error('API Error:', err);
     return res.status(500).json({ error: err.message });
   }
 }

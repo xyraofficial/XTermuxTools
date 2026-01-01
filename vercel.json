@@ -1,22 +1,21 @@
 {
   "version": 2,
-  "framework": "vite",
   "rewrites": [
     {
       "source": "/api/sessions",
-      "destination": "/api/sessions"
+      "destination": "/api/sessions/index.ts"
     },
     {
       "source": "/api/sessions/:id",
-      "destination": "/api/sessions/[id]"
+      "destination": "/api/sessions/[id].ts"
     },
     {
       "source": "/api/messages",
-      "destination": "/api/messages"
+      "destination": "/api/messages/index.ts"
     },
     {
       "source": "/api/messages/:sessionId",
-      "destination": "/api/messages/[sessionId]"
+      "destination": "/api/messages/[sessionId].ts"
     },
     {
       "source": "/(.*)",

@@ -56,6 +56,7 @@ const AIChat: React.FC = () => {
 
   useEffect(() => {
     localStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(messages.filter(m => !m.isStreaming)));
+    window.dispatchEvent(new Event('storage')); // Notify other components
     scrollToBottom();
   }, [messages]);
 

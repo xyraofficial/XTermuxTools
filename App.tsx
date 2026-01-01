@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Home, Package, BookOpen, Bot, User, Palette, PenTool, Terminal, Cpu } from 'lucide-react';
 import { ViewState } from './types';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
 
 // Components
 import HomeView from './views/Home';
@@ -11,6 +12,7 @@ import AboutView from './views/About';
 import AIChatView from './views/AIChat';
 import ScriptsView from './views/Scripts';
 import ArchitectView from './views/Architect';
+import LoginView from './views/Login';
 
 // Legal Views
 import HelpView from './views/legal/Help';
@@ -26,7 +28,8 @@ const ACCENT_COLORS = [
   { name: 'Hacker Red', hex: '#ef4444' },
 ];
 
-const App: React.FC = () => {
+const AppContent: React.FC = () => {
+  const { token, isLoading } = useAuth();
   const getInitialView = (): ViewState => {
     const path = window.location.pathname.toLowerCase();
     if (path === '/help') return ViewState.HELP;
@@ -118,6 +121,9 @@ const App: React.FC = () => {
   };
 
   const renderContent = () => {
+    if (isLoading) return <div className="h-full flex items-center justify-center"><Cpu size={40} className="text-accent animate-spin" /></div>;
+    if (!token) return <LoginView />;
+
     const viewProps = { className: "h-full animate-in fade-in slide-in-from-bottom-4 duration-300 ease-out" };
     switch (currentView) {
       case ViewState.HOME: return <div {...viewProps}><HomeView onNavigate={(v) => navigate(ViewState[v as keyof typeof ViewState])} initialCommand={pendingCommand} onCommandStarted={() => setPendingCommand(null)} /></div>;
@@ -148,7 +154,7 @@ const App: React.FC = () => {
       `}</style>
 
       <ToastContainer />
-      {!isLegalView && (
+      {!isLegalView && token && (
           <header className="sticky top-0 z-50 bg-zinc-950/80 backdrop-blur-md border-b border-zinc-800">
             <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
               <div className="flex items-center gap-2">
@@ -187,7 +193,7 @@ const App: React.FC = () => {
         {renderContent()}
       </main>
 
-      {!isLegalView && (
+      {!isLegalView && token && (
         <nav className="fixed bottom-0 left-0 right-0 z-50 bg-zinc-950/90 backdrop-blur-xl border-t border-zinc-900 pb-[env(safe-area-inset-bottom)]">
             <div className="max-w-5xl mx-auto flex items-center justify-around h-[70px] px-2">
                 <NavButton active={currentView === ViewState.HOME} onClick={() => navigate(ViewState.HOME)} icon={<Home size={20} />} label="Home" />
@@ -215,6 +221,22 @@ const App: React.FC = () => {
     </div>
   );
 };
+
+const NavButton: React.FC<{active: boolean; onClick: () => void; icon: React.ReactNode; label: string}> = ({ active, onClick, icon, label }) => (
+  <button onClick={onClick} className="relative flex-1 flex flex-col items-center justify-center h-full group gap-0.5 pt-1">
+    <div className={`z-10 transition-all duration-300 ${active ? 'text-accent -translate-y-0.5 scale-110' : 'text-zinc-500 group-hover:text-zinc-300'}`}>{icon}</div>
+    <span className={`text-[10px] font-bold tracking-tight transition-colors duration-300 ${active ? 'text-accent' : 'text-zinc-500 group-hover:text-zinc-300'}`}>{label}</span>
+    {active && <div className="absolute bottom-1.5 w-1 h-1 bg-accent rounded-full shadow-[0_0_8px_var(--accent-color)]" />}
+  </button>
+);
+
+const App: React.FC = () => (
+  <AuthProvider>
+    <AppContent />
+  </AuthProvider>
+);
+
+export default App;
 
 const NavButton: React.FC<{active: boolean; onClick: () => void; icon: React.ReactNode; label: string}> = ({ active, onClick, icon, label }) => (
   <button onClick={onClick} className="relative flex-1 flex flex-col items-center justify-center h-full group gap-0.5 pt-1">

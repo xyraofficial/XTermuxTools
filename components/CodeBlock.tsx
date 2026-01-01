@@ -40,15 +40,6 @@ const CodeBlock: React.FC<CodeBlockProps> = ({ code, label = 'bash' }) => {
     <div className="my-4 rounded-2xl overflow-hidden bg-[#0c0c0c] border border-zinc-800/80 shadow-2xl group relative">
       <div className="px-4 py-2.5 flex items-center justify-between bg-zinc-900/50 border-b border-zinc-800">
         <span className="text-[9px] font-black text-zinc-500 uppercase tracking-[0.2em]">{label}</span>
-        <div className="flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
-            <button 
-                onClick={handleRun}
-                className="p-1.5 bg-accent/10 hover:bg-accent text-accent hover:text-black rounded-lg transition-all border border-accent/20"
-                title="Run in Simulation"
-            >
-                <Play size={12} fill="currentColor" />
-            </button>
-        </div>
       </div>
       
       <div className="relative p-5 flex items-start gap-4">

@@ -4,7 +4,7 @@ import {
   Send, Loader2, Code, ShieldCheck, Cpu, Layers, Box, 
   Search, CheckCircle2, TerminalSquare, Command, Info
 } from 'lucide-react';
-import { GoogleGenAI } from "@google/genai";
+import Groq from 'groq-sdk';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import CodeBlock from '../components/CodeBlock';
@@ -26,6 +26,11 @@ const BUILD_PHASES = [
     { threshold: 90, label: 'Logical Optimization', icon: <Cpu size={24} /> },
     { threshold: 100, label: 'Finalizing Build', icon: <ShieldCheck size={24} /> },
 ];
+
+const groq = new Groq({
+  apiKey: process.env.GROQ_API_KEY || process.env.API_KEY || '',
+  dangerouslyAllowBrowser: true
+});
 
 const Architect: React.FC = () => {
   const [prompt, setPrompt] = useState('');
@@ -101,36 +106,43 @@ const Architect: React.FC = () => {
     setPendingResult(null);
 
     try {
-      const apiKey = process.env.API_KEY || process.env.GROQ_API_KEY;
+      const apiKey = process.env.GROQ_API_KEY || process.env.API_KEY;
       if (!apiKey) {
         showToast('API Key missing', 'error');
         setIsGenerating(false);
         return;
       }
-      const ai = new GoogleGenAI({ apiKey });
-      const response = await ai.models.generateContent({
-        model: 'gemini-3-pro-preview',
-        contents: `I need a professional script for Termux. User request: "${prompt}".
-        
-        CRITICAL RESPONSE FORMAT:
-        You MUST return ONLY a valid JSON object.
-        JSON Structure:
-        {
-          "scriptName": "String",
-          "description": "Short explanation",
-          "language": "bash/python",
-          "dependencies": ["pkg1", "pkg2"],
-          "code": "The full code here",
-          "instructions": "Step-by-step markdown list on how to install and run this specific script."
-        }
-        
-        Ensure "instructions" is NEVER empty and provides at least 3 clear steps.`,
-        config: {
-            responseMimeType: "application/json"
-        }
+      
+      const response = await groq.chat.completions.create({
+        messages: [
+          { 
+            role: "system", 
+            content: `You are a professional Termux script architect. 
+            You MUST return ONLY a valid JSON object.
+            
+            JSON Structure:
+            {
+              "scriptName": "String",
+              "description": "Short explanation",
+              "language": "bash/python",
+              "dependencies": ["pkg1", "pkg2"],
+              "code": "The full code here",
+              "instructions": "Step-by-step markdown list on how to install and run this specific script."
+            }`
+          },
+          { 
+            role: "user", 
+            content: `I need a professional script for Termux. User request: "${prompt}". Ensure "instructions" is NEVER empty and provides at least 3 clear steps.` 
+          }
+        ],
+        model: "llama-3.3-70b-versatile",
+        response_format: { type: "json_object" }
       });
 
-      const data = JSON.parse(response.text) as ArchitectResponse;
+      const content = response.choices[0]?.message?.content;
+      if (!content) throw new Error("No response from AI");
+
+      const data = JSON.parse(content) as ArchitectResponse;
       setPendingResult(data);
       setIsApiDone(true);
 

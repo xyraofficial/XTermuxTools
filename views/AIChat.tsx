@@ -128,28 +128,7 @@ const AIChat: React.FC = () => {
   };
 
   const handleSend = async (customPrompt?: string) => {
-    if (!user) {
-      showToast("Silakan login untuk menggunakan AI Chat", "error");
-      return;
-    }
-    
-    // Auto-create session if none exists
-    let activeSessionId = currentSessionId;
-    if (!activeSessionId) {
-      try {
-        const docRef = await addDoc(collection(db, 'sessions'), {
-          title: 'New Chat',
-          userId: user.uid,
-          createdAt: serverTimestamp()
-        });
-        activeSessionId = docRef.id;
-        setCurrentSessionId(activeSessionId);
-      } catch (err) {
-        showToast("Gagal membuat sesi chat", "error");
-        return;
-      }
-    }
-
+    if (!currentSessionId || !user) return;
     const finalInput = customPrompt || input;
     if ((!finalInput.trim() && !selectedImage) || isLoading) return;
     
@@ -161,61 +140,45 @@ const AIChat: React.FC = () => {
     setIsLoading(true);
 
     try {
-      const newUserMsg = { 
+      const newUserMsg: Message = { 
         role: 'user', 
         content: userMessage, 
-        image: currentImage || null,
+        image: currentImage || undefined,
         createdAt: serverTimestamp()
       };
 
-      // Add to session messages
-      await addDoc(collection(db, 'sessions', activeSessionId, 'messages'), newUserMsg);
+      await addDoc(collection(db, 'sessions', currentSessionId, 'messages'), newUserMsg);
 
       // Update title if first message
       if (messages.length === 0) {
         const title = userMessage.length > 30 ? userMessage.substring(0, 30) + "..." : userMessage;
-        await updateDoc(doc(db, 'sessions', activeSessionId), { title });
+        await updateDoc(doc(db, 'sessions', currentSessionId), { title });
       }
-
-      setMessages(prev => [...prev, { role: 'user', content: userMessage, image: currentImage || undefined, isStreaming: false, createdAt: new Date() }]);
-      setMessages(prev => [...prev, { role: 'model', content: '', isStreaming: true }]);
 
       const stream = await groq.chat.completions.create({
         messages: [
           { role: "system", content: "Anda adalah 'X-Intelligence'. Berikan jawaban teknis, singkat, dan gunakan Markdown." },
-          ...messages.filter(m => m.content).map(m => ({ 
+          ...messages.map(m => ({ 
             role: (m.role === 'model' ? 'assistant' : 'user') as "assistant" | "user" | "system", 
             content: m.content 
           })),
           { role: 'user', content: userMessage }
         ],
-        model: "llama-3.1-8b-instant",
+        model: "llama-3.3-70b-versatile",
         stream: true,
       });
 
       let fullContent = '';
       for await (const chunk of stream) {
         const chunkText = chunk.choices[0]?.delta?.content || '';
-        if (chunkText) {
-          fullContent += chunkText;
-          setMessages(prev => {
-            const last = prev[prev.length - 1];
-            if (last && last.role === 'model' && last.isStreaming) {
-              return [...prev.slice(0, -1), { ...last, content: fullContent }];
-            }
-            return prev;
-          });
-        }
+        if (chunkText) fullContent += chunkText;
       }
 
-      const finalModelMsg: Message = {
+      await addDoc(collection(db, 'sessions', currentSessionId, 'messages'), {
         role: 'model',
         content: fullContent,
         createdAt: serverTimestamp()
-      };
-
-      await addDoc(collection(db, 'sessions', activeSessionId, 'messages'), finalModelMsg);
-      setMessages(prev => [...prev.slice(0, -1), { ...finalModelMsg, isStreaming: false }]);
+      });
 
     } catch (err) {
       console.error(err);

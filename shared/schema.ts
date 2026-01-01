@@ -1,20 +1,20 @@
-import { pgTable, text, serial, timestamp, integer } from "drizzle-orm/pg-core";
+import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
 
-export const chatSessions = pgTable("chat_sessions", {
-  id: serial("id").primaryKey(),
+export const chatSessions = sqliteTable("chat_sessions", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
   title: text("title").notNull().default("New Chat"),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
+  createdAt: integer("created_at", { mode: "timestamp" }).default(new Date()).notNull(),
 });
 
-export const chatMessages = pgTable("chat_messages", {
-  id: serial("id").primaryKey(),
+export const chatMessages = sqliteTable("chat_messages", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
   sessionId: integer("session_id").references(() => chatSessions.id).notNull(),
   role: text("role").notNull(), // 'user' | 'model'
   content: text("content").notNull(),
   image: text("image"),
-  createdAt: timestamp("created_at").defaultNow(),
+  createdAt: integer("created_at", { mode: "timestamp" }).default(new Date()),
 });
 
 export const insertChatSessionSchema = createInsertSchema(chatSessions);

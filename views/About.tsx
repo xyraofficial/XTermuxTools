@@ -27,9 +27,9 @@ const About: React.FC = () => {
       
       {/* Profile Section */}
       <div className="max-w-2xl mx-auto space-y-6">
-        <div className="relative group">
+        <div className="relative">
           <div className="h-32 w-full bg-gradient-to-r from-accent/20 to-accent/5 rounded-3xl border border-zinc-800" />
-          <div className="absolute -bottom-10 left-8">
+          <div className="absolute -bottom-10 left-6">
             <div className="relative">
               <div className="w-24 h-24 bg-zinc-900 rounded-3xl border-4 border-zinc-950 flex items-center justify-center overflow-hidden shadow-2xl">
                 {avatar ? (
@@ -38,16 +38,16 @@ const About: React.FC = () => {
                   <User size={40} className="text-zinc-600" />
                 )}
               </div>
-              <button className="absolute -bottom-1 -right-1 p-2 bg-accent text-black rounded-xl shadow-lg hover:scale-110 active:scale-95 transition-all">
+              <button className="absolute -bottom-1 -right-1 p-2 bg-accent text-black rounded-xl shadow-lg hover:scale-110 active:scale-95 transition-all z-10">
                 <Camera size={16} />
               </button>
             </div>
           </div>
         </div>
 
-        <div className="mt-12 bg-zinc-900 border border-zinc-800 rounded-3xl p-6 space-y-6 shadow-xl">
+        <div className="mt-14 bg-zinc-900 border border-zinc-800 rounded-3xl p-6 space-y-6 shadow-xl">
           <div className="flex items-center justify-between">
-            <div className="flex-1 mr-4">
+            <div className="flex-1">
               {isEditing ? (
                 <div className="flex items-center gap-2">
                   <input
@@ -58,10 +58,10 @@ const About: React.FC = () => {
                     autoFocus
                     onKeyDown={(e) => e.key === 'Enter' && handleSaveUsername()}
                   />
-                  <button onClick={handleSaveUsername} className="p-2 bg-accent/10 text-accent rounded-lg hover:bg-accent/20 transition-colors">
+                  <button onClick={handleSaveUsername} className="p-2 bg-accent/10 text-accent rounded-lg hover:bg-accent/20 transition-colors shrink-0">
                     <Check size={18} />
                   </button>
-                  <button onClick={handleCancelEdit} className="p-2 bg-red-500/10 text-red-500 rounded-lg hover:bg-red-500/20 transition-colors">
+                  <button onClick={handleCancelEdit} className="p-2 bg-red-500/10 text-red-500 rounded-lg hover:bg-red-500/20 transition-colors shrink-0">
                     <X size={18} />
                   </button>
                 </div>

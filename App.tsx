@@ -44,27 +44,6 @@ const App: React.FC = () => {
   const [accentColor, setAccentColor] = useState(() => localStorage.getItem('xtermux_accent') || '#22c55e');
   const [showThemePicker, setShowThemePicker] = useState(false);
   const [pendingCommand, setPendingCommand] = useState<{label: string, cmd: string} | null>(null);
-  const [aiCount, setAiCount] = useState(0);
-
-  const updateAICount = () => {
-    try {
-      const saved = localStorage.getItem('xtermux_ai_history_final_v3');
-      if (saved) {
-        const msgs = JSON.parse(saved);
-        setAiCount(msgs.length);
-      } else {
-        setAiCount(0);
-      }
-    } catch (e) {
-      setAiCount(0);
-    }
-  };
-
-  useEffect(() => {
-    updateAICount();
-    window.addEventListener('storage', updateAICount);
-    return () => window.removeEventListener('storage', updateAICount);
-  }, []);
 
   useEffect(() => {
     document.documentElement.style.setProperty('--accent-color', accentColor);
@@ -184,7 +163,7 @@ const App: React.FC = () => {
             <div className="max-w-5xl mx-auto flex items-center justify-around h-[70px] px-2">
                 <NavButton active={currentView === ViewState.HOME} onClick={() => navigate(ViewState.HOME)} icon={<Home size={20} />} label="Home" />
                 <NavButton active={currentView === ViewState.PACKAGES} onClick={() => navigate(ViewState.PACKAGES)} icon={<Package size={20} />} label="Tools" />
-                <NavButton active={currentView === ViewState.AI_CHAT} onClick={() => navigate(ViewState.AI_CHAT)} icon={<Bot size={22} />} label="AI" badge={aiCount > 0 ? aiCount : undefined} />
+                <NavButton active={currentView === ViewState.AI_CHAT} onClick={() => navigate(ViewState.AI_CHAT)} icon={<Bot size={22} />} label="AI" />
                 <NavButton active={currentView === ViewState.GUIDES} onClick={() => navigate(ViewState.GUIDES)} icon={<BookOpen size={20} />} label="Guides" />
                 <NavButton active={currentView === ViewState.ABOUT} onClick={() => navigate(ViewState.ABOUT)} icon={<User size={20} />} label="Me" />
             </div>
@@ -194,16 +173,9 @@ const App: React.FC = () => {
   );
 };
 
-const NavButton: React.FC<{active: boolean; onClick: () => void; icon: React.ReactNode; label: string; badge?: number}> = ({ active, onClick, icon, label, badge }) => (
+const NavButton: React.FC<{active: boolean; onClick: () => void; icon: React.ReactNode; label: string}> = ({ active, onClick, icon, label }) => (
   <button onClick={onClick} className="relative flex-1 flex flex-col items-center justify-center h-full group gap-0.5 pt-1">
-    <div className={`z-10 transition-all duration-300 ${active ? 'text-accent -translate-y-0.5 scale-110' : 'text-zinc-500 group-hover:text-zinc-300'}`}>
-      {icon}
-      {badge !== undefined && (
-        <div className="absolute -top-1 -right-1 bg-red-500 text-white text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center border-2 border-zinc-950 animate-in zoom-in duration-300">
-          {badge > 99 ? '99+' : badge}
-        </div>
-      )}
-    </div>
+    <div className={`z-10 transition-all duration-300 ${active ? 'text-accent -translate-y-0.5 scale-110' : 'text-zinc-500 group-hover:text-zinc-300'}`}>{icon}</div>
     <span className={`text-[10px] font-bold tracking-tight transition-colors duration-300 ${active ? 'text-accent' : 'text-zinc-500 group-hover:text-zinc-300'}`}>{label}</span>
     {active && <div className="absolute bottom-1.5 w-1 h-1 bg-accent rounded-full shadow-[0_0_8px_var(--accent-color)]" />}
   </button>

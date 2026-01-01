@@ -63,10 +63,6 @@ const Packages: React.FC = () => {
         const exists = prev.includes(id);
         const newFavs = exists ? prev.filter(fid => fid !== id) : [...prev, id];
         localStorage.setItem(FAVORITES_KEY, JSON.stringify(newFavs));
-        
-        // Dispatch custom event to notify App.tsx
-        window.dispatchEvent(new Event('favorites-updated'));
-        
         showToast(exists ? 'Removed from favorites' : 'Added to favorites', exists ? 'info' : 'success');
         return newFavs;
     });
@@ -146,11 +142,6 @@ const Packages: React.FC = () => {
                 }`}
                 >
                 {cat.icon}{cat.name}
-                {cat.name === 'Saved' && favorites.length > 0 && (
-                  <span className="ml-2 px-1.5 py-0.5 bg-accent text-black text-[10px] font-black rounded-lg min-w-[20px] text-center shadow-[0_0_10px_rgba(var(--accent-color-rgb),0.5)]">
-                    {favorites.length}
-                  </span>
-                )}
                 </button>
             ))}
             </div>

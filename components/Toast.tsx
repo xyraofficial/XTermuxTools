@@ -26,7 +26,8 @@ export const ToastContainer: React.FC = () => {
       setToasts(prev => {
         // Prevent duplicate messages appearing at the same time
         if (prev.some(t => t.message === detail.message)) return prev;
-        return [...prev, { ...detail, id }];
+        // Limit total active toasts to 1 for cleaner look on mobile
+        return [{ ...detail, id }];
       });
       
       // Auto dismiss
@@ -44,11 +45,11 @@ export const ToastContainer: React.FC = () => {
   };
 
   return (
-    <div className="fixed top-20 left-0 right-0 z-[100] flex flex-col items-center gap-2 pointer-events-none px-4">
+    <div className="fixed top-6 left-0 right-0 z-[100] flex flex-col items-center gap-2 pointer-events-none px-4">
       {toasts.map(t => (
         <div 
             key={t.id} 
-            className="pointer-events-auto relative overflow-hidden bg-zinc-900/95 backdrop-blur-md border border-zinc-800 shadow-2xl shadow-black/50 rounded-2xl py-3 px-4 flex items-center gap-3 min-w-[280px] max-w-sm animate-in slide-in-from-top-full fade-in zoom-in-95 duration-300"
+            className="pointer-events-auto relative overflow-hidden bg-zinc-900/90 backdrop-blur-xl border border-white/10 shadow-2xl shadow-black rounded-2xl py-3 px-4 flex items-center gap-3 w-full max-w-[320px] animate-in slide-in-from-top-4 fade-in duration-300"
         >
             <div className={`p-1.5 rounded-full shrink-0 ${
                 t.type === 'success' ? 'bg-green-500/10 text-green-500' : 

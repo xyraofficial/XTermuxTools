@@ -21,7 +21,8 @@ const CodeBlock: React.FC<CodeBlockProps> = ({ code, label = 'bash' }) => {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const handleRun = () => {
+  const handleRun = (e: React.MouseEvent) => {
+      e.stopPropagation();
       // Dispatch custom event to trigger home terminal
       const event = new CustomEvent('run-termux-cmd', { detail: { cmd: code } });
       window.dispatchEvent(event);

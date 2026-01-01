@@ -1,33 +1,26 @@
 {
   "version": 2,
+  "framework": "vite",
   "rewrites": [
     {
       "source": "/api/sessions",
-      "destination": "/api/sessions/index.ts"
+      "destination": "/api/sessions"
     },
     {
       "source": "/api/sessions/:id",
-      "destination": "/api/sessions/[id].ts"
+      "destination": "/api/sessions/[id]"
     },
     {
       "source": "/api/messages",
-      "destination": "/api/messages/index.ts"
+      "destination": "/api/messages"
     },
     {
       "source": "/api/messages/:sessionId",
-      "destination": "/api/messages/[sessionId].ts"
+      "destination": "/api/messages/[sessionId]"
     },
     {
       "source": "/(.*)",
       "destination": "/index.html"
-    }
-  ],
-  "headers": [
-    {
-      "source": "/api/(.*)",
-      "headers": [
-        { "key": "Content-Type", "value": "application/json" }
-      ]
     }
   ]
 }

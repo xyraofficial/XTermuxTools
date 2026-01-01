@@ -19,9 +19,10 @@ const QUICK_ACTIONS = [
 ];
 
 const handleQuickAction = (cmd: string) => {
-    const event = new CustomEvent('run-termux-cmd', { detail: { cmd } });
-    window.dispatchEvent(event);
-    showToast(`Command: ${cmd.split(' ')[0]}...`, 'info');
+    // const event = new CustomEvent('run-termux-cmd', { detail: { cmd } });
+    // window.dispatchEvent(event);
+    navigator.clipboard.writeText(cmd);
+    showToast(`Copied: ${cmd.split(' ')[0]}...`, 'success');
 };
 
 const Home: React.FC<HomeProps> = ({ onNavigate, initialCommand, onCommandStarted }) => {
@@ -153,9 +154,6 @@ const Home: React.FC<HomeProps> = ({ onNavigate, initialCommand, onCommandStarte
                       <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-all">
                           <button onClick={() => { navigator.clipboard.writeText(cmd); showToast('Copied', 'success'); }} className="p-1.5 text-zinc-600 hover:text-accent">
                               <Copy size={14} />
-                          </button>
-                          <button onClick={() => handleQuickAction(cmd)} className="p-1.5 text-zinc-600 hover:text-green-500">
-                              <Terminal size={14} />
                           </button>
                       </div>
                   </div>

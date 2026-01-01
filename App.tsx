@@ -84,8 +84,8 @@ const App: React.FC = () => {
         setPendingCommand({ label: 'Execute', cmd: e.detail.cmd });
         navigate(ViewState.HOME);
     };
-    window.addEventListener('run-termux-cmd', handleRunCommand);
-    return () => window.removeEventListener('run-termux-cmd', handleRunCommand);
+    // window.addEventListener('run-termux-cmd', handleRunCommand);
+    return () => { /* window.removeEventListener('run-termux-cmd', handleRunCommand); */ };
   }, []);
 
   const navigate = (view: ViewState) => {

@@ -6,6 +6,23 @@ import remarkGfm from 'remark-gfm';
 import CodeBlock from '../components/CodeBlock';
 import { showToast } from '../components/Toast';
 import IOSModal from '../components/IOSModal';
+import { useAuth } from '../contexts/AuthContext';
+import { db } from '../firebase';
+import { 
+  collection, 
+  addDoc, 
+  query, 
+  where, 
+  orderBy, 
+  onSnapshot, 
+  deleteDoc, 
+  doc, 
+  updateDoc, 
+  getDocs, 
+  writeBatch,
+  Timestamp,
+  serverTimestamp
+} from 'firebase/firestore';
 
 const groq = new Groq({
   apiKey: process.env.GROQ_API_KEY || process.env.API_KEY || 'dummy_key',
@@ -17,18 +34,20 @@ interface Message {
   content: string;
   image?: string;
   isStreaming?: boolean;
+  createdAt?: any;
 }
 
 interface ChatSession {
-  id: number;
+  id: string;
   title: string;
-  createdAt: string;
-  messages: Message[];
+  createdAt: any;
+  userId: string;
 }
 
 const AIChat: React.FC = () => {
+  const { user } = useAuth();
   const [sessions, setSessions] = useState<ChatSession[]>([]);
-  const [currentSessionId, setCurrentSessionId] = useState<number | null>(null);
+  const [currentSessionId, setCurrentSessionId] = useState<string | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -39,65 +58,62 @@ const AIChat: React.FC = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  // Sync Sessions
   useEffect(() => {
-    const savedSessions = localStorage.getItem('xtermux_chat_sessions');
-    if (savedSessions) {
-      try {
-        const parsed = JSON.parse(savedSessions);
-        setSessions(parsed);
-        if (parsed.length > 0) {
-          selectSession(parsed[0].id, parsed);
-        } else {
-          createNewChat();
-        }
-      } catch (e) {
-        createNewChat();
-      }
-    } else {
-      createNewChat();
-    }
-  }, []);
-
-  const saveToLocalStorage = (newSessions: ChatSession[]) => {
-    localStorage.setItem('xtermux_chat_sessions', JSON.stringify(newSessions));
-  };
-
-  const createNewChat = () => {
-    const newSession: ChatSession = {
-      id: Date.now(),
-      title: 'New Chat',
-      createdAt: new Date().toISOString(),
-      messages: []
-    };
-    const updatedSessions = [newSession, ...sessions];
-    setSessions(updatedSessions);
-    setCurrentSessionId(newSession.id);
-    setMessages([]);
-    saveToLocalStorage(updatedSessions);
-    setIsSidebarOpen(false);
-  };
-
-  const selectSession = (id: number, currentSessions = sessions) => {
-    const session = currentSessions.find(s => s.id === id);
-    if (session) {
-      setCurrentSessionId(id);
-      setMessages(session.messages);
-      setIsSidebarOpen(false);
-    }
-  };
-
-  const deleteSession = (e: React.MouseEvent, id: number) => {
-    e.stopPropagation();
-    const updatedSessions = sessions.filter(s => s.id !== id);
-    setSessions(updatedSessions);
-    saveToLocalStorage(updatedSessions);
+    if (!user) return;
+    const q = query(
+      collection(db, 'sessions'), 
+      where('userId', '==', user.uid),
+      orderBy('createdAt', 'desc')
+    );
     
-    if (currentSessionId === id) {
-      if (updatedSessions.length > 0) {
-        selectSession(updatedSessions[0].id, updatedSessions);
-      } else {
-        createNewChat();
+    return onSnapshot(q, (snapshot) => {
+      const docs = snapshot.docs.map(d => ({ id: d.id, ...d.data() } as ChatSession));
+      setSessions(docs);
+      if (docs.length > 0 && !currentSessionId) {
+        setCurrentSessionId(docs[0].id);
       }
+    });
+  }, [user]);
+
+  // Sync Messages
+  useEffect(() => {
+    if (!currentSessionId) {
+      setMessages([]);
+      return;
+    }
+    const q = query(
+      collection(db, 'sessions', currentSessionId, 'messages'),
+      orderBy('createdAt', 'asc')
+    );
+    
+    return onSnapshot(q, (snapshot) => {
+      setMessages(snapshot.docs.map(d => d.data() as Message));
+    });
+  }, [currentSessionId]);
+
+  const createNewChat = async () => {
+    if (!user) return;
+    try {
+      const docRef = await addDoc(collection(db, 'sessions'), {
+        title: 'New Chat',
+        userId: user.uid,
+        createdAt: serverTimestamp()
+      });
+      setCurrentSessionId(docRef.id);
+      setIsSidebarOpen(false);
+    } catch (err) {
+      showToast("Gagal membuat chat", "error");
+    }
+  };
+
+  const deleteSession = async (e: React.MouseEvent, id: string) => {
+    e.stopPropagation();
+    try {
+      await deleteDoc(doc(db, 'sessions', id));
+      if (currentSessionId === id) setCurrentSessionId(null);
+    } catch (err) {
+      showToast("Gagal menghapus chat", "error");
     }
   };
 
@@ -112,64 +128,54 @@ const AIChat: React.FC = () => {
   };
 
   const handleSend = async (customPrompt?: string) => {
-    if (!currentSessionId) return;
+    if (!currentSessionId || !user) return;
     const finalInput = customPrompt || input;
     if ((!finalInput.trim() && !selectedImage) || isLoading) return;
     
     const userMessage = finalInput.trim() || (selectedImage ? "Analisis gambar ini." : "");
     const currentImage = selectedImage;
     
-    const newUserMsg: Message = { role: 'user', content: userMessage, image: currentImage || undefined };
-    const updatedMessages = [...messages, newUserMsg];
-    setMessages(updatedMessages);
     setInput('');
     setSelectedImage(null);
     setIsLoading(true);
 
     try {
+      const newUserMsg: Message = { 
+        role: 'user', 
+        content: userMessage, 
+        image: currentImage || undefined,
+        createdAt: serverTimestamp()
+      };
+
+      await addDoc(collection(db, 'sessions', currentSessionId, 'messages'), newUserMsg);
+
+      // Update title if first message
+      if (messages.length === 0) {
+        const title = userMessage.length > 30 ? userMessage.substring(0, 30) + "..." : userMessage;
+        await updateDoc(doc(db, 'sessions', currentSessionId), { title });
+      }
+
       const stream = await groq.chat.completions.create({
         messages: [
           { role: "system", content: "Anda adalah 'X-Intelligence'. Berikan jawaban teknis, singkat, dan gunakan Markdown." },
-          ...updatedMessages.map(m => ({ 
-            role: (m.role === 'model' ? 'assistant' : 'user') as "assistant" | "user" | "system", 
-            content: m.content 
-          })),
+          ...messages.map(m => ({ role: m.role === 'model' ? 'assistant' : 'user', content: m.content })),
+          { role: 'user', content: userMessage }
         ],
         model: "llama-3.3-70b-versatile",
         stream: true,
       });
 
       let fullContent = '';
-      setMessages(prev => [...prev, { role: 'model', content: '', isStreaming: true }]);
-
       for await (const chunk of stream) {
         const chunkText = chunk.choices[0]?.delta?.content || '';
-        if (chunkText) {
-          fullContent += chunkText;
-          setMessages(prev => {
-            const last = prev[prev.length - 1];
-            if (last && last.role === 'model' && last.isStreaming) {
-              return [...prev.slice(0, -1), { ...last, content: fullContent }];
-            }
-            return prev;
-          });
-        }
+        if (chunkText) fullContent += chunkText;
       }
 
-      const finalModelMsg: Message = { role: 'model', content: fullContent, isStreaming: false };
-      const finalMessages = [...updatedMessages, finalModelMsg];
-      setMessages(finalMessages);
-
-      // Update session title and messages in localStorage
-      const title = messages.length === 0 
-        ? (userMessage.length > 30 ? userMessage.substring(0, 30) + "..." : userMessage)
-        : (sessions.find(s => s.id === currentSessionId)?.title || 'New Chat');
-
-      const updatedSessions = sessions.map(s => 
-        s.id === currentSessionId ? { ...s, title, messages: finalMessages } : s
-      );
-      setSessions(updatedSessions);
-      saveToLocalStorage(updatedSessions);
+      await addDoc(collection(db, 'sessions', currentSessionId, 'messages'), {
+        role: 'model',
+        content: fullContent,
+        createdAt: serverTimestamp()
+      });
 
     } catch (err) {
       console.error(err);
@@ -205,7 +211,7 @@ const AIChat: React.FC = () => {
             {sessions.map(s => (
               <div 
                 key={s.id}
-                onClick={() => selectSession(s.id)}
+                onClick={() => setCurrentSessionId(s.id)}
                 className={`group flex items-center justify-between p-3 rounded-xl cursor-pointer transition-all border ${currentSessionId === s.id ? 'bg-accent/10 border-accent/20 text-accent' : 'border-transparent text-zinc-400 hover:bg-zinc-900'}`}
               >
                 <div className="flex items-center gap-3 truncate">
@@ -280,7 +286,7 @@ const AIChat: React.FC = () => {
                           {msg.image && (
                               <img src={msg.image} className="w-60 rounded-2xl border border-zinc-800 mb-2 shadow-2xl" alt="Input" />
                           )}
-                          {(msg.content || (msg.isStreaming && isLoading)) && (
+                          {msg.content && (
                               <div className={`p-4 rounded-[1.8rem] text-[14px] leading-relaxed shadow-lg ${
                                   msg.role === 'user' 
                                   ? 'bg-accent text-black font-black rounded-tr-none' 
@@ -296,7 +302,7 @@ const AIChat: React.FC = () => {
                                               }
                                           }}
                                       >
-                                          {msg.content + (msg.isStreaming && msg.content ? "▍" : "")}
+                                          {msg.content}
                                       </ReactMarkdown>
                                   </div>
                               </div>
@@ -304,7 +310,7 @@ const AIChat: React.FC = () => {
                       </div>
                   </div>
               ))}
-              {isLoading && messages.length > 0 && !messages[messages.length - 1].content && (
+              {isLoading && (
                   <div className="flex gap-3 animate-in fade-in duration-300">
                       <div className="w-8 h-8 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center"><Bot size={16} className="text-accent animate-pulse" /></div>
                       <div className="bg-zinc-900/40 border border-zinc-800 rounded-[1.5rem] rounded-tl-none p-4 flex flex-col gap-2 min-w-[140px]">
@@ -373,16 +379,15 @@ const AIChat: React.FC = () => {
           isOpen={isClearModalOpen}
           title="Hapus Chat"
           message="Hapus seluruh pesan di sesi ini?"
-          onConfirm={() => {
+          onConfirm={async () => {
               if (currentSessionId) {
-                  const updatedSessions = sessions.map(s => 
-                    s.id === currentSessionId ? { ...s, messages: [] } : s
-                  );
-                  setSessions(updatedSessions);
-                  setMessages([]);
-                  saveToLocalStorage(updatedSessions);
-                  setIsClearModalOpen(false);
-                  showToast("Chat dibersihkan", "info");
+                const q = query(collection(db, 'sessions', currentSessionId, 'messages'));
+                const snapshot = await getDocs(q);
+                const batch = writeBatch(db);
+                snapshot.docs.forEach(d => batch.delete(d.ref));
+                await batch.commit();
+                setIsClearModalOpen(false);
+                showToast("Chat dibersihkan", "info");
               }
           }}
           onCancel={() => setIsClearModalOpen(false)}

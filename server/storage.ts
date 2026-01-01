@@ -1,16 +1,35 @@
-import { type ChatMessage, type InsertChatMessage, chatMessages } from "../shared/schema";
+import { 
+  type ChatMessage, 
+  type InsertChatMessage, 
+  type ChatSession, 
+  type InsertChatSession,
+  chatMessages, 
+  chatSessions 
+} from "../shared/schema";
 import { db } from "./db";
-import { desc } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 
 export interface IStorage {
-  getMessages(): Promise<ChatMessage[]>;
+  getSessions(): Promise<ChatSession[]>;
+  createSession(session: InsertChatSession): Promise<ChatSession>;
+  getMessages(sessionId: number): Promise<ChatMessage[]>;
   addMessage(message: InsertChatMessage): Promise<ChatMessage>;
-  clearMessages(): Promise<void>;
+  clearSession(sessionId: number): Promise<void>;
+  deleteSession(sessionId: number): Promise<void>;
 }
 
 export class DatabaseStorage implements IStorage {
-  async getMessages(): Promise<ChatMessage[]> {
-    return await db.select().from(chatMessages).orderBy(chatMessages.id);
+  async getSessions(): Promise<ChatSession[]> {
+    return await db.select().from(chatSessions).orderBy(desc(chatSessions.createdAt));
+  }
+
+  async createSession(session: InsertChatSession): Promise<ChatSession> {
+    const [newSession] = await db.insert(chatSessions).values(session).returning();
+    return newSession;
+  }
+
+  async getMessages(sessionId: number): Promise<ChatMessage[]> {
+    return await db.select().from(chatMessages).where(eq(chatMessages.sessionId, sessionId)).orderBy(chatMessages.id);
   }
 
   async addMessage(message: InsertChatMessage): Promise<ChatMessage> {
@@ -18,10 +37,13 @@ export class DatabaseStorage implements IStorage {
     return newMessage;
   }
 
-  async clearMessages(): Promise<void> {
-    // In a real app we might soft delete or filter by session, 
-    // but for this toolbox we'll just clear the table as requested.
-    await db.delete(chatMessages);
+  async clearSession(sessionId: number): Promise<void> {
+    await db.delete(chatMessages).where(eq(chatMessages.sessionId, sessionId));
+  }
+
+  async deleteSession(sessionId: number): Promise<void> {
+    await db.delete(chatMessages).where(eq(chatMessages.sessionId, sessionId));
+    await db.delete(chatSessions).where(eq(chatSessions.id, sessionId));
   }
 }
 

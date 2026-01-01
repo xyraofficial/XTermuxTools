@@ -8,7 +8,7 @@ import { showToast } from '../components/Toast';
 import IOSModal from '../components/IOSModal';
 
 const groq = new Groq({
-  apiKey: process.env.GROQ_API_KEY || process.env.API_KEY || '',
+  apiKey: process.env.GROQ_API_KEY || process.env.API_KEY || 'dummy_key',
   dangerouslyAllowBrowser: true
 });
 

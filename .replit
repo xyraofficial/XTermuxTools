@@ -39,6 +39,10 @@ localPort = 5000
 externalPort = 80
 
 [[ports]]
+localPort = 5001
+externalPort = 3000
+
+[[ports]]
 localPort = 5002
 externalPort = 3001
 
@@ -47,3 +51,8 @@ deploymentTarget = "autoscale"
 build = ["npm", "run", "build"]
 publicDir = "dist"
 run = ["npm", "run", "dev"]
+
+[userenv]
+
+[userenv.shared]
+DATABASE_URL_EXTERNAL = "postgresql://neondb_owner:npg_mG1FSdUHy5Iv@ep-mute-wave-adqkumo1-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require"

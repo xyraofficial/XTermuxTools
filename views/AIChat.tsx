@@ -149,6 +149,26 @@ const AIChat: React.FC = () => {
     setTimeout(() => setCopiedIdx(null), 2000);
   };
 
+  const handleShare = async (text: string) => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'XTermux AI Chat',
+          text: text,
+          url: window.location.href,
+        });
+        showToast('Berhasil dibagikan', 'success');
+      } catch (err) {
+        if ((err as Error).name !== 'AbortError') {
+          showToast('Gagal membagikan', 'error');
+        }
+      }
+    } else {
+      handleCopy(text, -1);
+      showToast('Share tidak didukung, teks disalin', 'info');
+    }
+  };
+
   return (
     <div className="flex flex-col h-full bg-zinc-950 overflow-hidden relative">
       {/* Header */}
@@ -235,7 +255,7 @@ const AIChat: React.FC = () => {
                                 <button onClick={() => handleCopy(msg.content, idx)} className={`transition-colors ${copiedIdx === idx ? 'text-green-500' : 'text-zinc-700 hover:text-zinc-400'}`}>
                                     {copiedIdx === idx ? <Check size={14} /> : <Copy size={14} />}
                                 </button>
-                                <button className="text-zinc-700 hover:text-zinc-400"><Share2 size={14}/></button>
+                                <button onClick={() => handleShare(msg.content)} className="text-zinc-700 hover:text-zinc-400"><Share2 size={14}/></button>
                             </div>
                         )}
                     </div>

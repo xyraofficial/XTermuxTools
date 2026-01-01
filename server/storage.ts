@@ -21,34 +21,34 @@ export interface IStorage {
 
 export class DatabaseStorage implements IStorage {
   async getSessions(): Promise<ChatSession[]> {
-    return await db.select().from(chatSessions).orderBy(desc(chatSessions.createdAt));
+    return db.select().from(chatSessions).orderBy(desc(chatSessions.createdAt)).all();
   }
 
   async createSession(session: InsertChatSession): Promise<ChatSession> {
-    const [newSession] = await db.insert(chatSessions).values(session).returning();
+    const [newSession] = db.insert(chatSessions).values(session).returning().all();
     return newSession;
   }
 
   async getMessages(sessionId: number): Promise<ChatMessage[]> {
-    return await db.select().from(chatMessages).where(eq(chatMessages.sessionId, sessionId)).orderBy(chatMessages.id);
+    return db.select().from(chatMessages).where(eq(chatMessages.sessionId, sessionId)).orderBy(chatMessages.id).all();
   }
 
   async addMessage(message: InsertChatMessage): Promise<ChatMessage> {
-    const [newMessage] = await db.insert(chatMessages).values(message).returning();
+    const [newMessage] = db.insert(chatMessages).values(message).returning().all();
     return newMessage;
   }
 
   async clearSession(sessionId: number): Promise<void> {
-    await db.delete(chatMessages).where(eq(chatMessages.sessionId, sessionId));
+    db.delete(chatMessages).where(eq(chatMessages.sessionId, sessionId)).run();
   }
 
   async deleteSession(sessionId: number): Promise<void> {
-    await db.delete(chatMessages).where(eq(chatMessages.sessionId, sessionId));
-    await db.delete(chatSessions).where(eq(chatSessions.id, sessionId));
+    db.delete(chatMessages).where(eq(chatMessages.sessionId, sessionId)).run();
+    db.delete(chatSessions).where(eq(chatSessions.id, sessionId)).run();
   }
 
   async updateSessionTitle(sessionId: number, title: string): Promise<void> {
-    await db.update(chatSessions).set({ title }).where(eq(chatSessions.id, sessionId));
+    db.update(chatSessions).set({ title }).where(eq(chatSessions.id, sessionId)).run();
   }
 }
 

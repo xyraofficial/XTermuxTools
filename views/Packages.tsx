@@ -147,7 +147,7 @@ const Packages: React.FC = () => {
                 >
                 {cat.icon}{cat.name}
                 {cat.name === 'Saved' && favorites.length > 0 && (
-                  <span className="ml-1 px-1.5 py-0.5 bg-accent text-black text-[9px] font-black rounded-full min-w-[16px] text-center">
+                  <span className="ml-2 px-1.5 py-0.5 bg-accent text-black text-[10px] font-black rounded-lg min-w-[20px] text-center shadow-[0_0_10px_rgba(var(--accent-color-rgb),0.5)]">
                     {favorites.length}
                   </span>
                 )}

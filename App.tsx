@@ -44,7 +44,6 @@ const App: React.FC = () => {
   const [accentColor, setAccentColor] = useState(() => localStorage.getItem('xtermux_accent') || '#22c55e');
   const [showThemePicker, setShowThemePicker] = useState(false);
   const [pendingCommand, setPendingCommand] = useState<{label: string, cmd: string} | null>(null);
-  const [savedCount, setSavedCount] = useState(0);
 
   useEffect(() => {
     const updateSavedCount = () => {
@@ -52,23 +51,15 @@ const App: React.FC = () => {
       if (saved) {
         try {
           const parsed = JSON.parse(saved);
-          setSavedCount(Array.isArray(parsed) ? parsed.length : 0);
-        } catch (e) {
-          setSavedCount(0);
-        }
-      } else {
-        setSavedCount(0);
+          window.dispatchEvent(new CustomEvent('favorites-count-changed', { 
+            detail: { count: Array.isArray(parsed) ? parsed.length : 0 } 
+          }));
+        } catch (e) {}
       }
     };
 
-    updateSavedCount();
-    window.addEventListener('storage', updateSavedCount);
-    // Custom event for internal updates since storage event only fires for other windows
     window.addEventListener('favorites-updated', updateSavedCount);
-    return () => {
-      window.removeEventListener('storage', updateSavedCount);
-      window.removeEventListener('favorites-updated', updateSavedCount);
-    };
+    return () => window.removeEventListener('favorites-updated', updateSavedCount);
   }, []);
 
   useEffect(() => {

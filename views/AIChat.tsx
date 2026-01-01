@@ -6,6 +6,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import CodeBlock from '../components/CodeBlock';
 import { showToast } from '../components/Toast';
+import IOSModal from '../components/IOSModal';
 
 const groq = new Groq({
   apiKey: import.meta.env.VITE_GROQ_API_KEY || "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",
@@ -48,6 +49,7 @@ const AIChat: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [copiedIdx, setCopiedIdx] = useState<number | null>(null);
+  const [isClearModalOpen, setIsClearModalOpen] = useState(false);
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -64,11 +66,14 @@ const AIChat: React.FC = () => {
   };
 
   const handleClearChat = () => {
-    if(window.confirm("Hapus seluruh percakapan?")) {
-        setMessages([]);
-        localStorage.removeItem(CHAT_STORAGE_KEY);
-        showToast('Memori dibersihkan', 'info');
-    }
+    setIsClearModalOpen(true);
+  };
+
+  const confirmClearChat = () => {
+    setMessages([]);
+    localStorage.removeItem(CHAT_STORAGE_KEY);
+    showToast('Memori dibersihkan', 'info');
+    setIsClearModalOpen(false);
   };
 
   const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -344,6 +349,14 @@ const AIChat: React.FC = () => {
             100% { transform: translateX(300%); }
         }
       `}</style>
+
+      <IOSModal 
+        isOpen={isClearModalOpen}
+        title="Hapus Chat"
+        message="Hapus seluruh percakapan?"
+        onConfirm={confirmClearChat}
+        onCancel={() => setIsClearModalOpen(false)}
+      />
     </div>
   );
 };

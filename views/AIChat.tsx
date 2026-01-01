@@ -147,13 +147,17 @@ const AIChat: React.FC = () => {
         createdAt: serverTimestamp()
       };
 
-      await addDoc(collection(db, 'sessions', currentSessionId, 'messages'), newUserMsg);
+      // Add to session messages
+      const sessionMsgRef = await addDoc(collection(db, 'sessions', currentSessionId, 'messages'), newUserMsg);
 
       // Update title if first message
       if (messages.length === 0) {
         const title = userMessage.length > 30 ? userMessage.substring(0, 30) + "..." : userMessage;
         await updateDoc(doc(db, 'sessions', currentSessionId), { title });
       }
+
+      setMessages(prev => [...prev, { ...newUserMsg, isStreaming: false }]);
+      setMessages(prev => [...prev, { role: 'model', content: '', isStreaming: true }]);
 
       const stream = await groq.chat.completions.create({
         messages: [
@@ -171,14 +175,26 @@ const AIChat: React.FC = () => {
       let fullContent = '';
       for await (const chunk of stream) {
         const chunkText = chunk.choices[0]?.delta?.content || '';
-        if (chunkText) fullContent += chunkText;
+        if (chunkText) {
+          fullContent += chunkText;
+          setMessages(prev => {
+            const last = prev[prev.length - 1];
+            if (last && last.role === 'model' && last.isStreaming) {
+              return [...prev.slice(0, -1), { ...last, content: fullContent }];
+            }
+            return prev;
+          });
+        }
       }
 
-      await addDoc(collection(db, 'sessions', currentSessionId, 'messages'), {
+      const finalModelMsg: Message = {
         role: 'model',
         content: fullContent,
         createdAt: serverTimestamp()
-      });
+      };
+
+      await addDoc(collection(db, 'sessions', currentSessionId, 'messages'), finalModelMsg);
+      setMessages(prev => [...prev.slice(0, -1), { ...finalModelMsg, isStreaming: false }]);
 
     } catch (err) {
       console.error(err);

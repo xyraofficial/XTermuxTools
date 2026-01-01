@@ -1,10 +1,26 @@
-import React, { useState } from 'react';
-import { Youtube, Mail, Facebook, ExternalLink, User, CheckCircle2, Star, Code, Heart, Smartphone, AlertTriangle, Shield, Hexagon, Camera, Calendar, Shield as SecurityShield } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Youtube, Mail, Facebook, ExternalLink, User, CheckCircle2, Star, Code, Heart, Smartphone, AlertTriangle, Shield, Hexagon, Camera, Calendar, Shield as SecurityShield, Edit2, Check, X, Bell, Moon, Sun } from 'lucide-react';
 import { APP_VERSION } from '../constants';
 
 const About: React.FC = () => {
-  const [username] = useState('X-User');
+  const [username, setUsername] = useState(() => localStorage.getItem('xtermux_username') || 'X-User');
+  const [isEditing, setIsEditing] = useState(false);
+  const [tempUsername, setTempUsername] = useState(username);
   const [avatar] = useState('');
+
+  const handleSaveUsername = () => {
+    const trimmed = tempUsername.trim();
+    if (trimmed) {
+      setUsername(trimmed);
+      localStorage.setItem('xtermux_username', trimmed);
+      setIsEditing(false);
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setTempUsername(username);
+    setIsEditing(false);
+  };
 
   return (
     <div className="space-y-6 animate-fade-in pb-32 px-4 pt-4">
@@ -15,41 +31,106 @@ const About: React.FC = () => {
           <div className="h-32 w-full bg-gradient-to-r from-accent/20 to-accent/5 rounded-3xl border border-zinc-800" />
           <div className="absolute -bottom-10 left-8">
             <div className="relative">
-              <div className="w-24 h-24 bg-zinc-900 rounded-3xl border-4 border-zinc-950 flex items-center justify-center overflow-hidden">
+              <div className="w-24 h-24 bg-zinc-900 rounded-3xl border-4 border-zinc-950 flex items-center justify-center overflow-hidden shadow-2xl">
                 {avatar ? (
                   <img src={avatar} alt="Profile" className="w-full h-full object-cover" />
                 ) : (
                   <User size={40} className="text-zinc-600" />
                 )}
               </div>
-              <button className="absolute -bottom-1 -right-1 p-2 bg-accent text-black rounded-xl shadow-lg hover:scale-110 transition-transform">
+              <button className="absolute -bottom-1 -right-1 p-2 bg-accent text-black rounded-xl shadow-lg hover:scale-110 active:scale-95 transition-all">
                 <Camera size={16} />
               </button>
             </div>
           </div>
         </div>
 
-        <div className="mt-12 bg-zinc-900 border border-zinc-800 rounded-3xl p-6 space-y-6">
+        <div className="mt-12 bg-zinc-900 border border-zinc-800 rounded-3xl p-6 space-y-6 shadow-xl">
           <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-xl font-black uppercase tracking-tight">{username}</h2>
-              <p className="text-[10px] text-zinc-500 font-black uppercase tracking-widest">guest@xtermux.local</p>
+            <div className="flex-1 mr-4">
+              {isEditing ? (
+                <div className="flex items-center gap-2">
+                  <input
+                    type="text"
+                    value={tempUsername}
+                    onChange={(e) => setTempUsername(e.target.value)}
+                    className="bg-zinc-950 border border-accent/30 rounded-lg px-3 py-1 text-lg font-black uppercase tracking-tight text-white focus:outline-none focus:border-accent w-full"
+                    autoFocus
+                    onKeyDown={(e) => e.key === 'Enter' && handleSaveUsername()}
+                  />
+                  <button onClick={handleSaveUsername} className="p-2 bg-accent/10 text-accent rounded-lg hover:bg-accent/20 transition-colors">
+                    <Check size={18} />
+                  </button>
+                  <button onClick={handleCancelEdit} className="p-2 bg-red-500/10 text-red-500 rounded-lg hover:bg-red-500/20 transition-colors">
+                    <X size={18} />
+                  </button>
+                </div>
+              ) : (
+                <div className="flex items-center gap-3 group/name">
+                  <h2 className="text-xl font-black uppercase tracking-tight">{username}</h2>
+                  <button 
+                    onClick={() => setIsEditing(true)}
+                    className="p-1.5 opacity-0 group-hover/name:opacity-100 text-zinc-500 hover:text-accent transition-all"
+                  >
+                    <Edit2 size={14} />
+                  </button>
+                </div>
+              )}
+              <p className="text-[10px] text-zinc-500 font-black uppercase tracking-widest mt-1">guest@xtermux.local</p>
             </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="p-4 bg-zinc-950/50 border border-zinc-800 rounded-2xl flex items-center gap-4">
+            <div className="p-4 bg-zinc-950/50 border border-zinc-800 rounded-2xl flex items-center gap-4 hover:border-accent/20 transition-colors">
               <Calendar className="text-accent" size={20} />
               <div>
                 <p className="text-[10px] text-zinc-500 font-black uppercase tracking-widest">Initialization</p>
                 <p className="text-sm font-bold">{new Date().toLocaleDateString()}</p>
               </div>
             </div>
-            <div className="p-4 bg-zinc-950/50 border border-zinc-800 rounded-2xl flex items-center gap-4">
+            <div className="p-4 bg-zinc-950/50 border border-zinc-800 rounded-2xl flex items-center gap-4 hover:border-accent/20 transition-colors">
               <SecurityShield className="text-blue-400" size={20} />
               <div>
                 <p className="text-[10px] text-zinc-500 font-black uppercase tracking-widest">Security Status</p>
                 <p className="text-sm font-bold text-green-500">Local Only</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Preferences Section */}
+      <div className="max-w-2xl mx-auto space-y-4">
+        <h3 className="text-xs font-black text-zinc-600 uppercase tracking-widest px-2">System Preferences</h3>
+        <div className="bg-zinc-900 border border-zinc-800 rounded-3xl overflow-hidden shadow-lg">
+          <div className="divide-y divide-zinc-800">
+            <div className="p-4 flex items-center justify-between hover:bg-zinc-800/30 transition-colors">
+              <div className="flex items-center gap-4">
+                <div className="w-9 h-9 rounded-xl bg-orange-500/10 flex items-center justify-center text-orange-500">
+                  <Bell size={18} />
+                </div>
+                <div>
+                  <p className="text-sm font-bold">Notifications</p>
+                  <p className="text-[10px] text-zinc-500 uppercase font-bold">Show alerts</p>
+                </div>
+              </div>
+              <div className="w-10 h-6 bg-zinc-800 rounded-full relative cursor-pointer group">
+                <div className="absolute left-1 top-1 w-4 h-4 bg-zinc-600 rounded-full group-hover:scale-110 transition-all" />
+              </div>
+            </div>
+            
+            <div className="p-4 flex items-center justify-between hover:bg-zinc-800/30 transition-colors">
+              <div className="flex items-center gap-4">
+                <div className="w-9 h-9 rounded-xl bg-accent/10 flex items-center justify-center text-accent">
+                  <Moon size={18} />
+                </div>
+                <div>
+                  <p className="text-sm font-bold">Hacker Mode</p>
+                  <p className="text-[10px] text-zinc-500 uppercase font-bold">Deep dark theme</p>
+                </div>
+              </div>
+              <div className="w-10 h-6 bg-accent rounded-full relative cursor-pointer">
+                <div className="absolute right-1 top-1 w-4 h-4 bg-black rounded-full" />
               </div>
             </div>
           </div>

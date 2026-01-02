@@ -121,7 +121,7 @@ const AppContent: React.FC = () => {
       case ViewState.RESET_PASSWORD: path = '/reset-password'; break;
       default: path = '/';
     }
-    window.history.pushState({}, '', path);
+    if (!isLegalView) window.history.pushState({}, '', path);
   };
 
   const renderContent = () => {
@@ -153,6 +153,17 @@ const AppContent: React.FC = () => {
     </button>
   );
 
+  if (!session && !isLegalView) {
+    return (
+      <div className="fixed inset-0 bg-black text-zinc-100 flex flex-col font-sans selection:bg-accent/30 overflow-hidden">
+        <ToastContainer />
+        <main className="flex-1 w-full relative outline-none bg-[#0b141a] overflow-hidden">
+          <Auth />
+        </main>
+      </div>
+    );
+  }
+
   return (
     <div className="fixed inset-0 bg-black text-zinc-100 flex flex-col font-sans selection:bg-accent/30 overflow-hidden">
       <style>{`
@@ -181,9 +192,9 @@ const AppContent: React.FC = () => {
       
       <main 
         tabIndex={-1}
-        className={`flex-1 w-full relative outline-none focus:outline-none focus-visible:outline-none ${!session ? 'overflow-hidden h-full bg-[#0b141a]' : ([ViewState.AI_CHAT, ViewState.ARCHITECT].includes(currentView) ? 'overflow-hidden h-full bg-black' : 'overflow-y-auto overflow-x-hidden scroll-smooth pb-28 no-scrollbar')}`}
+        className={`flex-1 w-full relative outline-none focus:outline-none focus-visible:outline-none ${([ViewState.AI_CHAT, ViewState.ARCHITECT].includes(currentView) ? 'overflow-hidden h-full bg-black' : 'overflow-y-auto overflow-x-hidden scroll-smooth pb-28 no-scrollbar')}`}
       >
-        {!session ? <Auth /> : renderContent()}
+        {renderContent()}
       </main>
 
       {session && !isLegalView && (

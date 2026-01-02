@@ -35,143 +35,145 @@ const Home: React.FC<HomeProps> = ({ onNavigate, initialCommand, onCommandStarte
   }, []);
 
   return (
-    <div className="p-6 space-y-12 pb-32 md:px-10 lg:px-16">
-      <div className="relative">
-        <div className="absolute -top-24 -left-24 w-64 h-64 bg-accent/20 rounded-full blur-[100px] pointer-events-none" />
-        <div className="absolute -top-24 -right-24 w-64 h-64 bg-blue-500/10 rounded-full blur-[100px] pointer-events-none" />
+    <div className="breathing-room space-y-24 pb-48 md:px-12 lg:px-20 max-w-6xl mx-auto">
+      <div className="relative group">
+        <div className="absolute -top-32 -left-32 w-80 h-80 bg-accent/20 rounded-full blur-[120px] pointer-events-none group-hover:bg-accent/30 transition-all duration-1000" />
+        <div className="absolute -top-32 -right-32 w-80 h-80 bg-blue-500/10 rounded-full blur-[120px] pointer-events-none group-hover:bg-blue-500/20 transition-all duration-1000" />
         
-        <div className="flex items-center justify-between relative z-10">
-          <div>
-            <h2 className="text-4xl font-black text-white tracking-tighter uppercase md:text-5xl lg:text-6xl bg-clip-text text-transparent bg-gradient-to-br from-white via-white to-zinc-500">
+        <div className="flex items-end justify-between relative z-10">
+          <div className="space-y-2">
+            <div className="flex items-center gap-3 mb-1">
+                <div className="h-[1px] w-8 bg-accent/50" />
+                <span className="text-[10px] font-black text-accent uppercase tracking-[0.5em]">Terminal Interface</span>
+            </div>
+            <h2 className="text-6xl font-black text-white tracking-tighter uppercase md:text-7xl lg:text-8xl bg-clip-text text-transparent bg-gradient-to-b from-white via-white to-zinc-700 leading-none">
               XTermux
             </h2>
-            <div className="flex items-center gap-2 mt-2">
-                <div className="flex gap-1">
-                  {[1, 2, 3].map((i) => (
-                    <div key={i} className="w-1 h-3 bg-accent/40 rounded-full overflow-hidden">
-                      <div className="w-full h-full bg-accent animate-pulse" style={{ animationDelay: `${i * 200}ms` }} />
-                    </div>
-                  ))}
-                </div>
-                <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em]">Operational Nexus</span>
-            </div>
           </div>
           <div onClick={() => onNavigate('ABOUT')} className="group relative">
-            <div className="absolute inset-0 bg-accent/20 rounded-2xl blur-lg group-hover:bg-accent/40 transition-all duration-500" />
-            <div className="relative w-14 h-14 rounded-2xl bg-zinc-900/50 backdrop-blur-xl border border-white/10 flex items-center justify-center shadow-2xl cursor-pointer active:scale-90 transition-all duration-300 md:w-16 md:h-16 overflow-hidden">
-               <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent" />
-               <Hexagon size={28} className="text-accent md:w-8 md:h-8 group-hover:rotate-12 transition-transform duration-500" />
+            <div className="absolute inset-0 bg-accent/20 rounded-3xl blur-2xl group-hover:bg-accent/40 transition-all duration-700" />
+            <div className="relative w-20 h-20 rounded-3xl bg-zinc-900/40 backdrop-blur-3xl border border-white/10 flex items-center justify-center shadow-2xl cursor-pointer active:scale-90 transition-all duration-500 overflow-hidden">
+               <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent" />
+               <Hexagon size={32} className="text-accent group-hover:rotate-12 transition-transform duration-700" />
             </div>
           </div>
         </div>
       </div>
 
       {/* Main Feature Grid */}
-      <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-3">
           {/* AI Chat Card */}
-          <button onClick={() => onNavigate('AI_CHAT')} className="group relative min-h-[220px] text-left active:scale-[0.98] transition-all duration-500">
-              <div className="absolute inset-0 bg-zinc-900/40 backdrop-blur-md border border-white/5 rounded-[2.5rem] group-hover:border-accent/50 group-hover:bg-zinc-900/80 transition-all duration-500 shadow-2xl" />
-              <div className="absolute inset-0 bg-gradient-to-br from-accent/10 via-accent/5 to-transparent rounded-[2.5rem] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+          <button onClick={() => onNavigate('AI_CHAT')} className="group relative min-h-[280px] text-left active:scale-[0.98] transition-all duration-500">
+              <div className="absolute inset-0 bg-zinc-900/40 backdrop-blur-3xl border border-white/[0.05] rounded-[3rem] group-hover:border-accent/40 group-hover:bg-zinc-900/80 transition-all duration-700 shadow-2xl" />
+              <div className="absolute inset-0 bg-gradient-to-br from-accent/10 via-accent/5 to-transparent rounded-[3rem] opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
               
-              <div className="relative h-full p-10 flex flex-col justify-between overflow-hidden">
-                <div className="absolute -right-12 -bottom-12 w-48 h-48 bg-accent/10 rounded-full blur-3xl group-hover:bg-accent/20 transition-all duration-700" />
-                <Bot size={180} className="absolute -right-12 -bottom-12 text-accent opacity-[0.05] group-hover:opacity-[0.12] group-hover:scale-110 group-hover:-rotate-12 transition-all duration-700 pointer-events-none" />
+              <div className="relative h-full p-12 flex flex-col justify-between overflow-hidden">
+                <div className="absolute -right-16 -bottom-16 w-64 h-64 bg-accent/10 rounded-full blur-[80px] group-hover:bg-accent/20 transition-all duration-1000" />
+                <Bot size={220} className="absolute -right-16 -bottom-16 text-accent opacity-[0.03] group-hover:opacity-[0.1] group-hover:scale-110 group-hover:-rotate-12 transition-all duration-1000 pointer-events-none" />
                 
-                <div className="space-y-5">
-                  <div className="inline-flex items-center gap-2.5 px-4 py-2 bg-accent/10 rounded-full border border-accent/20 backdrop-blur-md shadow-inner">
-                    <div className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
-                    <span className="text-[10px] font-black text-accent uppercase tracking-[0.2em]">Neural Core v4</span>
+                <div className="space-y-6">
+                  <div className="inline-flex items-center gap-3 px-5 py-2.5 bg-accent/10 rounded-full border border-accent/20 backdrop-blur-xl shadow-inner group-hover:bg-accent/20 transition-colors">
+                    <div className="w-2 h-2 rounded-full bg-accent animate-pulse" />
+                    <span className="text-[11px] font-black text-accent uppercase tracking-[0.25em]">Neural Link</span>
                   </div>
                   <div>
-                    <h3 className="text-3xl font-black text-white mb-2 tracking-tighter uppercase">AI Insight</h3>
-                    <p className="text-sm text-zinc-400 font-medium leading-relaxed max-w-[220px]">Advanced neural architecture for system diagnostics and logic processing.</p>
+                    <h3 className="text-4xl font-black text-white mb-3 tracking-tighter uppercase leading-none">Nexus</h3>
+                    <p className="text-base text-zinc-500 font-medium leading-relaxed max-w-[240px] group-hover:text-zinc-400 transition-colors">Advanced cognitive synthesis for system architecture.</p>
                   </div>
                 </div>
                 
-                <div className="flex items-center gap-2 text-accent text-[11px] font-black uppercase tracking-[0.2em] opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-4 group-hover:translate-y-0">
-                  Initialize Link <Terminal size={14} className="ml-1" />
+                <div className="flex items-center gap-3 text-accent text-[12px] font-black uppercase tracking-[0.3em] opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-6 group-hover:translate-y-0">
+                  <span className="h-[1px] w-6 bg-accent" />
+                  Connect
                 </div>
               </div>
           </button>
 
           {/* Tools Registry Card */}
-          <button onClick={() => onNavigate('PACKAGES')} className="group relative min-h-[220px] text-left active:scale-[0.98] transition-all duration-500">
-              <div className="absolute inset-0 bg-zinc-900/40 backdrop-blur-md border border-white/5 rounded-[2.5rem] group-hover:border-purple-500/50 group-hover:bg-zinc-900/80 transition-all duration-500 shadow-2xl" />
-              <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-purple-500/5 to-transparent rounded-[2.5rem] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+          <button onClick={() => onNavigate('PACKAGES')} className="group relative min-h-[280px] text-left active:scale-[0.98] transition-all duration-500">
+              <div className="absolute inset-0 bg-zinc-900/40 backdrop-blur-3xl border border-white/[0.05] rounded-[3rem] group-hover:border-purple-500/40 group-hover:bg-zinc-900/80 transition-all duration-700 shadow-2xl" />
+              <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-purple-500/5 to-transparent rounded-[3rem] opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
               
-              <div className="relative h-full p-10 flex flex-col justify-between overflow-hidden">
-                <div className="absolute -right-12 -bottom-12 w-48 h-48 bg-purple-500/10 rounded-full blur-3xl group-hover:bg-purple-500/20 transition-all duration-700" />
-                <Package size={180} className="absolute -right-12 -bottom-12 text-purple-500 opacity-[0.05] group-hover:opacity-[0.12] group-hover:scale-110 group-hover:rotate-12 transition-all duration-700 pointer-events-none" />
+              <div className="relative h-full p-12 flex flex-col justify-between overflow-hidden">
+                <div className="absolute -right-16 -bottom-16 w-64 h-64 bg-purple-500/10 rounded-full blur-[80px] group-hover:bg-purple-500/20 transition-all duration-1000" />
+                <Package size={220} className="absolute -right-16 -bottom-16 text-purple-500 opacity-[0.03] group-hover:opacity-[0.1] group-hover:scale-110 group-hover:rotate-12 transition-all duration-1000 pointer-events-none" />
                 
-                <div className="space-y-5">
-                  <div className="inline-flex items-center gap-2.5 px-4 py-2 bg-purple-500/10 rounded-full border border-purple-500/20 backdrop-blur-md shadow-inner">
-                    <div className="w-1.5 h-1.5 rounded-full bg-purple-500 animate-pulse" />
-                    <span className="text-[10px] font-black text-purple-500 uppercase tracking-[0.2em]">Registry Nexus</span>
+                <div className="space-y-6">
+                  <div className="inline-flex items-center gap-3 px-5 py-2.5 bg-purple-500/10 rounded-full border border-purple-500/20 backdrop-blur-xl shadow-inner group-hover:bg-purple-500/20 transition-colors">
+                    <div className="w-2 h-2 rounded-full bg-purple-500 animate-pulse" />
+                    <span className="text-[11px] font-black text-purple-500 uppercase tracking-[0.25em]">Vault Core</span>
                   </div>
                   <div>
-                    <h3 className="text-3xl font-black text-white mb-2 tracking-tighter uppercase">Vault</h3>
-                    <p className="text-sm text-zinc-400 font-medium leading-relaxed max-w-[220px]">Decentralized repository containing 2000+ specialized toolkits.</p>
+                    <h3 className="text-4xl font-black text-white mb-3 tracking-tighter uppercase leading-none">Archive</h3>
+                    <p className="text-base text-zinc-500 font-medium leading-relaxed max-w-[240px] group-hover:text-zinc-400 transition-colors">Secure repository of decentralized terminal toolkits.</p>
                   </div>
                 </div>
                 
-                <div className="flex items-center gap-2 text-purple-500 text-[11px] font-black uppercase tracking-[0.2em] opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-4 group-hover:translate-y-0">
-                  Access Archive <Terminal size={14} className="ml-1" />
+                <div className="flex items-center gap-3 text-purple-500 text-[12px] font-black uppercase tracking-[0.3em] opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-6 group-hover:translate-y-0">
+                  <span className="h-[1px] w-6 bg-purple-500" />
+                  Decrypt
                 </div>
               </div>
           </button>
 
           {/* Guides Card */}
-          <button onClick={() => onNavigate('GUIDES')} className="group relative min-h-[220px] text-left active:scale-[0.98] transition-all duration-500">
-              <div className="absolute inset-0 bg-zinc-900/40 backdrop-blur-md border border-white/5 rounded-[2.5rem] group-hover:border-orange-500/50 group-hover:bg-zinc-900/80 transition-all duration-500 shadow-2xl" />
-              <div className="absolute inset-0 bg-gradient-to-br from-orange-500/10 via-orange-500/5 to-transparent rounded-[2.5rem] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+          <button onClick={() => onNavigate('GUIDES')} className="group relative min-h-[280px] text-left active:scale-[0.98] transition-all duration-500">
+              <div className="absolute inset-0 bg-zinc-900/40 backdrop-blur-3xl border border-white/[0.05] rounded-[3rem] group-hover:border-orange-500/40 group-hover:bg-zinc-900/80 transition-all duration-700 shadow-2xl" />
+              <div className="absolute inset-0 bg-gradient-to-br from-orange-500/10 via-orange-500/5 to-transparent rounded-[3rem] opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
               
-              <div className="relative h-full p-10 flex flex-col justify-between overflow-hidden">
-                <div className="absolute -right-12 -bottom-12 w-48 h-48 bg-orange-500/10 rounded-full blur-3xl group-hover:bg-orange-500/20 transition-all duration-700" />
-                <BookOpen size={180} className="absolute -right-12 -bottom-12 text-orange-500 opacity-[0.05] group-hover:opacity-[0.12] group-hover:scale-110 group-hover:-rotate-6 transition-all duration-700 pointer-events-none" />
+              <div className="relative h-full p-12 flex flex-col justify-between overflow-hidden">
+                <div className="absolute -right-16 -bottom-16 w-64 h-64 bg-orange-500/10 rounded-full blur-[80px] group-hover:bg-orange-500/20 transition-all duration-1000" />
+                <BookOpen size={220} className="absolute -right-16 -bottom-16 text-orange-500 opacity-[0.03] group-hover:opacity-[0.1] group-hover:scale-110 group-hover:-rotate-6 transition-all duration-1000 pointer-events-none" />
                 
-                <div className="space-y-5">
-                  <div className="inline-flex items-center gap-2.5 px-4 py-2 bg-orange-500/10 rounded-full border border-orange-500/20 backdrop-blur-md shadow-inner">
-                    <div className="w-1.5 h-1.5 rounded-full bg-orange-500 animate-pulse" />
-                    <span className="text-[10px] font-black text-orange-500 uppercase tracking-[0.2em]">Codex Prime</span>
+                <div className="space-y-6">
+                  <div className="inline-flex items-center gap-3 px-5 py-2.5 bg-orange-500/10 rounded-full border border-orange-500/20 backdrop-blur-xl shadow-inner group-hover:bg-orange-500/20 transition-colors">
+                    <div className="w-2 h-2 rounded-full bg-orange-500 animate-pulse" />
+                    <span className="text-[11px] font-black text-orange-500 uppercase tracking-[0.25em]">Protocol</span>
                   </div>
                   <div>
-                    <h3 className="text-3xl font-black text-white mb-2 tracking-tighter uppercase">Academy</h3>
-                    <p className="text-sm text-zinc-400 font-medium leading-relaxed max-w-[220px]">Comprehensive database for mastering terminal protocols.</p>
+                    <h3 className="text-4xl font-black text-white mb-3 tracking-tighter uppercase leading-none">Codex</h3>
+                    <p className="text-base text-zinc-500 font-medium leading-relaxed max-w-[240px] group-hover:text-zinc-400 transition-colors">Master database for deep terminal exploitation.</p>
                   </div>
                 </div>
                 
-                <div className="flex items-center gap-2 text-orange-500 text-[11px] font-black uppercase tracking-[0.2em] opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-4 group-hover:translate-y-0">
-                  Begin Sequence <Terminal size={14} className="ml-1" />
+                <div className="flex items-center gap-3 text-orange-500 text-[12px] font-black uppercase tracking-[0.3em] opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-6 group-hover:translate-y-0">
+                  <span className="h-[1px] w-6 bg-orange-500" />
+                  Master
                 </div>
               </div>
           </button>
       </div>
 
       <div className="relative group">
-        <div className="absolute inset-0 bg-gradient-to-r from-accent/5 to-blue-500/5 rounded-[2.5rem] blur-xl opacity-50 group-hover:opacity-100 transition-opacity duration-700" />
-        <div className="relative bg-zinc-900/30 backdrop-blur-xl border border-white/5 rounded-[2.5rem] p-8 md:p-10">
-            <div className="flex items-center justify-between mb-8">
-                <div className="flex items-center gap-3">
-                  <div className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
-                  <span className="text-[10px] font-black text-zinc-400 uppercase tracking-[0.3em]">Command Matrix</span>
-                </div>
-                <div className="text-[9px] font-bold text-zinc-600 uppercase">System History</div>
+        <div className="absolute inset-0 bg-gradient-to-r from-accent/10 to-blue-500/10 rounded-[3rem] blur-3xl opacity-30 group-hover:opacity-60 transition-opacity duration-1000" />
+        <div className="relative bg-zinc-900/40 backdrop-blur-3xl border border-white/[0.03] rounded-[3rem] p-12 md:p-16 shadow-2xl overflow-hidden">
+            <div className="absolute top-0 right-0 p-8">
+                <Terminal size={120} className="text-white opacity-[0.02] -rotate-12" />
             </div>
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            <div className="flex items-center justify-between mb-12">
+                <div className="flex items-center gap-4">
+                  <div className="w-3 h-3 rounded-full bg-accent animate-pulse shadow-[0_0_15px_var(--accent-color)]" />
+                  <span className="text-[11px] font-black text-zinc-400 uppercase tracking-[0.5em]">Activity Log</span>
+                </div>
+                <div className="text-[10px] font-black text-zinc-600 uppercase tracking-widest">System Trace</div>
+            </div>
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                 {history.length > 0 ? history.slice(0, 4).map((cmd, i) => (
-                    <div key={i} className="flex items-center justify-between p-4 bg-white/5 rounded-2xl border border-white/5 group/item hover:border-accent/30 hover:bg-white/10 transition-all duration-300">
-                        <div className="flex items-center gap-3 overflow-hidden">
-                          <Terminal size={14} className="text-zinc-500 shrink-0" />
-                          <code className="text-xs text-zinc-300 truncate font-mono">{cmd}</code>
+                    <div key={i} className="flex items-center justify-between p-6 bg-black/40 rounded-[2rem] border border-white/[0.03] group/item hover:border-accent/40 hover:bg-black/60 transition-all duration-500">
+                        <div className="flex items-center gap-5 overflow-hidden">
+                          <div className="p-3 bg-zinc-900/50 rounded-2xl group-hover/item:text-accent transition-colors">
+                            <Terminal size={18} className="text-zinc-500 shrink-0" />
+                          </div>
+                          <code className="text-sm text-zinc-300 truncate font-mono font-bold tracking-tight">{cmd}</code>
                         </div>
-                        <button onClick={() => { navigator.clipboard.writeText(cmd); showToast('Matrix Copied', 'success'); }} className="p-2 text-zinc-500 hover:text-accent transition-colors">
-                            <Copy size={14} />
+                        <button onClick={() => { navigator.clipboard.writeText(cmd); showToast('Trace Copied', 'success'); }} className="p-3 text-zinc-600 hover:text-accent transition-all hover:scale-110 active:scale-90">
+                            <Copy size={18} />
                         </button>
                     </div>
                 )) : (
-                    <div className="py-8 text-center md:col-span-2">
-                      <div className="text-[10px] text-zinc-600 font-bold uppercase tracking-widest mb-1">No Trace Detected</div>
-                      <div className="text-[9px] text-zinc-700 font-medium">Activity logs are currently empty</div>
+                    <div className="py-20 text-center md:col-span-2 border-2 border-dashed border-white/[0.02] rounded-[3rem]">
+                      <div className="text-[12px] text-zinc-600 font-black uppercase tracking-[0.5em] mb-2">No Trace Detected</div>
+                      <div className="text-[10px] text-zinc-700 font-bold uppercase tracking-widest">Awaiting system initialization</div>
                     </div>
                 )}
             </div>

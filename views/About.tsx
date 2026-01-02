@@ -90,6 +90,17 @@ const About: React.FC = () => {
             username: newProfile?.username || 'X-User'
           }));
         } else {
+          // If profile exists but username is still an email, clean it up
+          if (profile.username && profile.username.includes('@')) {
+            let extracted = profile.username.split('@')[0];
+            if (extracted.toLowerCase().endsWith('sup')) {
+              extracted = extracted.slice(0, -3);
+            }
+            
+            await supabase.from('profiles').update({ username: extracted }).eq('id', user.id);
+            profile.username = extracted;
+          }
+
           const userData = { ...user, profile };
           setUser(userData);
           setUsername(profile.username || 'X-User');

@@ -171,7 +171,7 @@ const AppContent: React.FC = () => {
       
       <main 
         tabIndex={-1}
-        className={`flex-1 w-full relative outline-none focus:outline-none focus-visible:outline-none ${[ViewState.AI_CHAT, ViewState.ARCHITECT].includes(currentView) ? 'overflow-hidden h-full bg-black' : 'overflow-y-auto overflow-x-hidden scroll-smooth pb-28 no-scrollbar'}`}
+        className={`flex-1 w-full relative outline-none focus:outline-none focus-visible:outline-none ${!session ? 'overflow-hidden h-full bg-[#0b141a]' : ([ViewState.AI_CHAT, ViewState.ARCHITECT].includes(currentView) ? 'overflow-hidden h-full bg-black' : 'overflow-y-auto overflow-x-hidden scroll-smooth pb-28 no-scrollbar')}`}
       >
         {!session ? <Auth /> : renderContent()}
       </main>
@@ -185,7 +185,7 @@ const AppContent: React.FC = () => {
         </button>
       )}
 
-      {!isLegalView && (
+      {!isLegalView && session && (
         <nav className="fixed bottom-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-3xl border-t border-white/5 pb-safe">
             <div className="max-w-lg mx-auto flex items-center justify-around h-[70px] px-1">
                 <NavButton active={currentView === ViewState.HOME} onClick={() => navigate(ViewState.HOME)} icon={<Home size={18} />} label="Home" />

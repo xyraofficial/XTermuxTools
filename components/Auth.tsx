@@ -291,7 +291,7 @@ export const Auth: React.FC = () => {
 
         <div className="flex flex-col items-center gap-12 flex-1 justify-center max-w-sm w-full">
           <div className="relative">
-            <div className="w-64 h-64 flex items-center justify-center bg-[#111b21] rounded-full overflow-hidden shadow-2xl border border-[#202c33]">
+            <div className="w-48 h-48 flex items-center justify-center bg-[#111b21] rounded-full overflow-hidden shadow-2xl border border-[#202c33]">
               <Lottie 
                 animationData={{
                   v: "5.7.1",
@@ -300,27 +300,30 @@ export const Auth: React.FC = () => {
                   op: 60,
                   w: 400,
                   h: 400,
-                  nm: "XTermux Logo",
+                  nm: "Compact Shield",
                   ddd: 0,
                   assets: [],
                   layers: [
                     {
-                      ddd: 0, ind: 1, ty: 4, nm: "Circle", sr: 1,
+                      ddd: 0, ind: 1, ty: 4, nm: "MainShield", sr: 1,
                       ks: {
-                        o: { a: 0, k: 30 },
+                        o: { a: 1, k: [
+                          { t: 0, s: [0], e: [100], i: { x: 0.4, y: 1 }, o: { x: 0.2, y: 0 } },
+                          { t: 20, s: [100] }
+                        ]},
                         r: { a: 0, k: 0 },
                         p: { a: 0, k: [200, 200] },
                         a: { a: 0, k: [0, 0] },
                         s: { a: 1, k: [
-                          { t: 0, s: [0, 0], e: [100, 100] },
-                          { t: 30, s: [100, 100] }
+                          { t: 0, s: [0, 0], e: [100, 100], i: { x: 0.6, y: 1 }, o: { x: 0.4, y: 0 } },
+                          { t: 25, s: [100, 100] }
                         ]}
                       },
                       shapes: [
                         {
                           ty: "gr",
                           it: [
-                            { ty: "el", s: { a: 0, k: [300, 300] }, p: { a: 0, k: [0, 0] } },
+                            { ty: "rc", s: { a: 0, k: [120, 150] }, r: 30 },
                             { ty: "fl", c: { a: 0, k: [0, 0.66, 0.52, 1] } }
                           ]
                         }
@@ -328,22 +331,23 @@ export const Auth: React.FC = () => {
                       ip: 0, op: 60, st: 0
                     },
                     {
-                      ddd: 0, ind: 2, ty: 4, nm: "Shield", sr: 1,
+                      ddd: 0, ind: 2, ty: 4, nm: "InternalGlow", sr: 1,
                       ks: {
-                        o: { a: 0, k: 100 },
+                        o: { a: 1, k: [
+                          { t: 20, s: [0], e: [50], i: { x: 0.4, y: 1 }, o: { x: 0.2, y: 0 } },
+                          { t: 40, s: [50], e: [0], i: { x: 0.4, y: 1 }, o: { x: 0.2, y: 0 } },
+                          { t: 60, s: [0] }
+                        ]},
                         r: { a: 0, k: 0 },
-                        p: { a: 0, k: [200, 220] },
+                        p: { a: 0, k: [200, 200] },
                         a: { a: 0, k: [0, 0] },
-                        s: { a: 1, k: [
-                          { t: 0, s: [0, 0], e: [100, 100] },
-                          { t: 20, s: [100, 100] }
-                        ]}
+                        s: { a: 0, k: [80, 80] }
                       },
                       shapes: [
                         {
                           ty: "gr",
                           it: [
-                            { ty: "rc", s: { a: 0, k: [80, 100] }, r: 20 },
+                            { ty: "rc", s: { a: 0, k: [100, 130] }, r: 25 },
                             { ty: "fl", c: { a: 0, k: [1, 1, 1, 1] } }
                           ]
                         }
@@ -355,7 +359,7 @@ export const Auth: React.FC = () => {
                 loop={true}
                 autoplay={true}
                 className="w-full h-full"
-                style={{ width: '100%', height: '100%', display: 'block' }}
+                style={{ width: '80%', height: '80%', display: 'block' }}
               />
             </div>
           </div>

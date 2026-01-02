@@ -6,8 +6,7 @@ import { supabase } from './supabase';
 import { Auth } from './components/Auth';
 import { Session } from '@supabase/supabase-js';
 
-// Components
-import HomeView from './views/Home';
+import AdminView from './views/Admin';
 import PackagesView from './views/Packages';
 import GuidesView from './views/Guides';
 import AboutView from './views/About';
@@ -135,6 +134,7 @@ const AppContent: React.FC = () => {
       case ViewState.GUIDES: return <div {...viewProps}><GuidesView /></div>;
       case ViewState.ABOUT: return <div {...viewProps}><AboutView /></div>;
       case ViewState.AI_CHAT: return <div {...viewProps}><AIChatView /></div>;
+      case ViewState.ARCHITECT: return <div {...viewProps}><AdminView /></div>; // Mapping ARCHITECT to AdminView for now
       case ViewState.HELP: return <div {...viewProps}><HelpView onBack={() => navigate(ViewState.HOME)} /></div>;
       case ViewState.PRIVACY: return <div {...viewProps}><PrivacyView onBack={() => navigate(ViewState.HOME)} /></div>;
       case ViewState.TERMS: return <div {...viewProps}><TermsView onBack={() => navigate(ViewState.HOME)} /></div>;

@@ -76,11 +76,20 @@ const About: React.FC = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
         const { data: profile } = await supabase.from('profiles').select('*').eq('id', user.id).single();
-        const userData = { ...user, profile };
-        const name = profile?.username || 'X-User';
         
-        setUser(userData);
-        setUsername(name);
+        // If profile doesn't exist, create it
+        if (!profile) {
+          const { data: newProfile } = await supabase.from('profiles').insert([
+            { id: user.id, username: 'X-User', role: 'USER' }
+          ]).select().single();
+          const userData = { ...user, profile: newProfile };
+          setUser(userData);
+          setUsername(newProfile?.username || 'X-User');
+        } else {
+          const userData = { ...user, profile };
+          setUser(userData);
+          setUsername(profile.username || 'X-User');
+        }
         
         // Cache for next time
         localStorage.setItem('user_profile_cache', JSON.stringify({
@@ -133,6 +142,7 @@ const About: React.FC = () => {
         </div>
 
         <div className="flex justify-center gap-3">
+          <span className="px-4 py-1.5 bg-accent/10 border border-accent/20 rounded-xl text-[10px] font-black text-accent uppercase tracking-widest">{user?.profile?.role || 'USER'}</span>
           <span className="px-4 py-1.5 bg-accent/10 border border-accent/20 rounded-xl text-[10px] font-black text-accent uppercase tracking-widest">{t.syncActive}</span>
           <span className="px-4 py-1.5 bg-white/5 border border-white/10 rounded-xl text-[10px] font-black text-zinc-500 uppercase tracking-widest">v{APP_VERSION}</span>
         </div>

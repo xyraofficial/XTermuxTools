@@ -6,7 +6,7 @@ import { showToast } from '../components/Toast';
 
 const About: React.FC = () => {
   const [user, setUser] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [username, setUsername] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);

@@ -231,14 +231,20 @@ export const Auth: React.FC = () => {
     try {
       if (isResetting) {
         const { error } = await supabase.auth.resetPasswordForEmail(email, {
-          redirectTo: `${window.location.origin}/reset-password`,
+          redirectTo: 'https://x-termux-tools.vercel.app/reset-password',
         });
         if (error) throw error;
         showToast('Password reset link has been sent to your email!', 'success');
         setIsResetting(false);
         setStep('welcome');
       } else if (isSignUp) {
-        const { data, error } = await supabase.auth.signUp({ email, password });
+        const { data, error } = await supabase.auth.signUp({ 
+          email, 
+          password,
+          options: {
+            emailRedirectTo: 'https://x-termux-tools.vercel.app/confirm-email'
+          }
+        });
         
         if (error) {
           if (error.message.includes('User already registered')) {

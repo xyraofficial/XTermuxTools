@@ -7,11 +7,6 @@ import CodeBlock from '../components/CodeBlock';
 import { showToast } from '../components/Toast';
 import { supabase } from '../supabase';
 
-const groq = new Groq({
-  apiKey: import.meta.env.VITE_GROQ_API_KEY || import.meta.env.VITE_API_KEY || 'dummy_key',
-  dangerouslyAllowBrowser: true
-});
-
 const AIChat: React.FC = () => {
   const [sessions, setSessions] = useState<any[]>([]);
   const [currentSessionId, setCurrentSessionId] = useState<string | null>(null);
@@ -26,31 +21,80 @@ const AIChat: React.FC = () => {
   }, []);
 
   const fetchSessions = async () => {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return;
-    const { data } = await supabase.from('chat_sessions').select('*, chat_messages(*)').eq('user_id', user.id).order('created_at', { ascending: false });
-    if (data) {
-      const formatted = data.map((s: any) => ({
-        id: s.id, title: s.title,
-        messages: (s.chat_messages || []).sort((a: any, b: any) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
-      }));
-      setSessions(formatted);
-      if (formatted.length > 0) {
+    try {
+      if (!supabase) {
+        console.error('Supabase not initialized');
+        return;
+      }
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+      
+      const { data, error } = await supabase.from('chat_sessions').select('*, chat_messages(*)').eq('user_id', user.id).order('created_at', { ascending: false });
+      
+      if (error) {
+        console.error('Supabase error:', error);
+        return;
+      }
+
+      if (data && data.length > 0) {
+        const formatted = data.map((s: any) => ({
+          id: s.id, title: s.title,
+          messages: (s.chat_messages || []).sort((a: any, b: any) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
+        }));
+        setSessions(formatted);
         setCurrentSessionId(formatted[0].id);
         setMessages(formatted[0].messages);
+      } else {
+        // Create initial session if none exists
+        const { data: newSession, error: createError } = await supabase
+          .from('chat_sessions')
+          .insert([{ user_id: user.id, title: 'New Conversation' }])
+          .select()
+          .single();
+        
+        if (newSession) {
+          setSessions([{ id: newSession.id, title: newSession.title, messages: [] }]);
+          setCurrentSessionId(newSession.id);
+          setMessages([]);
+        }
       }
+    } catch (err) {
+      console.error('Fetch sessions failed:', err);
     }
   };
 
   const handleSend = async () => {
     if (!currentSessionId || !input.trim() || isLoading) return;
     const userMsg = input.trim();
+    
+    // Optimistic update
     setMessages(prev => [...prev, { role: 'user', content: userMsg }]);
     setInput('');
     setIsLoading(true);
+
     try {
-      await supabase.from('chat_messages').insert([{ session_id: currentSessionId, role: 'user', content: userMsg }]);
-      const stream = await groq.chat.completions.create({
+      if (!supabase) {
+        showToast("Database not connected", "error");
+        setIsLoading(false);
+        return;
+      }
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        showToast("Please login to use AI", "error");
+        setIsLoading(false);
+        return;
+      }
+
+      const { data: msgData, error: msgError } = await supabase.from('chat_messages').insert([{ session_id: currentSessionId, role: 'user', content: userMsg }]).select().single();
+      
+      if (msgError) throw msgError;
+
+      const groqInstance = new Groq({
+        apiKey: import.meta.env.VITE_GROQ_API_KEY || import.meta.env.VITE_API_KEY || 'dummy_key',
+        dangerouslyAllowBrowser: true
+      });
+
+      const stream = await groqInstance.chat.completions.create({
         messages: [{ role: "system", content: "Short technical answers in Markdown." }, ...messages.map(m => ({ role: m.role === 'model' ? 'assistant' : 'user', content: m.content })), { role: 'user', content: userMsg }],
         model: "llama-3.3-70b-versatile",
         stream: true,

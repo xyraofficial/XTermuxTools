@@ -15,8 +15,7 @@ export const Auth: React.FC = () => {
   const [showMenu, setShowMenu] = useState(false);
   const [language, setLanguage] = useState<'en' | 'id' | 'hi'>('en');
   const [showLanguagePicker, setShowLanguagePicker] = useState(false);
-  const [screenshots, setScreenshots] = useState<(string | null)[]>([null, null, null]);
-
+  
   const translations = {
     en: {
       welcome: 'Welcome to XTermux',
@@ -73,25 +72,6 @@ export const Auth: React.FC = () => {
 
   const t = translations[language];
 
-  const handleScreenshotClick = (index: number) => {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = 'image/*';
-    input.onchange = (e) => {
-      const file = (e.target as HTMLInputElement).files?.[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = (re) => {
-          const newScreenshots = [...screenshots];
-          newScreenshots[index] = re.target?.result as string;
-          setScreenshots(newScreenshots);
-        };
-        reader.readAsDataURL(file);
-      }
-    };
-    input.click();
-  };
-
   const handleSupportSubmit = async (e: React.FormEvent, platform: 'email' | 'whatsapp') => {
     e.preventDefault();
     
@@ -100,49 +80,16 @@ export const Auth: React.FC = () => {
     const supportInfo = `\n\n--Support Info--\nApp: XTermux\nLanguage: ${language}`;
     const fullMessage = `Title: ${title}\nDescription: ${description}${supportInfo}`;
     
-    const hasScreenshots = screenshots.some(s => s !== null);
-
-    // If there are screenshots, try to use Share API to include files
-    if (hasScreenshots && navigator.share) {
-      try {
-        const files: File[] = [];
-        for (let i = 0; i < screenshots.length; i++) {
-          const src = screenshots[i];
-          if (src) {
-            const response = await fetch(src);
-            const blob = await response.blob();
-            files.push(new File([blob], `screenshot_${i + 1}.jpg`, { type: 'image/jpeg' }));
-          }
-        }
-
-        if (navigator.canShare && navigator.canShare({ files })) {
-          await navigator.share({
-            files,
-            title: title,
-            text: fullMessage
-          });
-          setStep('welcome');
-          setSupportMessage('');
-          setScreenshots([null, null, null]);
-          return;
-        }
-      } catch (error) {
-        console.error('Error sharing files:', error);
-      }
-    }
-    
-    // Fallback if no screenshots or sharing fails
     if (platform === 'whatsapp') {
-      const whatsappUrl = `https://wa.me/62895325844493?text=${encodeURIComponent(fullMessage)}${hasScreenshots ? encodeURIComponent('\n\n(Note: Please attach your screenshots manually in WhatsApp)') : ''}`;
+      const whatsappUrl = `https://wa.me/62895325844493?text=${encodeURIComponent(fullMessage)}`;
       window.open(whatsappUrl, '_blank');
     } else {
-      const mailto = `mailto:xyraofficialsup@gmail.com?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(fullMessage)}${hasScreenshots ? encodeURIComponent('\n\n--Screenshots Captured--\nPlease attach the screenshots manually for better quality.') : ''}`;
+      const mailto = `mailto:xyraofficialsup@gmail.com?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(fullMessage)}`;
       window.location.href = mailto;
     }
 
     setStep('welcome');
     setSupportMessage('');
-    setScreenshots([null, null, null]);
   };
 
   const handlePrivacyClick = (e?: React.MouseEvent) => {
@@ -304,26 +251,6 @@ export const Auth: React.FC = () => {
               placeholder={t.describe}
               className="w-full bg-[#202c33] rounded-lg p-4 min-h-[150px] outline-none border-none resize-none"
             />
-          </div>
-
-          <div className="space-y-4">
-            <p className="text-sm text-[#8696a0]">{t.screenshot}</p>
-            <div className="flex gap-4">
-              {screenshots.map((src, i) => (
-                <button
-                  key={i}
-                  type="button"
-                  onClick={() => handleScreenshotClick(i)}
-                  className="w-24 h-24 bg-[#202c33] rounded-lg flex items-center justify-center border border-dashed border-[#8696a0]/30 overflow-hidden"
-                >
-                  {src ? (
-                    <img src={src} alt="Screenshot" className="w-full h-full object-cover" />
-                  ) : (
-                    <Mail className="text-[#8696a0]" size={24} />
-                  )}
-                </button>
-              ))}
-            </div>
           </div>
 
           <p className="text-xs text-[#8696a0] leading-relaxed">

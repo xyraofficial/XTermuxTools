@@ -72,8 +72,6 @@ const AIChat: React.FC = () => {
       setSessions(formattedSessions);
       if (formattedSessions.length > 0) {
         selectSession(formattedSessions[0].id, formattedSessions);
-      } else {
-        createNewChat();
       }
     } else {
       createNewChat();

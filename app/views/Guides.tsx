@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { ChevronDown, CheckCircle2, Circle, RotateCcw } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { GUIDES } from '../constants';
+import { GUIDES } from '@/app/constants';
 import CodeBlock from '../components/CodeBlock';
 import { showToast } from '../components/Toast';
 

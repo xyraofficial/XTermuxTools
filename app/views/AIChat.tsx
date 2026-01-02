@@ -6,7 +6,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import CodeBlock from '../components/CodeBlock';
 import { showToast } from '../components/Toast';
-import { supabase } from '../supabase';
+import { supabase } from '@/app/supabase';
 
 const groq = new Groq({
   apiKey: import.meta.env.VITE_GROQ_API_KEY || import.meta.env.VITE_API_KEY || 'dummy_key',

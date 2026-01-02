@@ -1,8 +1,8 @@
 "use client";
 import React, { useState, useMemo, useEffect } from 'react';
 import { Search, Package, Heart, ArrowDownAZ, ArrowUpAZ, Plus, Check, ShoppingCart, Copy, X } from 'lucide-react';
-import { PACKAGES } from '../constants';
-import { PackageItem } from '../types';
+import { PACKAGES } from '@/app/constants';
+import { PackageItem } from '@/app/types';
 import CodeBlock from '../components/CodeBlock';
 import { showToast } from '../components/Toast';
 

@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { AlertTriangle, Wrench, ShieldAlert, Search, X, Microscope, Sparkles, Loader2, Copy, CheckCircle2, ChevronRight } from 'lucide-react';
-import { ERRORS } from '../constants';
+import { ERRORS } from '@/app/constants';
 import CodeBlock from '../components/CodeBlock';
 import { GoogleGenAI } from "@google/genai";
 import ReactMarkdown from 'react-markdown';

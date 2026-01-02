@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useMemo, useEffect } from 'react';
 import { Search, Terminal, Github, ShieldAlert, Skull, ChevronDown, Copy, X, Info } from 'lucide-react';
-import { SCRIPTS } from '../constants';
+import { SCRIPTS } from '@/app/constants';
 import CodeBlock from '../components/CodeBlock';
 import { showToast } from '../components/Toast';
 

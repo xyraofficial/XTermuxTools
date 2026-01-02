@@ -1,12 +1,12 @@
 "use client";
 import React, { useState, useEffect } from 'react';
-import HomeView from './views/Home';
-import PackagesView from './views/Packages';
-import ScriptsView from './views/Scripts';
-import AIChatView from './views/AIChat';
-import GuidesView from './views/Guides';
-import UserProfileView from './views/About';
-import BottomNav from './components/BottomNav';
+import HomeView from '@/app/views/Home';
+import PackagesView from '@/app/views/Packages';
+import ScriptsView from '@/app/views/Scripts';
+import AIChatView from '@/app/views/AIChat';
+import GuidesView from '@/app/views/Guides';
+import UserProfileView from '@/app/views/About';
+import BottomNav from '@/app/components/BottomNav';
 
 export default function Page() {
   const [mounted, setMounted] = useState(false);

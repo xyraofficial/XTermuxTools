@@ -1,8 +1,8 @@
 "use client";
 import React, { useState, useRef, useEffect } from 'react';
 import { Youtube, Mail, Facebook, User, Camera, Calendar, Shield, Edit2, Check, X, LogOut, Loader2, Smartphone, Code, Star, Heart } from 'lucide-react';
-import { APP_VERSION } from '../constants';
-import { supabase } from '../supabase';
+import { APP_VERSION } from '@/app/constants';
+import { supabase } from '@/app/supabase';
 import { showToast } from '../components/Toast';
 
 const About: React.FC = () => {

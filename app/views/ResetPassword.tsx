@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { supabase } from '../supabase';
+import { supabase } from '@/app/supabase';
 import { Lock, Loader2, KeyRound, Eye, EyeOff, CheckCircle2 } from 'lucide-react';
 import { showToast } from '../components/Toast';
 

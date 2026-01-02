@@ -297,15 +297,15 @@ const AIChat: React.FC = () => {
 
           <div className="max-w-4xl mx-auto space-y-8 pb-4">
               {messages.map((msg, idx) => (
-                  <div key={idx} className={`flex gap-3 ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'} animate-in fade-in slide-in-from-bottom-2 duration-300`}>
-                      <div className={`w-8 h-8 rounded-lg shrink-0 flex items-center justify-center border ${msg.role === 'user' ? 'bg-zinc-800 border-zinc-700' : 'bg-zinc-900 border-zinc-800'}`}>
-                          {msg.role === 'user' ? <User size={16} className="text-zinc-500" /> : <Bot size={16} className="text-accent" />}
+                  <div className={`flex gap-3 ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'} animate-in fade-in slide-in-from-bottom-2 duration-300`}>
+                      <div className={`w-10 h-10 rounded-xl shrink-0 flex items-center justify-center border shadow-sm ${msg.role === 'user' ? 'bg-zinc-800 border-zinc-700' : 'bg-zinc-900 border-zinc-800'}`}>
+                          {msg.role === 'user' ? <User size={20} className="text-zinc-500" /> : <Bot size={20} className="text-accent" />}
                       </div>
                       <div className={`max-w-[85%] space-y-2 ${msg.role === 'user' ? 'items-end' : 'items-start'}`}>
                           {(msg.content || (msg.isStreaming && isLoading)) && (
-                              <div className={`p-4 rounded-[1.8rem] text-[14px] leading-relaxed shadow-lg ${
+                              <div className={`p-5 rounded-[2rem] text-[15px] leading-relaxed shadow-lg ${
                                   msg.role === 'user' 
-                                  ? 'bg-accent text-black font-black rounded-tr-none' 
+                                  ? 'bg-accent text-black font-bold rounded-tr-none' 
                                   : 'bg-zinc-900/60 border border-zinc-800 text-zinc-100 rounded-tl-none'
                               }`}>
                                   <div className="prose prose-invert prose-sm max-w-none prose-p:my-1.5 prose-code:text-accent prose-headings:text-white">
@@ -341,7 +341,7 @@ const AIChat: React.FC = () => {
           </div>
         </div>
 
-        <div className="p-4 bg-zinc-950/80 backdrop-blur-xl border-t border-zinc-900 shrink-0 z-40">
+        <div className="p-4 bg-zinc-950/80 backdrop-blur-xl border-t border-zinc-900 shrink-0 z-40 pb-[calc(1rem+env(safe-area-inset-bottom))]">
           <div className="max-w-4xl mx-auto">
               <div className="flex items-center gap-2 bg-zinc-900 p-2 rounded-[2.2rem] border border-zinc-800 focus-within:border-accent/40 transition-all shadow-2xl relative group">
                   <textarea

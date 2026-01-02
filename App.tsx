@@ -202,7 +202,7 @@ const AppContent: React.FC = () => {
 
       <main 
         tabIndex={-1}
-        className={`flex-1 max-w-5xl mx-auto w-full relative outline-none focus:outline-none focus-visible:outline-none ${[ViewState.AI_CHAT, ViewState.ARCHITECT].includes(currentView) ? 'overflow-hidden pb-24' : 'overflow-y-auto overflow-x-hidden p-0 scroll-smooth pb-32'}`}
+        className={`flex-1 max-w-5xl mx-auto w-full relative outline-none focus:outline-none focus-visible:outline-none ${[ViewState.AI_CHAT, ViewState.ARCHITECT].includes(currentView) ? 'overflow-hidden' : 'overflow-y-auto overflow-x-hidden p-0 scroll-smooth pb-32'}`}
       >
         {!session ? <Auth /> : renderContent()}
         {showThemePicker && (

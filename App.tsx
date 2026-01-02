@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Home, Package, BookOpen, Bot, User, Palette } from 'lucide-react';
+import { Home, Package, BookOpen, Bot, User, Palette, X } from 'lucide-react';
 import SystemMonitor from './components/SystemMonitor';
 import { ViewState } from './types';
 import { supabase } from './supabase';
@@ -210,8 +210,8 @@ const AppContent: React.FC = () => {
             <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 w-full max-w-xs shadow-2xl animate-in fade-in zoom-in-95 duration-200">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-lg font-bold text-white tracking-tight">Select Accent</h3>
-                <button onClick={() => setShowThemePicker(false)} className="p-2 text-zinc-500 hover:text-white transition-colors">
-                  <Palette size={18} />
+                <button onClick={() => setShowThemePicker(false)} className="p-2 text-zinc-500 hover:text-white transition-colors bg-zinc-900 rounded-lg border border-zinc-800">
+                  <X size={18} />
                 </button>
               </div>
               <div className="grid grid-cols-4 gap-3">

@@ -161,25 +161,25 @@ const Architect: React.FC = () => {
       <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-blue-500/10 blur-[120px] rounded-full" />
       <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-accent/5 blur-[100px] rounded-full" />
 
-      <div className="flex-1 overflow-y-auto p-4 md:p-12 space-y-6 relative z-10 no-scrollbar">
+      <div className="flex-1 overflow-y-auto p-4 md:p-12 space-y-6 relative z-10 no-scrollbar pb-32">
         {!result && !isGenerating && (
-            <div className="mt-16 flex flex-col items-center text-center space-y-6 animate-in fade-in slide-in-from-bottom-10 duration-1000">
+            <div className="mt-8 flex flex-col items-center text-center space-y-4 animate-in fade-in slide-in-from-bottom-10 duration-1000">
                 <div className="relative">
                     <div className="absolute inset-0 bg-blue-500/20 blur-2xl animate-pulse rounded-full" />
-                    <div className="w-24 h-24 bg-zinc-900 border border-zinc-800 rounded-[2.5rem] flex items-center justify-center relative z-10 shadow-2xl">
-                        <Command size={42} className="text-blue-400" />
+                    <div className="w-20 h-20 bg-zinc-900 border border-zinc-800 rounded-[2rem] flex items-center justify-center relative z-10 shadow-2xl">
+                        <Command size={36} className="text-blue-400" />
                     </div>
                 </div>
-                <div className="space-y-2">
-                    <h2 className="text-4xl font-black text-white tracking-tighter uppercase md:text-5xl">X-Architect</h2>
-                    <p className="text-zinc-500 text-sm max-w-xs mx-auto leading-relaxed font-medium">
+                <div className="space-y-1">
+                    <h2 className="text-3xl font-black text-white tracking-tighter uppercase md:text-5xl">X-Architect</h2>
+                    <p className="text-zinc-500 text-[11px] max-w-[240px] mx-auto leading-relaxed font-medium">
                         Enter your vision. We will synthesize the core logic into an executable blueprint.
                     </p>
                 </div>
                 
-                <div className="flex flex-wrap justify-center gap-2 mt-4">
-                    {['Auto Backup Tool', 'Network Guard', 'System Optimizer', 'File Encryptor'].map(tag => (
-                        <button key={tag} onClick={() => setPrompt(tag)} className="px-5 py-2.5 bg-zinc-900/50 backdrop-blur-md border border-zinc-800/50 rounded-2xl text-[10px] font-black uppercase tracking-widest text-zinc-400 hover:text-blue-400 hover:border-blue-400/30 transition-all active:scale-95">
+                <div className="flex flex-wrap justify-center gap-2 mt-2">
+                    {['Backup Tool', 'Network Guard', 'System Opt', 'Encryptor'].map(tag => (
+                        <button key={tag} onClick={() => setPrompt(tag)} className="px-4 py-2 bg-zinc-900/50 backdrop-blur-md border border-zinc-800/50 rounded-xl text-[9px] font-black uppercase tracking-widest text-zinc-400 hover:text-blue-400 hover:border-blue-400/30 transition-all active:scale-95">
                             {tag}
                         </button>
                     ))}
@@ -297,27 +297,27 @@ const Architect: React.FC = () => {
       </div>
 
       {/* iOS Centered Input Bar */}
-      <div className="p-4 bg-transparent shrink-0 relative z-20">
+      <div className="p-4 bg-transparent shrink-0 relative z-20 mb-20">
         <div className="max-w-4xl mx-auto">
-            <div className="bg-zinc-900/70 backdrop-blur-2xl p-2 rounded-[2.8rem] border border-zinc-800/50 flex items-center gap-2 shadow-[0_20px_50px_rgba(0,0,0,0.4)] focus-within:ring-2 focus-within:ring-blue-500/20 transition-all overflow-hidden">
+            <div className="bg-zinc-900/70 backdrop-blur-2xl p-1.5 rounded-[2rem] border border-zinc-800/50 flex items-center gap-2 shadow-[0_20px_50px_rgba(0,0,0,0.4)] focus-within:ring-2 focus-within:ring-blue-500/20 transition-all overflow-hidden">
                 <textarea
                     value={prompt}
                     onChange={(e) => setPrompt(e.target.value)}
-                    placeholder="What should I architect for you?"
-                    className="flex-1 bg-transparent text-white py-3 px-5 resize-none focus:outline-none text-[14px] font-medium leading-tight max-h-24 no-scrollbar placeholder:text-zinc-700 text-center"
+                    placeholder="Describe your script..."
+                    className="flex-1 bg-transparent text-white py-2.5 px-4 resize-none focus:outline-none text-[13px] font-medium leading-tight max-h-20 no-scrollbar placeholder:text-zinc-700 text-center"
                     rows={1}
                     disabled={isGenerating}
                 />
                 <button 
                     onClick={handleGenerate} 
                     disabled={!prompt.trim() || isGenerating} 
-                    className={`p-3.5 rounded-full transition-all shadow-xl active:scale-90 shrink-0 ${
+                    className={`p-3 rounded-full transition-all shadow-xl active:scale-90 shrink-0 ${
                         prompt.trim() && !isGenerating 
                         ? 'bg-blue-600 text-white hover:bg-blue-500 shadow-blue-600/20' 
                         : 'bg-zinc-800 text-zinc-600 opacity-50'
                     }`}
                 >
-                    {isGenerating ? <Loader2 size={20} className="animate-spin" /> : <Send size={20} strokeWidth={2.5} />}
+                    {isGenerating ? <Loader2 size={18} className="animate-spin" /> : <Send size={18} strokeWidth={2.5} />}
                 </button>
             </div>
         </div>

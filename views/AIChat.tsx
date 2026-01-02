@@ -7,8 +7,49 @@ import CodeBlock from '../components/CodeBlock';
 import { showToast } from '../components/Toast';
 import { supabase } from '../supabase';
 
+import { LanguageProvider, useLanguage } from '../LanguageContext';
+
 const AIChat: React.FC = () => {
+  const { language } = useLanguage();
   const [sessions, setSessions] = useState<any[]>([]);
+  
+  const translations = {
+    en: {
+      header: "Neural Link",
+      active: "Active",
+      newChat: "New Conversation",
+      placeholder: "Type a command...",
+      quantum: "Quantum Processing Active",
+      history: "Sessions",
+      copyToast: "Copied to clipboard",
+      deletedToast: "Conversation deleted",
+      suggestions: ["How to install scripts?", "Best Termux tools?", "Optimization guide", "Neural Link help"]
+    },
+    id: {
+      header: "Tautan Syaraf",
+      active: "Aktif",
+      newChat: "Percakapan Baru",
+      placeholder: "Ketik perintah...",
+      quantum: "Pemrosesan Kuantum Aktif",
+      history: "Sesi",
+      copyToast: "Disalin ke papan klip",
+      deletedToast: "Percakapan dihapus",
+      suggestions: ["Cara instal skrip?", "Alat Termux terbaik?", "Panduan optimasi", "Bantuan Tautan Syaraf"]
+    },
+    hi: {
+      header: "न्यूरल लिंक",
+      active: "सक्रिय",
+      newChat: "नई बातचीत",
+      placeholder: "कमांड टाइप करें...",
+      quantum: "क्वांटम प्रोसेसिंग सक्रिय",
+      history: "सत्र",
+      copyToast: "क्लिपबोर्ड पर कॉपी किया गया",
+      deletedToast: "बातचीत हटा दी गई",
+      suggestions: ["स्क्रिप्ट कैसे इंस्टॉल करें?", "सर्वश्रेष्ठ Termux टूल?", "अनुकूलन मार्गदर्शिका", "न्यूरल लिंक सहायता"]
+    }
+  };
+
+  const t = translations[language];
   const [currentSessionId, setCurrentSessionId] = useState<string | null>(null);
   const [messages, setMessages] = useState<any[]>([]);
   const [input, setInput] = useState('');
@@ -192,8 +233,8 @@ const AIChat: React.FC = () => {
         <div className="flex items-center gap-3">
           <button onClick={() => setIsSidebarOpen(true)} className="p-2 bg-zinc-900 border border-white/5 rounded-xl text-zinc-400"><Menu size={18} /></button>
           <div>
-            <h2 className="text-xs font-black text-white uppercase tracking-widest">Neural Link</h2>
-            <div className="flex items-center gap-1.5"><div className="w-1 h-1 rounded-full bg-accent animate-pulse" /><span className="text-[8px] font-bold text-zinc-600 uppercase">Active</span></div>
+            <h2 className="text-xs font-black text-white uppercase tracking-widest">{t.header}</h2>
+            <div className="flex items-center gap-1.5"><div className="w-1 h-1 rounded-full bg-accent animate-pulse" /><span className="text-[8px] font-bold text-zinc-600 uppercase">{t.active}</span></div>
           </div>
         </div>
         <button onClick={() => setMessages([])} className="p-2 text-zinc-600"><Eraser size={18} /></button>
@@ -210,17 +251,12 @@ const AIChat: React.FC = () => {
             </div>
             
             <div className="text-center space-y-1 shrink-0">
-              <h3 className="text-lg font-black text-white uppercase tracking-tighter italic">Neural Link v4.0</h3>
-              <p className="text-[9px] text-zinc-500 font-bold uppercase tracking-[0.3em]">Quantum Processing Active</p>
+              <h3 className="text-lg font-black text-white uppercase tracking-tighter italic">{t.header} v4.0</h3>
+              <p className="text-[9px] text-zinc-500 font-bold uppercase tracking-[0.3em]">{t.quantum}</p>
             </div>
 
             <div className="grid grid-cols-2 gap-2 w-full max-w-sm px-2">
-              {[
-                "How to install scripts?",
-                "Best Termux tools?",
-                "Optimization guide",
-                "Neural Link help"
-              ].map((suggestion, i) => (
+              {t.suggestions.map((suggestion, i) => (
                 <button 
                   key={i}
                   onClick={() => { setInput(suggestion); }}
@@ -311,7 +347,7 @@ const AIChat: React.FC = () => {
 
       <div className="p-4 bg-black/80 backdrop-blur-xl border-t border-white/5 pb-20 shrink-0">
         <div className="flex items-center gap-2 bg-zinc-900 p-1.5 rounded-2xl border border-white/5">
-          <textarea value={input} onChange={(e) => setInput(e.target.value)} placeholder="Type a command..." className="flex-1 bg-transparent text-white py-2 px-3 resize-none focus:outline-none text-xs max-h-24 no-scrollbar" rows={1} />
+          <textarea value={input} onChange={(e) => setInput(e.target.value)} placeholder={t.placeholder} className="flex-1 bg-transparent text-white py-2 px-3 resize-none focus:outline-none text-xs max-h-24 no-scrollbar" rows={1} />
           <button onClick={handleSend} disabled={!input.trim() || isLoading} className="p-3 bg-accent text-black rounded-xl active:scale-95 transition-all">
             {isLoading ? <Loader2 size={18} className="animate-spin" /> : <Send size={18} />}
           </button>
@@ -323,7 +359,7 @@ const AIChat: React.FC = () => {
           <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={() => setIsSidebarOpen(false)} />
           <aside className="relative w-72 bg-zinc-950 h-full border-r border-white/10 flex flex-col animate-in slide-in-from-left duration-300">
             <div className="p-4 border-b border-white/5 flex items-center justify-between">
-              <h3 className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">Sessions</h3>
+              <h3 className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">{t.history}</h3>
               <button onClick={() => setIsSidebarOpen(false)} className="text-zinc-600"><X size={18} /></button>
             </div>
             
@@ -333,7 +369,7 @@ const AIChat: React.FC = () => {
                 className="w-full p-3 bg-accent/10 border border-accent/20 rounded-xl text-accent text-xs font-bold flex items-center justify-center gap-2 hover:bg-accent/20 transition-all"
               >
                 <Plus size={16} />
-                New Conversation
+                {t.newChat}
               </button>
             </div>
 

@@ -6,8 +6,19 @@ import { GUIDES } from '../constants';
 import CodeBlock from '../components/CodeBlock';
 import { showToast } from '../components/Toast';
 
+import { LanguageProvider, useLanguage } from '../LanguageContext';
+
 const Guides: React.FC = () => {
+  const { language } = useLanguage();
   const [expandedId, setExpandedId] = useState<string | null>(null);
+
+  const translations = {
+    en: { header: "Codex", sub: "Protocols" },
+    id: { header: "Kodeks", sub: "Protokol" },
+    hi: { header: "कोडेक्स", sub: "प्रोटोकॉल" }
+  };
+
+  const t = translations[language];
   const [completedSteps, setCompletedSteps] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
@@ -26,8 +37,8 @@ const Guides: React.FC = () => {
     <div className="p-4 space-y-4 pb-32 bg-black min-h-full">
       <header className="flex items-center justify-between px-2 mb-6">
         <div>
-          <h2 className="text-sm font-black text-white uppercase tracking-widest">Codex</h2>
-          <p className="text-[9px] text-zinc-600 font-bold uppercase tracking-widest">Protocols</p>
+          <h2 className="text-sm font-black text-white uppercase tracking-widest">{t.header}</h2>
+          <p className="text-[9px] text-zinc-600 font-bold uppercase tracking-widest">{t.sub}</p>
         </div>
         <button onClick={() => { setCompletedSteps({}); localStorage.removeItem('xtermux_guide_progress'); }} className="p-2 bg-zinc-900 border border-white/5 rounded-xl text-zinc-600 hover:text-red-400 transition-all">
           <RotateCcw size={16} />

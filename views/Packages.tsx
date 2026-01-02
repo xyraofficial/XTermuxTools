@@ -8,21 +8,47 @@ import { showToast } from '../components/Toast';
 type CategoryType = 'All' | 'Development' | 'System' | 'Network' | 'Utility' | 'Saved';
 type SortOrder = 'AZ' | 'ZA';
 
-const CATEGORIES: { name: CategoryType; icon: string }[] = [
+import { LanguageProvider, useLanguage } from '../LanguageContext';
+
+const Packages: React.FC = () => {
+  const { language } = useLanguage();
+  const [searchTerm, setSearchTerm] = useState('');
+  
+  const translations = {
+    en: {
+      search: "Search Vault...",
+      removed: "Removed",
+      saved: "Saved",
+      categories: { All: "All", Saved: "Saved", Development: "Development", System: "System", Network: "Network", Utility: "Utility" }
+    },
+    id: {
+      search: "Cari Gudang...",
+      removed: "Dihapus",
+      saved: "Disimpan",
+      categories: { All: "Semua", Saved: "Tersimpan", Development: "Pengembangan", System: "Sistem", Network: "Jaringan", Utility: "Utilitas" }
+    },
+    hi: {
+      search: "वॉल्ट खोजें...",
+      removed: "हटाया गया",
+      saved: "सहेजा गया",
+      categories: { All: "सभी", Saved: "सहेजा गया", Development: "विकास", System: "सिस्टम", Network: "नेटवर्क", Utility: "उपयोगिता" }
+    }
+  };
+
+  const t = translations[language];
+  
+  const CATEGORIES: { name: CategoryType; icon: string }[] = [
     { name: 'All', icon: '📦' },
     { name: 'Saved', icon: '❤️' },
     { name: 'Development', icon: '💻' },
     { name: 'System', icon: '⚙️' },
     { name: 'Network', icon: '🌐' },
     { name: 'Utility', icon: '🔧' },
-];
+  ];
+  const FAVORITES_KEY = 'xtermux_favorites';
+  const INSTALL_QUEUE_KEY = 'xtermux_install_queue';
+  const ITEMS_PER_PAGE = 15;
 
-const FAVORITES_KEY = 'xtermux_favorites';
-const INSTALL_QUEUE_KEY = 'xtermux_install_queue';
-const ITEMS_PER_PAGE = 15;
-
-const Packages: React.FC = () => {
-  const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<CategoryType>('All');
   const [sortOrder, setSortOrder] = useState<SortOrder>('AZ');
   const [favorites, setFavorites] = useState<string[]>([]);
@@ -42,7 +68,7 @@ const Packages: React.FC = () => {
     const newFavs = favorites.includes(id) ? favorites.filter(fid => fid !== id) : [...favorites, id];
     setFavorites(newFavs);
     localStorage.setItem(FAVORITES_KEY, JSON.stringify(newFavs));
-    showToast(favorites.includes(id) ? 'Removed' : 'Saved', 'info');
+    showToast(favorites.includes(id) ? t.removed : t.saved, 'info');
     window.dispatchEvent(new CustomEvent('favorites-updated'));
   };
 
@@ -69,7 +95,7 @@ const Packages: React.FC = () => {
         <div className="relative">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500" size={16} />
           <input 
-            type="text" placeholder="Search Vault..." value={searchTerm}
+            type="text" placeholder={t.search} value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full bg-zinc-900 border border-white/5 pl-11 pr-4 py-3 rounded-2xl text-sm focus:border-accent/50 transition-all outline-none"
           />
@@ -79,7 +105,7 @@ const Packages: React.FC = () => {
             <button key={cat.name} onClick={() => setSelectedCategory(cat.name)}
               className={`px-4 py-2 rounded-xl border whitespace-nowrap text-[11px] font-black uppercase tracking-widest transition-all ${selectedCategory === cat.name ? 'bg-accent text-black border-accent' : 'bg-zinc-900 border-white/5 text-zinc-500'}`}
             >
-              {cat.icon} {cat.name}
+              {cat.icon} {(t.categories as any)[cat.name]}
             </button>
           ))}
         </div>

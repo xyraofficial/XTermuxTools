@@ -4,10 +4,47 @@ import { SCRIPTS } from '../constants';
 import CodeBlock from '../components/CodeBlock';
 import { showToast } from '../components/Toast';
 
-const CATEGORIES = ['All', 'Phishing', 'OSINT', 'Exploit', 'Utility', 'Spam'];
+import { LanguageProvider, useLanguage } from '../LanguageContext';
 
 const Scripts: React.FC = () => {
+  const { language } = useLanguage();
   const [searchTerm, setSearchTerm] = useState('');
+
+  const translations = {
+    en: {
+      search: "Search Scripts...",
+      desc: "Protocol Description",
+      req: "Required Packages",
+      guide: "Setup Guide (Termux)",
+      copied: "Copied!",
+      output: "Live Output Preview",
+      github: "View On GitHub",
+      cats: { All: 'All', Phishing: 'Phishing', OSINT: 'OSINT', Exploit: 'Exploit', Utility: 'Utility', Spam: 'Spam' }
+    },
+    id: {
+      search: "Cari Skrip...",
+      desc: "Deskripsi Protokol",
+      req: "Paket Diperlukan",
+      guide: "Panduan Penyiapan (Termux)",
+      copied: "Disalin!",
+      output: "Pratinjau Output Langsung",
+      github: "Lihat Di GitHub",
+      cats: { All: 'Semua', Phishing: 'Phishing', OSINT: 'OSINT', Exploit: 'Eksploit', Utility: 'Utilitas', Spam: 'Spam' }
+    },
+    hi: {
+      search: "स्क्रिप्ट खोजें...",
+      desc: "प्रोटोकॉल विवरण",
+      req: "आवश्यक पैकेज",
+      guide: "सेटअप गाइड (Termux)",
+      copied: "कॉपी किया गया!",
+      output: "लाइव आउटपुट पूर्वावलोकन",
+      github: "GitHub पर देखें",
+      cats: { All: 'सभी', Phishing: 'फ़िशिंग', OSINT: 'OSINT', Exploit: 'एक्सप्लोइट', Utility: 'उपयोगिता', Spam: 'स्पैम' }
+    }
+  };
+
+  const t = translations[language];
+  const CATEGORIES = ['All', 'Phishing', 'OSINT', 'Exploit', 'Utility', 'Spam'];
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedScript, setSelectedScript] = useState<any>(null);
 
@@ -24,7 +61,7 @@ const Scripts: React.FC = () => {
         <div className="relative">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500" size={16} />
           <input 
-            type="text" placeholder="Search Scripts..." value={searchTerm}
+            type="text" placeholder={t.search} value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full bg-zinc-900 border border-white/5 pl-11 pr-4 py-3 rounded-2xl text-sm focus:border-green-500/50 transition-all outline-none"
           />
@@ -34,7 +71,7 @@ const Scripts: React.FC = () => {
             <button key={cat} onClick={() => setSelectedCategory(cat)}
               className={`px-4 py-2 rounded-xl border whitespace-nowrap text-[11px] font-black uppercase tracking-widest transition-all ${selectedCategory === cat ? 'bg-green-500 text-black border-green-500' : 'bg-zinc-900 border-white/5 text-zinc-500'}`}
             >
-              {cat}
+              {(t.cats as any)[cat]}
             </button>
           ))}
         </div>
@@ -72,13 +109,13 @@ const Scripts: React.FC = () => {
             </div>
             <div className="p-6 overflow-y-auto space-y-6 no-scrollbar">
               <div className="space-y-2">
-                <span className="text-[10px] font-black text-zinc-600 uppercase tracking-widest">Protocol Description</span>
+                <span className="text-[10px] font-black text-zinc-600 uppercase tracking-widest">{t.desc}</span>
                 <p className="text-sm text-zinc-400 leading-relaxed">{selectedScript.description}</p>
               </div>
 
               {selectedScript.requiredPackages && selectedScript.requiredPackages.length > 0 && (
                 <div className="space-y-2">
-                  <span className="text-[10px] font-black text-zinc-600 uppercase tracking-widest">Required Packages</span>
+                  <span className="text-[10px] font-black text-zinc-600 uppercase tracking-widest">{t.req}</span>
                   <div className="flex flex-wrap gap-2">
                     {selectedScript.requiredPackages.map((pkg: string) => (
                       <span key={pkg} className="px-3 py-1 bg-green-500/10 border border-green-500/20 rounded-lg text-green-500 text-[10px] font-black uppercase">
@@ -91,7 +128,7 @@ const Scripts: React.FC = () => {
 
               {selectedScript.setupInfo && (
                 <div className="space-y-2">
-                  <span className="text-[10px] font-black text-zinc-600 uppercase tracking-widest">Setup Guide (Termux)</span>
+                  <span className="text-[10px] font-black text-zinc-600 uppercase tracking-widest">{t.guide}</span>
                   <div className="bg-zinc-900/50 border border-white/5 rounded-2xl overflow-hidden">
                     <div className="p-4 border-b border-white/5">
                       <p className="text-xs text-zinc-500 leading-relaxed italic">"{selectedScript.setupInfo}"</p>
@@ -110,7 +147,7 @@ const Scripts: React.FC = () => {
                             termux-setup-storage && pkg update && pkg upgrade -y
                           </div>
                           <button 
-                            onClick={() => { navigator.clipboard.writeText('termux-setup-storage && pkg update && pkg upgrade -y'); showToast('Copied!', 'success'); }} 
+                            onClick={() => { navigator.clipboard.writeText('termux-setup-storage && pkg update && pkg upgrade -y'); showToast(t.copied, 'success'); }} 
                             className="absolute top-1/2 -translate-y-1/2 right-3 p-1.5 bg-zinc-800/80 backdrop-blur-sm border border-white/5 rounded-lg text-zinc-500 hover:text-white hover:border-green-500/30 transition-all active:scale-90 opacity-100"
                           >
                             <Copy size={12} />
@@ -131,7 +168,7 @@ const Scripts: React.FC = () => {
                               pkg install {selectedScript.requiredPackages.join(' ')} -y
                             </div>
                             <button 
-                              onClick={() => { navigator.clipboard.writeText(`pkg install ${selectedScript.requiredPackages.join(' ')} -y`); showToast('Copied!', 'success'); }} 
+                              onClick={() => { navigator.clipboard.writeText(`pkg install ${selectedScript.requiredPackages.join(' ')} -y`); showToast(t.copied, 'success'); }} 
                               className="absolute top-1/2 -translate-y-1/2 right-3 p-1.5 bg-zinc-800/80 backdrop-blur-sm border border-white/5 rounded-lg text-zinc-500 hover:text-white hover:border-green-500/30 transition-all active:scale-90 opacity-100"
                             >
                               <Copy size={12} />
@@ -152,7 +189,7 @@ const Scripts: React.FC = () => {
                             {selectedScript.installCommand}
                           </div>
                           <button 
-                            onClick={() => { navigator.clipboard.writeText(selectedScript.installCommand); showToast('Copied!', 'success'); }} 
+                            onClick={() => { navigator.clipboard.writeText(selectedScript.installCommand); showToast(t.copied, 'success'); }} 
                             className="absolute top-1/2 -translate-y-1/2 right-3 p-1.5 bg-zinc-800/80 backdrop-blur-sm border border-white/5 rounded-lg text-zinc-500 hover:text-white hover:border-green-500/30 transition-all active:scale-90 opacity-100"
                           >
                             <Copy size={12} />
@@ -165,7 +202,7 @@ const Scripts: React.FC = () => {
               )}
 
               <div className="space-y-2">
-                <span className="text-[10px] font-black text-zinc-600 uppercase tracking-widest">Live Output Preview</span>
+                <span className="text-[10px] font-black text-zinc-600 uppercase tracking-widest">{t.output}</span>
                 <div className="bg-black border border-white/5 rounded-2xl overflow-hidden shadow-inner relative">
                   <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-20">
                     <div className="w-full h-[2px] bg-green-500/50 absolute top-0 animate-scanline shadow-[0_0_10px_green]"></div>
@@ -181,7 +218,7 @@ const Scripts: React.FC = () => {
                 </div>
               </div>
               <button onClick={() => window.open(selectedScript.githubUrl, '_blank')} className="w-full py-4 bg-white/5 border border-white/5 rounded-2xl flex items-center justify-center gap-3 text-white font-black text-xs uppercase tracking-widest hover:bg-white/10 transition-colors">
-                <Github size={18} /> View On GitHub
+                <Github size={18} /> {t.github}
               </button>
             </div>
           </div>

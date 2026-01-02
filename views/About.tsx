@@ -10,6 +10,8 @@ const About: React.FC = () => {
   const { language } = useLanguage();
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [username, setUsername] = useState('');
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const translations = {
     en: {

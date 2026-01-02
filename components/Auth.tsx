@@ -94,7 +94,24 @@ export const Auth: React.FC = () => {
 
   const handleSupportSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const mailto = `mailto:xyraofficialsup@gmail.com?subject=Support Request&body=${encodeURIComponent(supportMessage)}\n\n--Support Info--\nApp: XTermux\nLanguage: ${language}`;
+    
+    let body = encodeURIComponent(supportMessage);
+    body += encodeURIComponent('\n\n--Support Info--\nApp: XTermux\nLanguage: ' + language);
+    
+    // Check if there are screenshots and add them as base64 or mention them
+    const hasScreenshots = screenshots.some(s => s !== null);
+    if (hasScreenshots) {
+      body += encodeURIComponent('\n\n--Screenshots Attached (Base64)--\n');
+      screenshots.forEach((s, i) => {
+        if (s) {
+          // Truncate for mailto limits but try to include what we can
+          // Note: mailto has character limits, but this is the requested fix
+          body += encodeURIComponent(`\nScreenshot ${i + 1}:\n${s.substring(0, 1000)}... [truncated]`);
+        }
+      });
+    }
+
+    const mailto = `mailto:xyraofficialsup@gmail.com?subject=Support Request&body=${body}`;
     window.location.href = mailto;
     setStep('welcome');
     setSupportMessage('');
@@ -436,55 +453,62 @@ export const Auth: React.FC = () => {
 
         <form onSubmit={handleAuth} className="space-y-6">
           <div className="group space-y-2">
-            <div className="flex items-center justify-between text-[#8696a0] text-sm font-medium transition-colors group-focus-within:text-[#00a884]">
-              <span>Your Email</span>
-              <ChevronDown size={16} className="transition-transform group-focus-within:rotate-180" />
+            <div className="flex items-center justify-between text-[#8696a0] text-xs font-semibold uppercase tracking-wider transition-colors group-focus-within:text-[#00a884] px-1">
+              <span>{t.yourEmail}</span>
             </div>
-            <div className="relative border-b-2 border-[#202c33] pb-1 transition-colors group-focus-within:border-[#00a884]">
-              <input
-                type="email"
-                placeholder="email@example.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full bg-transparent border-none outline-none text-[#e9edef] text-xl placeholder:text-[#8696a0]/20 py-1"
-                required
-              />
+            <div className="relative bg-[#233138] rounded-xl p-4 transition-all border border-transparent group-focus-within:border-[#00a884]/30 group-focus-within:bg-[#2a3942]">
+              <div className="flex items-center gap-3">
+                <Mail size={20} className="text-[#8696a0]" />
+                <input
+                  type="email"
+                  placeholder="email@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full bg-transparent border-none outline-none text-[#e9edef] text-lg placeholder:text-[#8696a0]/30"
+                  required
+                />
+              </div>
             </div>
           </div>
 
           {!isResetting && (
             <div className="group space-y-2">
-              <div className="flex items-center justify-between text-[#8696a0] text-sm font-medium transition-colors group-focus-within:text-[#00a884]">
+              <div className="flex items-center justify-between text-[#8696a0] text-xs font-semibold uppercase tracking-wider transition-colors group-focus-within:text-[#00a884] px-1">
                 <span>Password</span>
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="hover:text-[#00a884] transition-colors"
+                  className="text-[#8696a0] hover:text-[#00a884] transition-colors"
                 >
                   {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
               </div>
-              <div className="relative border-b-2 border-[#202c33] pb-1 transition-colors group-focus-within:border-[#00a884]">
-                <input
-                  type={showPassword ? 'text' : 'password'}
-                  placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full bg-transparent border-none outline-none text-[#e9edef] text-xl placeholder:text-[#8696a0]/20 py-1 tracking-wider"
-                  required
-                />
+              <div className="relative bg-[#233138] rounded-xl p-4 transition-all border border-transparent group-focus-within:border-[#00a884]/30 group-focus-within:bg-[#2a3942]">
+                <div className="flex items-center gap-3">
+                  <Lock size={20} className="text-[#8696a0]" />
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    placeholder="••••••••"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="w-full bg-transparent border-none outline-none text-[#e9edef] text-lg placeholder:text-[#8696a0]/30 tracking-wider"
+                    required
+                  />
+                </div>
               </div>
             </div>
           )}
 
-          <div className="pt-8">
+          <div className="pt-4">
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-[#00a884] text-[#0b141a] font-medium py-3 rounded-full hover:bg-[#06cf9c] transition-colors active:scale-95 disabled:bg-[#111b21] disabled:text-[#8696a0] flex items-center justify-center gap-2"
+              className="w-full bg-[#00a884] text-[#0b141a] font-bold py-4 rounded-xl hover:bg-[#06cf9c] shadow-lg shadow-[#00a884]/10 transition-all active:scale-[0.98] disabled:bg-[#111b21] disabled:text-[#8696a0] flex items-center justify-center gap-2"
             >
               {loading && <Loader2 className="animate-spin" size={20} />}
-              {isResetting ? 'NEXT' : (isSignUp ? 'SIGN UP' : 'NEXT')}
+              <span className="tracking-wide">
+                {isResetting ? 'SEND RESET LINK' : (isSignUp ? 'CREATE ACCOUNT' : 'SIGN IN')}
+              </span>
             </button>
           </div>
         </form>

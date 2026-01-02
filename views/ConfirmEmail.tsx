@@ -52,7 +52,7 @@ const ConfirmEmail: React.FC<ConfirmEmailProps> = ({ onNavigate }) => {
               </p>
               
               <button 
-                onClick={() => onNavigate('HOME')}
+                onClick={() => onNavigate('ABOUT')}
                 className="w-full bg-accent text-black font-black py-4 rounded-2xl hover:scale-[1.02] active:scale-95 transition-all shadow-lg shadow-accent/20 flex items-center justify-center gap-3 group"
               >
                 <span>LAUNCH TOOLBOX</span>

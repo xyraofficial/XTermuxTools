@@ -23,7 +23,7 @@ const ResetPassword = () => {
       setCompleted(true);
       showToast('Password updated successfully!', 'success');
       setTimeout(() => {
-        window.location.href = '/';
+        window.location.href = '/about';
       }, 2000);
     } catch (error: any) {
       showToast(error.message, 'error');

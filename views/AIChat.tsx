@@ -237,8 +237,20 @@ const AIChat: React.FC = () => {
               <div className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 border ${msg.role === 'user' ? 'bg-zinc-800 border-white/10' : 'bg-zinc-900 border-accent/20'}`}>
                 {msg.role === 'user' ? <User size={14} className="text-zinc-400" /> : <Bot size={14} className="text-accent" />}
               </div>
-              <div className={`max-w-[85%] p-4 rounded-2xl text-xs leading-relaxed ${msg.role === 'user' ? 'bg-accent text-black font-bold rounded-tr-none' : 'bg-zinc-900/50 border border-white/5 text-zinc-300 rounded-tl-none'}`}>
-                <ReactMarkdown remarkPlugins={[remarkGfm]} components={{ code: ({ children }) => <code className="bg-white/10 px-1 rounded text-accent font-mono">{children}</code> }}>{msg.content}</ReactMarkdown>
+              <div className={`max-w-[85%] p-4 rounded-2xl text-xs leading-relaxed ${msg.role === 'user' ? 'bg-accent text-black font-bold rounded-tr-none' : 'bg-zinc-900/50 border border-white/5 text-zinc-300 rounded-tl-none overflow-x-auto'}`}>
+                <ReactMarkdown 
+                  remarkPlugins={[remarkGfm]} 
+                  components={{ 
+                    code: ({ children, ...props }) => {
+                      const inline = (props as any).inline;
+                      return inline 
+                        ? <code className="bg-white/10 px-1 rounded text-accent font-mono">{children}</code>
+                        : <div className="my-2 overflow-x-auto"><code className="block bg-black/40 p-3 rounded-lg border border-white/5 text-accent font-mono whitespace-pre">{children}</code></div>
+                    }
+                  }}
+                >
+                  {msg.content}
+                </ReactMarkdown>
               </div>
             </div>
           ))

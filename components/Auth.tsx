@@ -416,123 +416,112 @@ export const Auth: React.FC = () => {
           )}
         </div>
 
-          <div className="flex flex-col items-center gap-8 flex-1 justify-center max-w-sm w-full">
-            <div className="relative">
-              <div className="w-48 h-48 bg-[#111b21] rounded-full flex items-center justify-center relative overflow-hidden animate-breathing">
-                <div className="absolute inset-0 opacity-10 flex flex-wrap gap-3 p-4 animate-parallax">
-                  {[...Array(20)].map((_, i) => (
-                    <MessageSquare key={i} size={14} />
-                  ))}
-                </div>
-                <div className="relative z-10 flex flex-col items-center scale-90">
-                  <div className="flex gap-3 mb-3">
-                    <div className="w-10 h-10 bg-[#25d366] rounded-xl flex items-center justify-center transform -rotate-6 animate-float-delayed">
-                      <MessageSquare size={20} className="text-[#0b141a]" />
-                    </div>
-                    <div className="w-10 h-10 bg-[#34b7f1] rounded-xl flex items-center justify-center transform rotate-6 animate-float-delayed delay-700">
-                      <Globe size={20} className="text-[#0b141a]" />
-                    </div>
+        <div className="flex flex-col items-center gap-8 flex-1 justify-center max-w-sm w-full">
+          <div className="relative">
+            <div className="w-48 h-48 bg-[#111b21] rounded-full flex items-center justify-center relative overflow-hidden animate-breathing">
+              <div className="absolute inset-0 opacity-10 flex flex-wrap gap-3 p-4 animate-parallax">
+                {[...Array(20)].map((_, i) => (
+                  <MessageSquare key={i} size={14} />
+                ))}
+              </div>
+              <div className="relative z-10 flex flex-col items-center scale-90">
+                <div className="flex gap-3 mb-3">
+                  <div className="w-10 h-10 bg-[#25d366] rounded-xl flex items-center justify-center transform -rotate-6 animate-float-delayed">
+                    <MessageSquare size={20} className="text-[#0b141a]" />
                   </div>
-                  <div className="w-14 h-14 bg-[#00a884] rounded-full flex items-center justify-center animate-glow-pulse">
-                    <Shield size={28} className="text-[#0b141a]" />
+                  <div className="w-10 h-10 bg-[#34b7f1] rounded-xl flex items-center justify-center transform rotate-6 animate-float-delayed delay-700">
+                    <Globe size={20} className="text-[#0b141a]" />
                   </div>
                 </div>
-              </div>
-              
-              {/* Ambient glow effect around the circle */}
-              <div className="absolute inset-0 bg-[#00a884]/5 blur-3xl rounded-full -z-10 animate-ambient-glow" />
-            </div>
-
-            <style dangerouslySetInnerHTML={{ __html: `
-              @keyframes breathing {
-                0%, 100% { transform: scale(1); box-shadow: 0 0 20px rgba(0, 168, 132, 0); }
-                50% { transform: scale(1.02); box-shadow: 0 0 40px rgba(0, 168, 132, 0.1); }
-              }
-              @keyframes parallax {
-                0%, 100% { transform: translate(0, 0); }
-                25% { transform: translate(4px, -4px); }
-                50% { transform: translate(-2px, 4px); }
-                75% { transform: translate(-4px, -2px); }
-              }
-              @keyframes float-delayed {
-                0%, 100% { transform: translateY(0) rotate(-6deg); }
-                50% { transform: translateY(-10px) rotate(0deg); }
-              }
-              @keyframes glow-pulse {
-                0%, 100% { filter: drop-shadow(0 0 2px rgba(0, 168, 132, 0.4)); transform: scale(1); }
-                50% { filter: drop-shadow(0 0 10px rgba(0, 168, 132, 0.8)); transform: scale(1.05); }
-              }
-              @keyframes ambient-glow {
-                0%, 100% { opacity: 0.3; transform: scale(1); }
-                50% { opacity: 0.6; transform: scale(1.2); }
-              }
-              .animate-breathing { animation: breathing 5s ease-in-out infinite; }
-              .animate-parallax { animation: parallax 10s ease-in-out infinite; }
-              .animate-float-delayed { animation: float-delayed 4s ease-in-out infinite; }
-              .animate-glow-pulse { animation: glow-pulse 3s ease-in-out infinite; }
-              .animate-ambient-glow { animation: ambient-glow 6s ease-in-out infinite; }
-              .delay-700 { animation-delay: 700ms; }
-            `}} />
-
-            <div className="text-center space-y-4">
-              <h1 className="text-3xl font-normal">{t.welcome}</h1>
-              <p className="text-[#8696a0] text-sm leading-relaxed px-4">
-                Read our <span onClick={(e) => handlePrivacyClick(e)} className="text-[#53bdeb] cursor-pointer">{t.privacy}</span>. Tap "{t.agree}" to accept the <span onClick={(e) => handleTermsClick(e)} className="text-[#53bdeb] cursor-pointer">{t.terms}</span>.
-              </p>
-            </div>
-
-            <div className="w-full space-y-6 relative">
-              <div 
-                onClick={() => setShowLanguagePicker(!showLanguagePicker)}
-                className="flex items-center justify-center gap-2 text-[#00a884] bg-[#111b21] py-2 px-4 rounded-full w-fit mx-auto cursor-pointer hover:bg-[#202c33] transition-colors"
-              >
-                <Globe size={18} />
-                <span className="text-sm">
-                  {language === 'en' ? 'English' : language === 'id' ? 'Bahasa Indonesia' : 'हिंदी (Hindi)'}
-                </span>
-                <ChevronDown size={16} />
-              </div>
-
-              {showLanguagePicker && (
-                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 bg-[#233138] rounded-lg shadow-xl py-2 border border-white/5 animate-in fade-in slide-in-from-bottom-2 duration-200">
-                  {[
-                    { id: 'en', label: 'English' },
-                    { id: 'id', label: 'Bahasa Indonesia' },
-                    { id: 'hi', label: 'हिंदी (Hindi)' }
-                  ].map((lang) => (
-                    <button
-                      key={lang.id}
-                      onClick={() => {
-                        setLanguage(lang.id as any);
-                        setShowLanguagePicker(false);
-                      }}
-                      className={`w-full text-left px-4 py-3 hover:bg-[#111b21] transition-colors text-sm ${language === lang.id ? 'text-[#00a884]' : 'text-[#e9edef]'}`}
-                    >
-                      {lang.label}
-                    </button>
-                  ))}
+                <div className="w-14 h-14 bg-[#00a884] rounded-full flex items-center justify-center animate-glow-pulse">
+                  <Shield size={28} className="text-[#0b141a]" />
                 </div>
-              )}
-
-              <button
-                onClick={() => setStep('form')}
-                className="w-full bg-[#00a884] text-[#0b141a] font-medium py-3 rounded-full hover:bg-[#06cf9c] transition-colors active:scale-95"
-              >
-                {t.agree}
-              </button>
-
-              <button
-                onClick={() => {
-                  setIsResetting(true);
-                  setIsSignUp(false);
-                  setStep('form');
-                }}
-                className="w-full text-[#53bdeb] text-sm font-medium hover:underline pt-2 text-center block"
-              >
-                {t.forgotPassword}
-              </button>
+              </div>
             </div>
+            
+            {/* Ambient glow effect around the circle */}
+            <div className="absolute inset-0 bg-[#00a884]/5 blur-3xl rounded-full -z-10 animate-ambient-glow" />
           </div>
+
+          <style dangerouslySetInnerHTML={{ __html: `
+            @keyframes breathing {
+              0%, 100% { transform: scale(1); box-shadow: 0 0 20px rgba(0, 168, 132, 0); }
+              50% { transform: scale(1.02); box-shadow: 0 0 40px rgba(0, 168, 132, 0.1); }
+            }
+            @keyframes parallax {
+              0%, 100% { transform: translate(0, 0); }
+              25% { transform: translate(4px, -4px); }
+              50% { transform: translate(-2px, 4px); }
+              75% { transform: translate(-4px, -2px); }
+            }
+            @keyframes float-delayed {
+              0%, 100% { transform: translateY(0) rotate(-6deg); }
+              50% { transform: translateY(-10px) rotate(0deg); }
+            }
+            @keyframes glow-pulse {
+              0%, 100% { filter: drop-shadow(0 0 2px rgba(0, 168, 132, 0.4)); transform: scale(1); }
+              50% { filter: drop-shadow(0 0 10px rgba(0, 168, 132, 0.8)); transform: scale(1.05); }
+            }
+            @keyframes ambient-glow {
+              0%, 100% { opacity: 0.3; transform: scale(1); }
+              50% { opacity: 0.6; transform: scale(1.2); }
+            }
+            .animate-breathing { animation: breathing 5s ease-in-out infinite; }
+            .animate-parallax { animation: parallax 10s ease-in-out infinite; }
+            .animate-float-delayed { animation: float-delayed 4s ease-in-out infinite; }
+            .animate-glow-pulse { animation: glow-pulse 3s ease-in-out infinite; }
+            .animate-ambient-glow { animation: ambient-glow 6s ease-in-out infinite; }
+            .delay-700 { animation-delay: 700ms; }
+          `}} />
+
+          <div className="text-center space-y-4">
+            <h1 className="text-3xl font-normal">{t.welcome}</h1>
+            <p className="text-[#8696a0] text-sm leading-relaxed px-4">
+              Read our <span onClick={(e) => handlePrivacyClick(e)} className="text-[#53bdeb] cursor-pointer">{t.privacy}</span>. Tap "{t.agree}" to accept the <span onClick={(e) => handleTermsClick(e)} className="text-[#53bdeb] cursor-pointer">{t.terms}</span>.
+            </p>
+          </div>
+
+          <div className="w-full space-y-6 relative">
+            <div 
+              onClick={() => setShowLanguagePicker(!showLanguagePicker)}
+              className="flex items-center justify-center gap-2 text-[#00a884] bg-[#111b21] py-2 px-4 rounded-full w-fit mx-auto cursor-pointer hover:bg-[#202c33] transition-colors"
+            >
+              <Globe size={18} />
+              <span className="text-sm">
+                {language === 'en' ? 'English' : language === 'id' ? 'Bahasa Indonesia' : 'हिंदी (Hindi)'}
+              </span>
+              <ChevronDown size={16} />
+            </div>
+
+            {showLanguagePicker && (
+              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 bg-[#233138] rounded-lg shadow-xl py-2 border border-white/5 animate-in fade-in slide-in-from-bottom-2 duration-200">
+                {[
+                  { id: 'en', label: 'English' },
+                  { id: 'id', label: 'Bahasa Indonesia' },
+                  { id: 'hi', label: 'हिंदी (Hindi)' }
+                ].map((lang) => (
+                  <button
+                    key={lang.id}
+                    onClick={() => {
+                      setLanguage(lang.id as any);
+                      setShowLanguagePicker(false);
+                    }}
+                    className={`w-full text-left px-4 py-3 hover:bg-[#111b21] transition-colors text-sm ${language === lang.id ? 'text-[#00a884]' : 'text-[#e9edef]'}`}
+                  >
+                    {lang.label}
+                  </button>
+                ))}
+              </div>
+            )}
+
+            <button
+              onClick={() => setStep('form')}
+              className="w-full bg-[#00a884] text-[#0b141a] font-medium py-3 rounded-full hover:bg-[#06cf9c] transition-colors active:scale-95"
+            >
+              {t.agree}
+            </button>
+          </div>
+        </div>
 
         <div className="py-6 text-center">
           <p className="text-[#8696a0] text-[10px] uppercase tracking-widest font-bold">from XYRAOFFICIAL</p>

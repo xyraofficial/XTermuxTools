@@ -7,6 +7,15 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     emptyOutDir: true,
+    chunkSizeWarningLimit: 1000,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vendor': ['react', 'react-dom', 'react-markdown', '@supabase/supabase-js'],
+          'icons': ['lucide-react']
+        }
+      }
+    }
   },
   server: {
     port: 5000,

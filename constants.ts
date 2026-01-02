@@ -15,6 +15,8 @@ export const SCRIPTS: ScriptItem[] = [
     githubUrl: 'https://github.com/maldevel/IPGeoLocation',
     category: 'OSINT',
     installCommand: 'git clone https://github.com/maldevel/IPGeoLocation && cd IPGeoLocation && pip install -r requirements.txt',
+    requiredPackages: ['python', 'git', 'pip'],
+    setupInfo: 'Requires Python 3.x and active internet connection for API requests.',
     previewOutput: `
  ______________________________________
 |                                      |
@@ -34,6 +36,8 @@ export const SCRIPTS: ScriptItem[] = [
     githubUrl: 'https://github.com/thewhiteh4t/seeker',
     category: 'OSINT',
     installCommand: 'git clone https://github.com/thewhiteh4t/seeker.git && cd seeker && ./install.sh',
+    requiredPackages: ['python', 'php', 'git'],
+    setupInfo: 'Make sure to enable GPS on target device and use Ngrok for port forwarding.',
     previewOutput: `
  .--.
 |o_o |  Seeker - Location Tracker
@@ -52,6 +56,8 @@ export const SCRIPTS: ScriptItem[] = [
     githubUrl: 'https://github.com/Tuhinshubhra/RED_HAWK',
     category: 'OSINT',
     installCommand: 'git clone https://github.com/Tuhinshubhra/RED_HAWK && cd RED_HAWK && php rhawk.php',
+    requiredPackages: ['php', 'git'],
+    setupInfo: 'Works best on Termux with PHP 7.4+',
     previewOutput: `
   ______  ______  _____    _   _
  |  _ \\ \\|  ____||  __ \\  | | | |

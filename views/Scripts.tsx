@@ -75,6 +75,29 @@ const Scripts: React.FC = () => {
                 <span className="text-[10px] font-black text-zinc-600 uppercase tracking-widest">Protocol Description</span>
                 <p className="text-sm text-zinc-400 leading-relaxed">{selectedScript.description}</p>
               </div>
+
+              {selectedScript.requiredPackages && selectedScript.requiredPackages.length > 0 && (
+                <div className="space-y-2">
+                  <span className="text-[10px] font-black text-zinc-600 uppercase tracking-widest">Required Packages</span>
+                  <div className="flex flex-wrap gap-2">
+                    {selectedScript.requiredPackages.map((pkg: string) => (
+                      <span key={pkg} className="px-3 py-1 bg-green-500/10 border border-green-500/20 rounded-lg text-green-500 text-[10px] font-black uppercase">
+                        {pkg}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {selectedScript.setupInfo && (
+                <div className="space-y-2">
+                  <span className="text-[10px] font-black text-zinc-600 uppercase tracking-widest">Setup Info</span>
+                  <div className="p-4 bg-zinc-900 border border-white/5 rounded-2xl">
+                    <p className="text-xs text-zinc-500 leading-relaxed">{selectedScript.setupInfo}</p>
+                  </div>
+                </div>
+              )}
+
               <div className="space-y-2">
                 <span className="text-[10px] font-black text-zinc-600 uppercase tracking-widest">Installation Command</span>
                 <div className="w-full">

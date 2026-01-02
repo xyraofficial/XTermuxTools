@@ -43,26 +43,26 @@ const CodeBlock: React.FC<CodeBlockProps> = ({ code, label = 'bash', showCopy = 
         <span className="text-[9px] font-black text-zinc-500 uppercase tracking-[0.2em]">{label}</span>
       </div>
       
-      <div className="relative p-5">
-        <div className="flex-1 font-mono text-[11px] leading-relaxed break-all">
-          <div className="flex items-start gap-2">
-            {isTerminal && <span className="text-zinc-700 select-none font-bold mt-[1px]">$</span>}
-            <span className={`${getTextColor()} whitespace-pre-wrap font-bold break-all opacity-90`} style={{ wordBreak: 'break-all', overflowWrap: 'anywhere' }}>
-              {code}
-            </span>
+      <div className="relative group/code">
+        <div className="p-5 pr-14 flex items-start gap-4">
+          <div className="flex-1 font-mono text-[11px] leading-relaxed break-all">
+            <div className="flex items-start gap-2">
+              {isTerminal && <span className="text-zinc-700 select-none font-bold mt-[1px]">$</span>}
+              <span className={`${getTextColor()} whitespace-pre-wrap font-bold break-all opacity-90`} style={{ wordBreak: 'break-all', overflowWrap: 'anywhere' }}>
+                {code}
+              </span>
+            </div>
           </div>
-        </div>
-        
-        {showCopy && (
-          <div className="mt-4 flex justify-end">
+          
+          {showCopy && (
             <button
               onClick={handleCopy}
-              className="p-2.5 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-500 hover:text-white hover:border-zinc-700 transition-all active:scale-90"
+              className="absolute top-4 right-4 p-2 rounded-xl bg-zinc-900/80 backdrop-blur-sm border border-white/5 text-zinc-500 hover:text-white hover:border-green-500/30 transition-all active:scale-90 opacity-0 group-hover/code:opacity-100"
             >
               {copied ? <Check size={14} className="text-green-500" /> : <Copy size={14} />}
             </button>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );

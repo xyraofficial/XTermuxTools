@@ -104,12 +104,17 @@ const Scripts: React.FC = () => {
                             <span className="w-1 h-1 bg-green-500 rounded-full"></span>
                             1. System Preparation
                           </p>
-                          <button onClick={() => { navigator.clipboard.writeText('termux-setup-storage && pkg update && pkg upgrade -y'); showToast('Copied!', 'success'); }} className="p-1.5 bg-zinc-800 border border-white/5 rounded-lg text-zinc-500 hover:text-white hover:border-green-500/30 transition-all active:scale-90">
+                        </div>
+                        <div className="relative group/cmd">
+                          <div className="bg-black/40 p-3 pr-12 rounded-xl border border-white/5 font-mono text-[10px] text-green-500/70 break-all leading-relaxed">
+                            termux-setup-storage && pkg update && pkg upgrade -y
+                          </div>
+                          <button 
+                            onClick={() => { navigator.clipboard.writeText('termux-setup-storage && pkg update && pkg upgrade -y'); showToast('Copied!', 'success'); }} 
+                            className="absolute top-1/2 -translate-y-1/2 right-3 p-1.5 bg-zinc-800/80 backdrop-blur-sm border border-white/5 rounded-lg text-zinc-500 hover:text-white hover:border-green-500/30 transition-all active:scale-90 opacity-0 group-hover/cmd:opacity-100"
+                          >
                             <Copy size={12} />
                           </button>
-                        </div>
-                        <div className="bg-black/40 p-3 rounded-xl border border-white/5 font-mono text-[10px] text-green-500/70 break-all leading-relaxed">
-                          termux-setup-storage && pkg update && pkg upgrade -y
                         </div>
                       </div>
                       
@@ -120,12 +125,17 @@ const Scripts: React.FC = () => {
                               <span className="w-1 h-1 bg-green-500 rounded-full"></span>
                               2. Dependency Setup
                             </p>
-                            <button onClick={() => { navigator.clipboard.writeText(`pkg install ${selectedScript.requiredPackages.join(' ')} -y`); showToast('Copied!', 'success'); }} className="p-1.5 bg-zinc-800 border border-white/5 rounded-lg text-zinc-500 hover:text-white hover:border-green-500/30 transition-all active:scale-90">
+                          </div>
+                          <div className="relative group/cmd">
+                            <div className="bg-black/40 p-3 pr-12 rounded-xl border border-white/5 font-mono text-[10px] text-green-500/70 break-all leading-relaxed">
+                              pkg install {selectedScript.requiredPackages.join(' ')} -y
+                            </div>
+                            <button 
+                              onClick={() => { navigator.clipboard.writeText(`pkg install ${selectedScript.requiredPackages.join(' ')} -y`); showToast('Copied!', 'success'); }} 
+                              className="absolute top-1/2 -translate-y-1/2 right-3 p-1.5 bg-zinc-800/80 backdrop-blur-sm border border-white/5 rounded-lg text-zinc-500 hover:text-white hover:border-green-500/30 transition-all active:scale-90 opacity-0 group-hover/cmd:opacity-100"
+                            >
                               <Copy size={12} />
                             </button>
-                          </div>
-                          <div className="bg-black/40 p-3 rounded-xl border border-white/5 font-mono text-[10px] text-green-500/70 break-all leading-relaxed">
-                            pkg install {selectedScript.requiredPackages.join(' ')} -y
                           </div>
                         </div>
                       )}
@@ -136,12 +146,17 @@ const Scripts: React.FC = () => {
                             <span className="w-1 h-1 bg-green-500 rounded-full"></span>
                             3. Final Execution
                           </p>
-                          <button onClick={() => { navigator.clipboard.writeText(selectedScript.installCommand); showToast('Copied!', 'success'); }} className="p-1.5 bg-zinc-800 border border-white/5 rounded-lg text-zinc-500 hover:text-white hover:border-green-500/30 transition-all active:scale-90">
+                        </div>
+                        <div className="relative group/cmd">
+                          <div className="bg-black/40 p-3 pr-12 rounded-xl border border-white/5 font-mono text-[10px] text-green-500/70 break-all leading-relaxed">
+                            {selectedScript.installCommand}
+                          </div>
+                          <button 
+                            onClick={() => { navigator.clipboard.writeText(selectedScript.installCommand); showToast('Copied!', 'success'); }} 
+                            className="absolute top-1/2 -translate-y-1/2 right-3 p-1.5 bg-zinc-800/80 backdrop-blur-sm border border-white/5 rounded-lg text-zinc-500 hover:text-white hover:border-green-500/30 transition-all active:scale-90 opacity-0 group-hover/cmd:opacity-100"
+                          >
                             <Copy size={12} />
                           </button>
-                        </div>
-                        <div className="bg-black/40 p-3 rounded-xl border border-white/5 font-mono text-[10px] text-green-500/70 break-all leading-relaxed">
-                          {selectedScript.installCommand}
                         </div>
                       </div>
                     </div>
@@ -151,13 +166,16 @@ const Scripts: React.FC = () => {
 
               <div className="space-y-2">
                 <span className="text-[10px] font-black text-zinc-600 uppercase tracking-widest">Live Output Preview</span>
-                <div className="bg-black border border-white/5 rounded-2xl overflow-hidden shadow-inner">
+                <div className="bg-black border border-white/5 rounded-2xl overflow-hidden shadow-inner relative">
+                  <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-20">
+                    <div className="w-full h-[2px] bg-green-500/50 absolute top-0 animate-scanline shadow-[0_0_10px_green]"></div>
+                  </div>
                   <div className="flex items-center gap-1.5 px-4 py-2 bg-zinc-900/50 border-b border-white/5">
                     <div className="w-2 h-2 rounded-full bg-red-500/20 border border-red-500/40"></div>
                     <div className="w-2 h-2 rounded-full bg-yellow-500/20 border border-yellow-500/40"></div>
                     <div className="w-2 h-2 rounded-full bg-green-500/20 border border-green-500/40"></div>
                   </div>
-                  <div className="p-4 max-h-48 overflow-y-auto no-scrollbar font-mono text-[11px] text-green-500 opacity-80 leading-snug whitespace-pre-wrap select-none">
+                  <div className="p-4 max-h-48 overflow-y-auto no-scrollbar font-mono text-[11px] text-green-500 opacity-80 leading-snug whitespace-pre-wrap select-none relative z-10">
                     {selectedScript.previewOutput}
                   </div>
                 </div>

@@ -33,9 +33,21 @@ const About: React.FC = () => {
             setTempUsername('X-User');
           }
           if (profile.avatar_url) setAvatar(profile.avatar_url);
-          if (profile.role) setRole(profile.role);
+          
+          // Force admin status for specified emails in UI as a fallback
+          const adminEmails = ['xyraofficialsup@gmail.com', 'pangkeyjulio2@gmail.com'];
+          if (adminEmails.includes(user.email?.toLowerCase() || '')) {
+            setRole('ADMIN');
+          } else if (profile.role) {
+            setRole(profile.role);
+          }
         } else {
           setTempUsername('X-User');
+          // Still check for admin status even if profile is missing
+          const adminEmails = ['xyraofficialsup@gmail.com', 'pangkeyjulio2@gmail.com'];
+          if (adminEmails.includes(user.email?.toLowerCase() || '')) {
+            setRole('ADMIN');
+          }
         }
       }
     };

@@ -25,10 +25,15 @@ export const Auth: React.FC = () => {
       } else if (isSignUp) {
         const { error } = await supabase.auth.signUp({ email, password });
         if (error) throw error;
-        showToast('Please check your email for confirmation!', 'success');
+        showToast('Account created! Please check your email for confirmation.', 'success');
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) throw error;
+        if (error) {
+          if (error.message.includes('Invalid login credentials')) {
+            throw new Error('Incorrect email or password. Please try again.');
+          }
+          throw error;
+        }
       }
     } catch (error: any) {
       showToast(error.message, 'error');

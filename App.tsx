@@ -191,7 +191,7 @@ const AppContent: React.FC = () => {
           </header>
       )}
 
-      <main className={`flex-1 max-w-5xl mx-auto w-full relative ${[ViewState.AI_CHAT, ViewState.ARCHITECT].includes(currentView) ? 'overflow-hidden pb-24' : 'overflow-y-auto overflow-x-hidden p-0 scroll-smooth pb-32'}`}>
+      <main className={`flex-1 max-w-5xl mx-auto w-full relative outline-none ${[ViewState.AI_CHAT, ViewState.ARCHITECT].includes(currentView) ? 'overflow-hidden pb-24' : 'overflow-y-auto overflow-x-hidden p-0 scroll-smooth pb-32'}`}>
         {!session ? <Auth /> : renderContent()}
       </main>
 

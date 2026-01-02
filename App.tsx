@@ -162,7 +162,7 @@ const AppContent: React.FC = () => {
       
       <main 
         tabIndex={-1}
-        className={`flex-1 w-full relative outline-none focus:outline-none focus-visible:outline-none ${[ViewState.AI_CHAT, ViewState.ARCHITECT].includes(currentView) ? 'overflow-hidden' : 'overflow-y-auto overflow-x-hidden scroll-smooth pb-28 no-scrollbar'}`}
+        className={`flex-1 w-full relative outline-none focus:outline-none focus-visible:outline-none ${[ViewState.AI_CHAT, ViewState.ARCHITECT].includes(currentView) ? 'overflow-hidden h-full' : 'overflow-y-auto overflow-x-hidden scroll-smooth pb-28 no-scrollbar'}`}
       >
         {!session ? <Auth /> : renderContent()}
       </main>

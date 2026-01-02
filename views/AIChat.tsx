@@ -284,31 +284,31 @@ const AIChat: React.FC = () => {
           </div>
         </header>
 
-        <div className="flex-1 overflow-y-auto p-4 lg:p-8 space-y-10 no-scrollbar">
+        <div className="flex-1 overflow-y-auto p-4 lg:px-12 space-y-6 no-scrollbar">
           {messages.length === 0 && !isLoading && (
               <div className="h-full flex flex-col items-center justify-center text-center p-6 animate-in fade-in duration-700">
-                  <div className="w-20 h-20 bg-accent/5 rounded-[2.5rem] border border-accent/20 flex items-center justify-center mb-8 shadow-2xl">
+                  <div className="w-20 h-20 bg-accent/5 rounded-[2.5rem] border border-accent/20 flex items-center justify-center mb-6 shadow-2xl">
                       <Bot size={40} className="text-accent" />
                   </div>
-                  <h1 className="text-2xl font-black text-white uppercase tracking-tighter mb-4">INTERFACE READY</h1>
-                  <p className="text-[10px] text-zinc-500 font-black uppercase tracking-widest max-w-[220px] leading-relaxed">Menunggu inisiasi input dari pengguna.</p>
+                  <h1 className="text-2xl font-black text-white uppercase tracking-tighter mb-2">INTERFACE READY</h1>
+                  <p className="text-[10px] text-zinc-500 font-black uppercase tracking-widest max-w-[220px]">Menunggu inisiasi input dari pengguna.</p>
               </div>
           )}
 
-          <div className="max-w-4xl mx-auto space-y-10 pb-8">
+          <div className="max-w-4xl mx-auto space-y-8 pb-4">
               {messages.map((msg, idx) => (
-                  <div key={idx} className={`flex gap-4 ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'} animate-in fade-in slide-in-from-bottom-2 duration-300`}>
-                      <div className={`w-9 h-9 rounded-xl shrink-0 flex items-center justify-center border ${msg.role === 'user' ? 'bg-zinc-800 border-zinc-700' : 'bg-zinc-900 border-zinc-800'}`}>
-                          {msg.role === 'user' ? <User size={18} className="text-zinc-500" /> : <Bot size={18} className="text-accent" />}
+                  <div key={idx} className={`flex gap-3 ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'} animate-in fade-in slide-in-from-bottom-2 duration-300`}>
+                      <div className={`w-8 h-8 rounded-lg shrink-0 flex items-center justify-center border ${msg.role === 'user' ? 'bg-zinc-800 border-zinc-700' : 'bg-zinc-900 border-zinc-800'}`}>
+                          {msg.role === 'user' ? <User size={16} className="text-zinc-500" /> : <Bot size={16} className="text-accent" />}
                       </div>
-                      <div className={`max-w-[85%] space-y-3 ${msg.role === 'user' ? 'items-end' : 'items-start'}`}>
+                      <div className={`max-w-[85%] space-y-2 ${msg.role === 'user' ? 'items-end' : 'items-start'}`}>
                           {(msg.content || (msg.isStreaming && isLoading)) && (
-                              <div className={`p-5 rounded-[2rem] text-[15px] leading-relaxed shadow-xl ${
+                              <div className={`p-4 rounded-[1.8rem] text-[14px] leading-relaxed shadow-lg ${
                                   msg.role === 'user' 
-                                  ? 'bg-accent text-black font-bold rounded-tr-none' 
+                                  ? 'bg-accent text-black font-black rounded-tr-none' 
                                   : 'bg-zinc-900/60 border border-zinc-800 text-zinc-100 rounded-tl-none'
                               }`}>
-                                  <div className="prose prose-invert prose-sm max-w-none prose-p:my-2 prose-code:text-accent prose-headings:text-white">
+                                  <div className="prose prose-invert prose-sm max-w-none prose-p:my-1.5 prose-code:text-accent prose-headings:text-white">
                                       <ReactMarkdown 
                                           remarkPlugins={[remarkGfm]} 
                                           components={{

@@ -95,7 +95,14 @@ const AIChat: React.FC = () => {
       });
 
       const stream = await groqInstance.chat.completions.create({
-        messages: [{ role: "system", content: "Short technical answers in Markdown." }, ...messages.map(m => ({ role: m.role === 'model' ? 'assistant' : 'user', content: m.content })), { role: 'user', content: userMsg }],
+        messages: [
+          { role: "system" as const, content: "Short technical answers in Markdown." },
+          ...messages.map(m => ({ 
+            role: (m.role === 'model' || m.role === 'assistant') ? 'assistant' as const : 'user' as const, 
+            content: m.content 
+          })),
+          { role: 'user' as const, content: userMsg }
+        ],
         model: "llama-3.3-70b-versatile",
         stream: true,
       });

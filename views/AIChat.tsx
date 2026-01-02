@@ -95,8 +95,8 @@ const AIChat: React.FC = () => {
     }
   };
   const handleSend = async () => {
-    if (!currentSessionId || !input.trim() || isLoading) return;
     const userMsg = input.trim();
+    if (!userMsg || isLoading) return;
     
     // Optimistic update
     setMessages(prev => [...prev, { role: 'user', content: userMsg }]);
@@ -119,22 +119,22 @@ const AIChat: React.FC = () => {
       // Automatically create session if it somehow went missing
       let sessionId = currentSessionId;
       if (!sessionId) {
-        const { data: newSession } = await supabase
+        const { data: newSession, error: sessionError } = await supabase
           .from('chat_sessions')
           .insert([{ user_id: user.id, title: userMsg.slice(0, 30) }])
           .select()
           .single();
-        if (newSession) {
-          sessionId = newSession.id;
-          setCurrentSessionId(sessionId);
-          setSessions(prev => [{ id: newSession.id, title: newSession.title, messages: [] }, ...prev]);
-        } else {
-          throw new Error("Failed to create session");
+        
+        if (sessionError || !newSession) {
+          throw new Error("Failed to create session: " + (sessionError?.message || "Unknown error"));
         }
+        
+        sessionId = newSession.id;
+        setCurrentSessionId(sessionId);
+        setSessions(prev => [{ id: newSession.id, title: newSession.title, messages: [] }, ...prev]);
       }
 
-      const { data: msgData, error: msgError } = await supabase.from('chat_messages').insert([{ session_id: sessionId, role: 'user', content: userMsg }]).select().single();
-      
+      const { error: msgError } = await supabase.from('chat_messages').insert([{ session_id: sessionId, role: 'user', content: userMsg }]);
       if (msgError) throw msgError;
 
       const groqInstance = new Groq({
@@ -154,8 +154,10 @@ const AIChat: React.FC = () => {
         model: "llama-3.3-70b-versatile",
         stream: true,
       });
+
       let fullContent = '';
       setMessages(prev => [...prev, { role: 'model', content: '', isStreaming: true }]);
+      
       for await (const chunk of stream) {
         const text = chunk.choices[0]?.delta?.content || '';
         if (text) {
@@ -166,9 +168,10 @@ const AIChat: React.FC = () => {
           });
         }
       }
+
       await supabase.from('chat_messages').insert([{ session_id: sessionId, role: 'model', content: fullContent }]);
     } catch (err) { 
-      console.error(err);
+      console.error('Chat error:', err);
       showToast("AI Link Failed", "error"); 
     } finally { 
       setIsLoading(false); 

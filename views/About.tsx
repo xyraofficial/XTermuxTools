@@ -30,6 +30,7 @@ const About: React.FC = () => {
             setUsername(profile.username);
             setTempUsername(profile.username);
           } else {
+            setUsername('X-User');
             setTempUsername('X-User');
           }
           if (profile.avatar_url) setAvatar(profile.avatar_url);
@@ -39,9 +40,10 @@ const About: React.FC = () => {
           if (adminEmails.includes(user.email?.toLowerCase() || '')) {
             setRole('ADMIN');
           } else if (profile.role) {
-            setRole(profile.role);
+            setRole(profile.role as 'USER' | 'ADMIN');
           }
         } else {
+          setUsername('X-User');
           setTempUsername('X-User');
           // Still check for admin status even if profile is missing
           const adminEmails = ['xyraofficialsup@gmail.com', 'pangkeyjulio2@gmail.com'];

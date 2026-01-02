@@ -110,16 +110,28 @@ export const Auth: React.FC = () => {
     setScreenshots([null, null, null]);
   };
 
-  const handlePrivacyClick = () => {
-    window.open('https://x-termux-tools.vercel.app/PrivacyPolicy', '_blank');
+  const handlePrivacyClick = (e?: React.MouseEvent) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    window.open('https://x-termux-tools.vercel.app/PrivacyPolicy', '_blank', 'noopener,noreferrer');
   };
 
-  const handleTermsClick = () => {
-    window.open('https://x-termux-tools.vercel.app/TermsOfService', '_blank');
+  const handleTermsClick = (e?: React.MouseEvent) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    window.open('https://x-termux-tools.vercel.app/TermsOfService', '_blank', 'noopener,noreferrer');
   };
 
-  const handleHelpCenterClick = () => {
-    window.open('https://x-termux-tools.vercel.app/HelpCenter', '_blank');
+  const handleHelpCenterClick = (e?: React.MouseEvent) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    window.open('https://x-termux-tools.vercel.app/HelpCenter', '_blank', 'noopener,noreferrer');
   };
 
   const handleAuth = async (e: React.FormEvent) => {
@@ -248,12 +260,12 @@ export const Auth: React.FC = () => {
           </div>
 
           <p className="text-xs text-[#8696a0] leading-relaxed">
-            Dengan melanjutkan, Anda mengizinkan Tim Dukungan XTermux meninjau informasi teknis tentang akun Anda guna membantu menjawab pertanyaan Anda. Pesan dari Tim Dukungan XTermux mungkin dibuat oleh AI menggunakan teknologi yang aman dari Meta. Pesan dan panggilan pribadi Anda tetap terenkripsi secara end-to-end. <span onClick={handlePrivacyClick} className="text-[#53bdeb] cursor-pointer">Pelajari selengkapnya</span>.
+            Dengan melanjutkan, Anda mengizinkan Tim Dukungan XTermux meninjau informasi teknis tentang akun Anda guna membantu menjawab pertanyaan Anda. Pesan dari Tim Dukungan XTermux mungkin dibuat oleh AI menggunakan teknologi yang aman dari Meta. Pesan dan panggilan pribadi Anda tetap terenkripsi secara end-to-end. <span onClick={(e) => handlePrivacyClick(e)} className="text-[#53bdeb] cursor-pointer">Pelajari selengkapnya</span>.
           </p>
         </div>
 
         <div className="p-6 flex flex-col gap-4 bg-[#0b141a] border-t border-[#202c33]">
-          <button onClick={handleHelpCenterClick} className="text-[#53bdeb] text-left text-sm font-medium">
+          <button onClick={(e) => handleHelpCenterClick(e)} className="text-[#53bdeb] text-left text-sm font-medium">
             Kunjungi Pusat Bantuan kami
           </button>
           <button
@@ -317,7 +329,7 @@ export const Auth: React.FC = () => {
           <div className="text-center space-y-4">
             <h1 className="text-3xl font-normal">{t.welcome}</h1>
             <p className="text-[#8696a0] text-sm leading-relaxed px-4">
-              Read our <span onClick={handlePrivacyClick} className="text-[#53bdeb] cursor-pointer">{t.privacy}</span>. Tap "{t.agree}" to accept the <span onClick={handleTermsClick} className="text-[#53bdeb] cursor-pointer">{t.terms}</span>.
+              Read our <span onClick={(e) => handlePrivacyClick(e)} className="text-[#53bdeb] cursor-pointer">{t.privacy}</span>. Tap "{t.agree}" to accept the <span onClick={(e) => handleTermsClick(e)} className="text-[#53bdeb] cursor-pointer">{t.terms}</span>.
             </p>
           </div>
 

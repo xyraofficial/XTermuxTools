@@ -251,7 +251,7 @@ const AIChat: React.FC = () => {
 
                       return (
                         <div className="my-4 relative group/code">
-                          <div className="absolute right-2 top-2 z-10 opacity-0 group-hover/code:opacity-100 transition-opacity">
+                          <div className="absolute right-2 top-2 z-10">
                             <button
                               onClick={() => {
                                 navigator.clipboard.writeText(content);

@@ -113,7 +113,7 @@ const Scripts: React.FC = () => {
                       )}
                       
                       <div className="space-y-1">
-                        <p className="text-[9px] text-zinc-600 font-bold uppercase">3. Clone & Run:</p>
+                        <p className="text-[9px] text-zinc-600 font-bold uppercase">3. Execute Script:</p>
                         <code className="text-[10px] text-yellow-500/80 font-mono block bg-black/30 p-2 rounded-lg break-all">
                           {selectedScript.installCommand}
                         </code>
@@ -131,9 +131,9 @@ const Scripts: React.FC = () => {
               )}
 
               <div className="space-y-2">
-                <span className="text-[10px] font-black text-zinc-600 uppercase tracking-widest">Installation Command</span>
+                <span className="text-[10px] font-black text-zinc-600 uppercase tracking-widest">Preview / Example</span>
                 <div className="w-full">
-                  <CodeBlock code={selectedScript.installCommand} />
+                  <CodeBlock code={selectedScript.previewOutput} label="Preview Output" />
                 </div>
               </div>
               <button onClick={() => window.open(selectedScript.githubUrl, '_blank')} className="w-full py-4 bg-white/5 border border-white/5 rounded-2xl flex items-center justify-center gap-3 text-white font-black text-xs uppercase tracking-widest hover:bg-white/10 transition-colors">

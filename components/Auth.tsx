@@ -309,50 +309,60 @@ export const Auth: React.FC = () => {
 
         <div className="flex flex-col items-center gap-8 flex-1 justify-center max-w-sm w-full">
           <div className="relative">
-            <div className="w-48 h-48 bg-[#111b21] rounded-full flex items-center justify-center relative overflow-hidden animate-soft-pulse">
-              <div className="absolute inset-0 opacity-10 flex flex-wrap gap-3 p-4 animate-float-slow">
+            <div className="w-48 h-48 bg-[#111b21] rounded-full flex items-center justify-center relative overflow-hidden animate-breathing">
+              <div className="absolute inset-0 opacity-10 flex flex-wrap gap-3 p-4 animate-parallax">
                 {[...Array(20)].map((_, i) => (
                   <MessageSquare key={i} size={14} />
                 ))}
               </div>
               <div className="relative z-10 flex flex-col items-center scale-90">
                 <div className="flex gap-3 mb-3">
-                  <div className="w-10 h-10 bg-[#25d366] rounded-xl flex items-center justify-center transform -rotate-6 animate-gentle-bob">
+                  <div className="w-10 h-10 bg-[#25d366] rounded-xl flex items-center justify-center transform -rotate-6 animate-float-delayed">
                     <MessageSquare size={20} className="text-[#0b141a]" />
                   </div>
-                  <div className="w-10 h-10 bg-[#34b7f1] rounded-xl flex items-center justify-center transform rotate-6 animate-gentle-bob delay-300">
+                  <div className="w-10 h-10 bg-[#34b7f1] rounded-xl flex items-center justify-center transform rotate-6 animate-float-delayed delay-700">
                     <Globe size={20} className="text-[#0b141a]" />
                   </div>
                 </div>
-                <div className="w-14 h-14 bg-[#00a884] rounded-full flex items-center justify-center animate-soft-rotate">
+                <div className="w-14 h-14 bg-[#00a884] rounded-full flex items-center justify-center animate-glow-pulse">
                   <Shield size={28} className="text-[#0b141a]" />
                 </div>
               </div>
             </div>
+            
+            {/* Ambient glow effect around the circle */}
+            <div className="absolute inset-0 bg-[#00a884]/5 blur-3xl rounded-full -z-10 animate-ambient-glow" />
           </div>
 
           <style dangerouslySetInnerHTML={{ __html: `
-            @keyframes soft-pulse {
-              0%, 100% { transform: scale(1); }
-              50% { transform: scale(1.03); }
+            @keyframes breathing {
+              0%, 100% { transform: scale(1); box-shadow: 0 0 20px rgba(0, 168, 132, 0); }
+              50% { transform: scale(1.02); box-shadow: 0 0 40px rgba(0, 168, 132, 0.1); }
             }
-            @keyframes float-slow {
-              0%, 100% { transform: translateY(0); }
-              50% { transform: translateY(-6px); }
+            @keyframes parallax {
+              0%, 100% { transform: translate(0, 0); }
+              25% { transform: translate(4px, -4px); }
+              50% { transform: translate(-2px, 4px); }
+              75% { transform: translate(-4px, -2px); }
             }
-            @keyframes gentle-bob {
-              0%, 100% { transform: translateY(0); }
-              50% { transform: translateY(-4px); }
+            @keyframes float-delayed {
+              0%, 100% { transform: translateY(0) rotate(-6deg); }
+              50% { transform: translateY(-10px) rotate(0deg); }
             }
-            @keyframes soft-rotate {
-              from { transform: rotate(0deg); }
-              to { transform: rotate(360deg); }
+            @keyframes glow-pulse {
+              0%, 100% { filter: drop-shadow(0 0 2px rgba(0, 168, 132, 0.4)); transform: scale(1); }
+              50% { filter: drop-shadow(0 0 10px rgba(0, 168, 132, 0.8)); transform: scale(1.05); }
             }
-            .animate-soft-pulse { animation: soft-pulse 6s ease-in-out infinite; }
-            .animate-float-slow { animation: float-slow 8s ease-in-out infinite; }
-            .animate-gentle-bob { animation: gentle-bob 4s ease-in-out infinite; }
-            .animate-soft-rotate { animation: soft-rotate 12s linear infinite; }
-            .delay-300 { animation-delay: 300ms; }
+            @keyframes ambient-glow {
+              0%, 100% { opacity: 0.3; transform: scale(1); }
+              50% { opacity: 0.6; transform: scale(1.2); }
+            }
+            .animate-breathing { animation: breathing 5s ease-in-out infinite; }
+            .animate-parallax { animation: parallax 10s ease-in-out infinite; }
+            .animate-float-delayed { animation: float-delayed 4s ease-in-out infinite; }
+            .animate-glow-pulse { animation: glow-pulse 3s ease-in-out infinite; }
+            .animate-ambient-glow { animation: ambient-glow 6s ease-in-out infinite; }
+            .delay-700 { animation-delay: 700ms; }
           `}} />
 
           <div className="text-center space-y-4">

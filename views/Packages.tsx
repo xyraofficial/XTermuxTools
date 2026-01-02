@@ -1,6 +1,5 @@
-
 import React, { useState, useMemo, useEffect } from 'react';
-import { Search, Package, Database, RefreshCw, X, Code, Globe, Settings, Wrench, History, Trash2, ChevronDown, Info, Heart, ArrowDownAZ, ArrowUpAZ, Plus, Check, ShoppingCart, Copy } from 'lucide-react';
+import { Search, Package, Heart, ArrowDownAZ, ArrowUpAZ, Plus, Check, ShoppingCart, Copy, X } from 'lucide-react';
 import { PACKAGES } from '../constants';
 import { PackageItem } from '../types';
 import CodeBlock from '../components/CodeBlock';
@@ -9,281 +8,116 @@ import { showToast } from '../components/Toast';
 type CategoryType = 'All' | 'Development' | 'System' | 'Network' | 'Utility' | 'Saved';
 type SortOrder = 'AZ' | 'ZA';
 
-const CATEGORIES: { name: CategoryType; icon: React.ReactNode }[] = [
-    { name: 'All', icon: <Package size={14} /> },
-    { name: 'Saved', icon: <Heart size={14} /> },
-    { name: 'Development', icon: <Code size={14} /> },
-    { name: 'System', icon: <Settings size={14} /> },
-    { name: 'Network', icon: <Globe size={14} /> },
-    { name: 'Utility', icon: <Wrench size={14} /> },
+const CATEGORIES: { name: CategoryType; icon: string }[] = [
+    { name: 'All', icon: '📦' },
+    { name: 'Saved', icon: '❤️' },
+    { name: 'Development', icon: '💻' },
+    { name: 'System', icon: '⚙️' },
+    { name: 'Network', icon: '🌐' },
+    { name: 'Utility', icon: '🔧' },
 ];
 
-const RECENTLY_VIEWED_KEY = 'xtermux_recently_viewed';
 const FAVORITES_KEY = 'xtermux_favorites';
 const INSTALL_QUEUE_KEY = 'xtermux_install_queue';
-const ITEMS_PER_PAGE = 20;
+const ITEMS_PER_PAGE = 15;
 
 const Packages: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<CategoryType>('All');
   const [sortOrder, setSortOrder] = useState<SortOrder>('AZ');
-  const [recentlyViewed, setRecentlyViewed] = useState<PackageItem[]>([]);
   const [favorites, setFavorites] = useState<string[]>([]);
   const [installQueue, setInstallQueue] = useState<string[]>([]);
   const [visibleCount, setVisibleCount] = useState(ITEMS_PER_PAGE);
   const [showQueueOverlay, setShowQueueOverlay] = useState(false);
 
-  // Load persistence
   useEffect(() => {
-    const savedRecent = localStorage.getItem(RECENTLY_VIEWED_KEY);
-    if (savedRecent) {
-      try {
-        const parsedIds = JSON.parse(savedRecent) as string[];
-        const validRecent = parsedIds
-          .map(id => PACKAGES.find(p => p.id === id))
-          .filter((p): p is PackageItem => !!p);
-        setRecentlyViewed(validRecent);
-      } catch (e) { console.error(e); }
-    }
-
     const savedFavs = localStorage.getItem(FAVORITES_KEY);
-    if (savedFavs) {
-        try { setFavorites(JSON.parse(savedFavs)); } catch (e) { console.error(e); }
-    }
-
+    if (savedFavs) try { setFavorites(JSON.parse(savedFavs)); } catch (e) {}
     const savedQueue = localStorage.getItem(INSTALL_QUEUE_KEY);
-    if (savedQueue) {
-        try { setInstallQueue(JSON.parse(savedQueue)); } catch (e) { console.error(e); }
-    }
+    if (savedQueue) try { setInstallQueue(JSON.parse(savedQueue)); } catch (e) {}
   }, []);
 
   const toggleFavorite = (e: React.MouseEvent, id: string) => {
     e.stopPropagation();
-    setFavorites(prev => {
-        const exists = prev.includes(id);
-        const newFavs = exists ? prev.filter(fid => fid !== id) : [...prev, id];
-        localStorage.setItem(FAVORITES_KEY, JSON.stringify(newFavs));
-        showToast(exists ? 'Removed from favorites' : 'Added to favorites', exists ? 'info' : 'success');
-        // Notify App component to update badge
-        window.dispatchEvent(new CustomEvent('favorites-updated'));
-        return newFavs;
-    });
+    const newFavs = favorites.includes(id) ? favorites.filter(fid => fid !== id) : [...favorites, id];
+    setFavorites(newFavs);
+    localStorage.setItem(FAVORITES_KEY, JSON.stringify(newFavs));
+    showToast(favorites.includes(id) ? 'Removed' : 'Saved', 'info');
+    window.dispatchEvent(new CustomEvent('favorites-updated'));
   };
 
   const toggleQueue = (e: React.MouseEvent, id: string) => {
     e.stopPropagation();
-    setInstallQueue(prev => {
-        const exists = prev.includes(id);
-        const newQueue = exists ? prev.filter(qid => qid !== id) : [...prev, id];
-        localStorage.setItem(INSTALL_QUEUE_KEY, JSON.stringify(newQueue));
-        showToast(exists ? 'Removed from queue' : 'Added to install queue', 'info');
-        return newQueue;
-    });
-  };
-
-  const clearQueue = () => {
-      setInstallQueue([]);
-      localStorage.setItem(INSTALL_QUEUE_KEY, JSON.stringify([]));
-      showToast('Queue cleared', 'info');
-  };
-
-  const generateBulkCommand = () => {
-      if (installQueue.length === 0) return "";
-      const pkgNames = installQueue.map(id => PACKAGES.find(p => p.id === id)?.name || id).join(' ');
-      return `pkg install ${pkgNames.toLowerCase()}`;
+    const newQueue = installQueue.includes(id) ? installQueue.filter(qid => qid !== id) : [...installQueue, id];
+    setInstallQueue(newQueue);
+    localStorage.setItem(INSTALL_QUEUE_KEY, JSON.stringify(newQueue));
   };
 
   const filteredPackages = useMemo(() => {
-    const filtered = PACKAGES.filter(pkg => {
-      const matchesSearch = 
-        pkg.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        pkg.description.toLowerCase().includes(searchTerm.toLowerCase());
-      
-      let matchesCategory = true;
-      if (selectedCategory === 'Saved') {
-        matchesCategory = favorites.includes(pkg.id);
-      } else if (selectedCategory !== 'All') {
-        matchesCategory = pkg.category === (selectedCategory as string);
-      }
-
+    return PACKAGES.filter(pkg => {
+      const matchesSearch = pkg.name.toLowerCase().includes(searchTerm.toLowerCase()) || pkg.description.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesCategory = selectedCategory === 'Saved' ? favorites.includes(pkg.id) : (selectedCategory === 'All' || pkg.category === selectedCategory);
       return matchesSearch && matchesCategory;
-    });
-
-    return filtered.sort((a, b) => sortOrder === 'AZ' ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name));
+    }).sort((a, b) => sortOrder === 'AZ' ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name));
   }, [searchTerm, selectedCategory, favorites, sortOrder]);
 
-  const visiblePackages = useMemo(() => filteredPackages.slice(0, visibleCount), [filteredPackages, visibleCount]);
+  const visiblePackages = filteredPackages.slice(0, visibleCount);
 
   return (
-    <div className="flex flex-col relative">
-      {/* Search & Filter Header */}
-      <div className="sticky top-[-1px] z-40 bg-zinc-950 border-b border-zinc-900/50">
-        <div className="px-4 pt-2 pb-2">
-          <div className="relative group">
-            <Search className={`absolute left-4 top-1/2 -translate-y-1/2 transition-colors ${searchTerm ? 'text-accent' : 'text-zinc-500'}`} size={18} />
-            <input 
-              type="text"
-              placeholder={`Search packages...`}
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full bg-zinc-900/80 text-white pl-12 pr-10 py-3.5 rounded-2xl border border-zinc-800 focus:outline-none focus:border-accent/50 focus:ring-4 focus:ring-accent/5 transition-all text-[14px] font-medium placeholder:text-zinc-600"
-            />
-          </div>
+    <div className="flex flex-col min-h-full bg-black">
+      <div className="sticky top-0 z-40 bg-black/80 backdrop-blur-xl border-b border-white/5 p-4 space-y-4">
+        <div className="relative">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500" size={16} />
+          <input 
+            type="text" placeholder="Search Vault..." value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full bg-zinc-900 border border-white/5 pl-11 pr-4 py-3 rounded-2xl text-sm focus:border-accent/50 transition-all outline-none"
+          />
         </div>
-
-        <div className="flex items-center justify-between px-4 pb-4 gap-2">
-            <div className="flex items-center gap-2 overflow-x-auto no-scrollbar flex-1">
-            {CATEGORIES.map((cat) => (
-                <button
-                key={cat.name}
-                onClick={() => setSelectedCategory(cat.name)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-full border whitespace-nowrap text-[12px] font-bold transition-all ${
-                    selectedCategory === cat.name
-                    ? 'bg-accent/10 border-accent/50 text-accent'
-                    : 'bg-zinc-900/50 border-zinc-800 text-zinc-500'
-                }`}
-                >
-                {cat.icon}
-                <span>{cat.name}</span>
-                {cat.name === 'Saved' && favorites.length > 0 && selectedCategory !== 'Saved' && (
-                  <span className="flex h-4 min-w-[16px] items-center justify-center rounded-full bg-accent px-1 text-[9px] font-black text-black ring-1 ring-accent/30 ml-1">
-                    {favorites.length}
-                  </span>
-                )}
-                </button>
-            ))}
-            </div>
-            <button onClick={() => setSortOrder(prev => prev === 'AZ' ? 'ZA' : 'AZ')} className="p-2 rounded-full bg-zinc-900 border border-zinc-800 text-zinc-500 active:scale-95 transition-all">
-                {sortOrder === 'AZ' ? <ArrowDownAZ size={18} /> : <ArrowUpAZ size={18} />}
+        <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
+          {CATEGORIES.map((cat) => (
+            <button key={cat.name} onClick={() => setSelectedCategory(cat.name)}
+              className={`px-4 py-2 rounded-xl border whitespace-nowrap text-[11px] font-black uppercase tracking-widest transition-all ${selectedCategory === cat.name ? 'bg-accent text-black border-accent' : 'bg-zinc-900 border-white/5 text-zinc-500'}`}
+            >
+              {cat.icon} {cat.name}
             </button>
+          ))}
         </div>
       </div>
 
-      <div className="p-6 space-y-8 pb-40">
-        <div className="grid gap-6">
-            {visiblePackages.length > 0 ? (
-              visiblePackages.map((pkg) => {
-                const isFav = favorites.includes(pkg.id);
-                const isInQueue = installQueue.includes(pkg.id);
-                return (
-                  <div key={pkg.id} className="group relative">
-                    <div className="absolute inset-0 bg-zinc-900/30 backdrop-blur-md border border-white/5 rounded-[2.5rem] group-hover:border-accent/30 transition-all duration-500" />
-                    <div className="relative p-6 md:p-8">
-                      <div className="absolute top-6 right-6 flex items-center gap-3">
-                          <button 
-                            onClick={(e) => toggleQueue(e, pkg.id)}
-                            className={`p-2.5 rounded-2xl transition-all active:scale-90 shadow-lg ${isInQueue ? 'bg-accent text-black' : 'bg-zinc-800/50 backdrop-blur-md text-zinc-500 hover:text-white border border-white/5'}`}
-                          >
-                            {isInQueue ? <Check size={18} /> : <Plus size={18} />}
-                          </button>
-                          <button 
-                            onClick={(e) => toggleFavorite(e, pkg.id)}
-                            className={`p-2.5 rounded-2xl transition-all active:scale-90 shadow-lg ${isFav ? 'text-red-500 bg-red-500/10 border border-red-500/20' : 'text-zinc-600 bg-zinc-800/50 backdrop-blur-md border border-white/5'}`}
-                          >
-                            <Heart size={18} className={isFav ? 'fill-current' : ''} />
-                          </button>
-                      </div>
-
-                      <div className="flex items-center gap-5 mb-6">
-                        <div className="w-14 h-14 rounded-[1.25rem] bg-zinc-900/80 border border-white/10 flex items-center justify-center group-hover:border-accent/50 group-hover:bg-zinc-800 transition-all duration-500 shadow-2xl">
-                          <Package size={24} className="text-zinc-400 group-hover:text-accent transition-colors" />
-                        </div>
-                        <div>
-                            <h4 className="font-black text-white text-lg tracking-tight group-hover:text-accent transition-colors">{pkg.name}</h4>
-                            <div className="flex items-center gap-2 mt-1">
-                              <div className="w-1 h-1 rounded-full bg-zinc-700" />
-                              <span className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em]">{pkg.category}</span>
-                            </div>
-                        </div>
-                      </div>
-
-                      <p className="text-sm text-zinc-400 mb-6 leading-relaxed font-medium line-clamp-2 pr-20">{pkg.description}</p>
-                      <div className="relative group/code">
-                        <div className="absolute -inset-1 bg-gradient-to-r from-accent/20 to-transparent rounded-2xl blur opacity-0 group-hover/code:opacity-100 transition duration-500" />
-                        <CodeBlock code={pkg.installCommand} />
-                      </div>
-                    </div>
-                  </div>
-                );
-              })
-            ) : (
-              <div className="py-20 flex flex-col items-center text-center space-y-4">
-                <div className="w-16 h-16 bg-zinc-900 rounded-full flex items-center justify-center border border-zinc-800 text-zinc-700">
-                  <Package size={32} />
+      <div className="p-4 grid grid-cols-1 gap-4 pb-32">
+        {visiblePackages.map((pkg) => (
+          <div key={pkg.id} className="bg-zinc-900/50 border border-white/5 rounded-3xl p-5 relative overflow-hidden">
+            <div className="flex items-start justify-between mb-4">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-2xl bg-zinc-900 border border-white/5 flex items-center justify-center">
+                  <Package size={20} className="text-accent" />
                 </div>
                 <div>
-                  <h3 className="text-white font-bold">No packages found</h3>
-                  <p className="text-xs text-zinc-500 mt-1 max-w-[200px]">Try adjusting your search or category filters.</p>
+                  <h4 className="font-black text-white text-base">{pkg.name}</h4>
+                  <span className="text-[9px] font-bold text-zinc-600 uppercase tracking-widest">{pkg.category}</span>
                 </div>
-                <button 
-                  onClick={() => { setSearchTerm(''); setSelectedCategory('All'); }}
-                  className="px-6 py-2 bg-accent/10 text-accent border border-accent/20 rounded-xl text-[10px] font-black uppercase tracking-widest"
-                >
-                  Reset Filters
+              </div>
+              <div className="flex gap-2">
+                <button onClick={(e) => toggleFavorite(e, pkg.id)} className={`p-2.5 rounded-xl border ${favorites.includes(pkg.id) ? 'bg-red-500/10 border-red-500/20 text-red-500' : 'bg-zinc-900 border-white/5 text-zinc-600'}`}>
+                  <Heart size={16} className={favorites.includes(pkg.id) ? 'fill-current' : ''} />
+                </button>
+                <button onClick={(e) => toggleQueue(e, pkg.id)} className={`p-2.5 rounded-xl border ${installQueue.includes(pkg.id) ? 'bg-accent text-black border-accent' : 'bg-zinc-900 border-white/5 text-zinc-600'}`}>
+                  {installQueue.includes(pkg.id) ? <Check size={16} /> : <Plus size={16} />}
                 </button>
               </div>
-            )}
-        </div>
-
-        {visibleCount < filteredPackages.length && (
-            <button onClick={() => setVisibleCount(v => v + ITEMS_PER_PAGE)} className="w-full py-4 rounded-[1.5rem] bg-zinc-900 border border-zinc-800 text-zinc-400 font-bold uppercase text-[10px] tracking-widest">
-                Load More Packages
-            </button>
-        )}
+            </div>
+            <p className="text-xs text-zinc-500 line-clamp-2 mb-4 leading-relaxed">{pkg.description}</p>
+            <CodeBlock code={pkg.installCommand} />
+          </div>
+        ))}
       </div>
 
-      {/* Bulk Install Queue FAB */}
       {installQueue.length > 0 && (
-          <div className="fixed bottom-24 left-1/2 -translate-x-1/2 z-50 animate-in slide-in-from-bottom-10 duration-500">
-              <button 
-                onClick={() => setShowQueueOverlay(true)}
-                className="bg-accent text-black font-black text-xs uppercase px-6 py-4 rounded-full shadow-2xl flex items-center gap-3 hover:scale-105 active:scale-95 transition-all"
-              >
-                  <ShoppingCart size={18} />
-                  Install Queue ({installQueue.length})
-              </button>
-          </div>
-      )}
-
-      {/* Queue Modal */}
-      {showQueueOverlay && (
-          <div className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in duration-300">
-              <div className="w-full max-w-lg bg-zinc-900 border border-zinc-800 rounded-[2rem] overflow-hidden flex flex-col max-h-[70vh] shadow-2xl">
-                  <div className="p-6 border-b border-zinc-800 flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                          <ShoppingCart className="text-accent" />
-                          <h3 className="font-black text-white uppercase tracking-widest">Install Queue</h3>
-                      </div>
-                      <button onClick={() => setShowQueueOverlay(false)} className="p-2 hover:bg-zinc-800 rounded-full transition-colors"><X size={20} className="text-zinc-500" /></button>
-                  </div>
-                  <div className="flex-1 overflow-y-auto p-6 space-y-4">
-                      <div className="flex flex-wrap gap-2">
-                          {installQueue.map(id => {
-                              const pkg = PACKAGES.find(p => p.id === id);
-                              return (
-                                  <div key={id} className="flex items-center gap-2 bg-zinc-800 px-3 py-1.5 rounded-lg border border-zinc-700">
-                                      <span className="text-xs font-bold text-zinc-300">{pkg?.name || id}</span>
-                                      <button onClick={(e) => toggleQueue(e, id)} className="text-zinc-500 hover:text-red-400"><X size={14} /></button>
-                                  </div>
-                              );
-                          })}
-                      </div>
-                      <div className="pt-4 space-y-2">
-                          <p className="text-[10px] font-black text-zinc-500 uppercase tracking-widest mb-2">Final Bulk Command</p>
-                          <CodeBlock code={generateBulkCommand()} />
-                      </div>
-                  </div>
-                  <div className="p-6 bg-zinc-950/50 border-t border-zinc-800 flex gap-3">
-                      <button onClick={clearQueue} className="flex-1 py-4 bg-zinc-800 text-zinc-400 font-bold uppercase text-[10px] rounded-xl">Clear All</button>
-                      <button onClick={() => {
-                          navigator.clipboard.writeText(generateBulkCommand());
-                          showToast('Bulk command copied!', 'success');
-                      }} className="flex-[2] py-4 bg-accent text-black font-bold uppercase text-[10px] rounded-xl flex items-center justify-center gap-2">
-                          <Copy size={14} /> Copy Final Command
-                      </button>
-                  </div>
-              </div>
-          </div>
+        <button onClick={() => setShowQueueOverlay(true)} className="fixed bottom-24 right-6 z-50 bg-accent text-black p-4 rounded-2xl shadow-2xl active:scale-95 transition-all">
+          <ShoppingCart size={24} />
+          <span className="absolute -top-2 -right-2 bg-white text-black text-[10px] font-black px-1.5 py-0.5 rounded-full border-2 border-accent">{installQueue.length}</span>
+        </button>
       )}
     </div>
   );

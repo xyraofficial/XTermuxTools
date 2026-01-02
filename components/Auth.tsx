@@ -10,7 +10,7 @@ export const Auth: React.FC = () => {
   const [isSignUp, setIsSignUp] = useState(false);
   const [isResetting, setIsResetting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [step, setStep] = useState<'welcome' | 'form' | 'support'>('welcome');
+  const [step, setStep] = useState<'welcome' | 'form' | 'support' | 'help_center'>('welcome');
   const [supportMessage, setSupportMessage] = useState('');
   const [showMenu, setShowMenu] = useState(false);
   const [language, setLanguage] = useState<'en' | 'id' | 'hi'>('en');
@@ -32,7 +32,11 @@ export const Auth: React.FC = () => {
       enterEmail: 'Enter email',
       createAccount: 'Create account',
       resetPassword: 'Reset password',
-      yourEmail: 'Your email'
+      yourEmail: 'Your email',
+      helpCenter: 'Help Center',
+      browseHelp: 'Browse Help Center',
+      isThisYourQuestion: 'Is this your question?',
+      sendEmailToSupport: 'Send email to XTermux Support'
     },
     id: {
       welcome: 'Selamat datang di XTermux',
@@ -48,7 +52,11 @@ export const Auth: React.FC = () => {
       enterEmail: 'Masukkan email',
       createAccount: 'Buat akun',
       resetPassword: 'Atur ulang sandi',
-      yourEmail: 'Email Anda'
+      yourEmail: 'Email Anda',
+      helpCenter: 'Pusat Bantuan',
+      browseHelp: 'Telusuri Pusat Bantuan',
+      isThisYourQuestion: 'Apakah ini pertanyaan Anda?',
+      sendEmailToSupport: 'Kirim email ke tim Dukungan XTermux'
     },
     hi: {
       welcome: 'XTermux में आपका स्वागत है',
@@ -64,7 +72,11 @@ export const Auth: React.FC = () => {
       enterEmail: 'ईमेल दर्ज करें',
       createAccount: 'खाता बनाएं',
       resetPassword: 'पासवर्ड रीसेट करें',
-      yourEmail: 'आपका ईमेल'
+      yourEmail: 'आपका ईमेल',
+      helpCenter: 'सहायता केंद्र',
+      browseHelp: 'सहायता केंद्र ब्राउज़ करें',
+      isThisYourQuestion: 'क्या यह आपका प्रश्न है?',
+      sendEmailToSupport: 'XTermux सहायता को ईमेल भेजें'
     }
   };
 
@@ -91,19 +103,11 @@ export const Auth: React.FC = () => {
 
   const handleSupportSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
-    try {
-      // Logic to send email would go here
-      // For now we'll just show success
-      showToast('Support message sent successfully!', 'success');
-      setStep('welcome');
-      setSupportMessage('');
-      setScreenshots([null, null, null]);
-    } catch (error: any) {
-      showToast('Failed to send message', 'error');
-    } finally {
-      setLoading(false);
-    }
+    const mailto = `mailto:xyraofficialsup@gmail.com?subject=Support Request&body=${encodeURIComponent(supportMessage)}\n\n--Support Info--\nApp: XTermux\nLanguage: ${language}`;
+    window.location.href = mailto;
+    setStep('welcome');
+    setSupportMessage('');
+    setScreenshots([null, null, null]);
   };
 
   const handlePrivacyClick = () => {
@@ -161,11 +165,53 @@ export const Auth: React.FC = () => {
     }
   };
 
-  if (step === 'support') {
+  if (step === 'help_center') {
     return (
       <div className="flex flex-col min-h-screen bg-[#0b141a] text-[#e9edef]">
         <div className="flex items-center gap-4 p-4 border-b border-[#202c33]">
           <button onClick={() => setStep('welcome')} className="p-1">
+            <LogIn className="rotate-180" size={24} />
+          </button>
+          <h2 className="text-xl font-medium">{t.browseHelp}</h2>
+        </div>
+
+        <div className="p-6 space-y-4 flex-1 overflow-y-auto">
+          <p className="text-sm text-[#8696a0] mb-6">{t.isThisYourQuestion}</p>
+          {[
+            'Melihat Pesan "Login Tidak Tersedia untuk Saa...',
+            'Izin Admin untuk Berlangganan Meta Verified u...',
+            'Melihat Pesan "Anda sudah logout"',
+            'Cara Menambahkan Akun WhatsApp Business...',
+            'Cara Memutus Tautan Perangkat',
+            'Memperbaiki Masalah di WhatsApp',
+            'Cara Mengirim Pesan Suara',
+            'Tidak Bisa Menggunakan WhatsApp karena Ap...',
+            'Pembaruan Otomatis WhatsApp',
+            'Tentang Kode Keamanan yang Terisi Secara Ot...'
+          ].map((q, i) => (
+            <div key={i} className="py-4 border-b border-[#202c33] text-sm hover:bg-[#202c33] transition-colors cursor-pointer px-2 rounded">
+              {q}
+            </div>
+          ))}
+        </div>
+
+        <div className="p-6">
+          <button
+            onClick={() => setStep('support')}
+            className="w-full bg-[#00a884] text-[#0b141a] font-medium py-3 rounded-full hover:bg-[#06cf9c] transition-colors active:scale-95"
+          >
+            {t.sendEmailToSupport}
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (step === 'support') {
+    return (
+      <div className="flex flex-col min-h-screen bg-[#0b141a] text-[#e9edef]">
+        <div className="flex items-center gap-4 p-4 border-b border-[#202c33]">
+          <button onClick={() => setStep('help_center')} className="p-1">
             <LogIn className="rotate-180" size={24} />
           </button>
           <h2 className="text-xl font-medium">{t.support}</h2>
@@ -173,18 +219,6 @@ export const Auth: React.FC = () => {
 
         <div className="p-6 space-y-6 flex-1 overflow-y-auto">
           <div className="space-y-2">
-            <p className="text-sm text-[#8696a0]">{t.yourEmail}</p>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="email@example.com"
-              className="w-full bg-[#202c33] rounded-lg p-4 outline-none border-none"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <p className="text-sm text-[#8696a0]">{t.describe}</p>
             <textarea
               value={supportMessage}
               onChange={(e) => setSupportMessage(e.target.value)}
@@ -214,18 +248,17 @@ export const Auth: React.FC = () => {
           </div>
 
           <p className="text-xs text-[#8696a0] leading-relaxed">
-            By continuing, you allow the XTermux Support Team to review technical information about your account.
-            Our team may use AI to help answer your questions. <span onClick={handlePrivacyClick} className="text-[#53bdeb] cursor-pointer">Learn more</span>.
+            Dengan melanjutkan, Anda mengizinkan Tim Dukungan XTermux meninjau informasi teknis tentang akun Anda guna membantu menjawab pertanyaan Anda. Pesan dari Tim Dukungan XTermux mungkin dibuat oleh AI menggunakan teknologi yang aman dari Meta. Pesan dan panggilan pribadi Anda tetap terenkripsi secara end-to-end. <span onClick={handlePrivacyClick} className="text-[#53bdeb] cursor-pointer">Pelajari selengkapnya</span>.
           </p>
         </div>
 
         <div className="p-6 flex flex-col gap-4 bg-[#0b141a] border-t border-[#202c33]">
           <button onClick={handleHelpCenterClick} className="text-[#53bdeb] text-left text-sm font-medium">
-            Visit our Help Center
+            Kunjungi Pusat Bantuan kami
           </button>
           <button
             onClick={handleSupportSubmit}
-            disabled={!supportMessage || !email || loading}
+            disabled={!supportMessage || loading}
             className="w-full bg-[#00a884] text-[#0b141a] font-medium py-3 rounded-full hover:bg-[#06cf9c] transition-colors active:scale-95 disabled:bg-[#111b21] disabled:text-[#8696a0]"
           >
             {t.next}
@@ -246,7 +279,7 @@ export const Auth: React.FC = () => {
             <div className="absolute top-10 right-0 w-48 bg-[#233138] rounded-lg shadow-xl z-50 py-2 border border-white/5 animate-in fade-in zoom-in-95 duration-200">
               <button
                 onClick={() => {
-                  setStep('support');
+                  setStep('help_center');
                   setShowMenu(false);
                 }}
                 className="w-full text-left px-4 py-3 hover:bg-[#111b21] transition-colors text-sm"

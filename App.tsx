@@ -24,8 +24,19 @@ import TermsView from './views/legal/Terms';
 
 import { ToastContainer } from './components/Toast';
 
+import { LanguageProvider, useLanguage } from './LanguageContext';
+
 const AppContent: React.FC = () => {
+  const { language } = useLanguage();
   const [session, setSession] = useState<Session | null>(null);
+
+  const translations = {
+    en: { home: "Home", tools: "Tools", script: "Script", ai: "AI", codex: "Codex", user: "User" },
+    id: { home: "Beranda", tools: "Alat", script: "Skrip", ai: "AI", codex: "Kodeks", user: "Profil" },
+    hi: { home: "होम", tools: "टूल्स", script: "स्क्रिप्ट", ai: "AI", codex: "कोडेक्स", user: "उपयोगकर्ता" }
+  };
+
+  const t = translations[language];
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -188,12 +199,12 @@ const AppContent: React.FC = () => {
       {!isLegalView && session && (
         <nav className="fixed bottom-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-3xl border-t border-white/5 pb-safe">
             <div className="max-w-lg mx-auto flex items-center justify-around h-[70px] px-1">
-                <NavButton active={currentView === ViewState.HOME} onClick={() => navigate(ViewState.HOME)} icon={<Home size={18} />} label="Home" />
-                <NavButton active={currentView === ViewState.PACKAGES} onClick={() => navigate(ViewState.PACKAGES)} icon={<Package size={18} />} label="Tools" />
-                <NavButton active={currentView === ViewState.SCRIPTS} onClick={() => navigate(ViewState.SCRIPTS)} icon={<Terminal size={18} />} label="Script" />
-                <NavButton active={currentView === ViewState.AI_CHAT} onClick={() => navigate(ViewState.AI_CHAT)} icon={<Bot size={20} />} label="AI" />
-                <NavButton active={currentView === ViewState.GUIDES} onClick={() => navigate(ViewState.GUIDES)} icon={<BookOpen size={18} />} label="Codex" />
-                <NavButton active={currentView === ViewState.ABOUT} onClick={() => navigate(ViewState.ABOUT)} icon={<User size={18} />} label="User" />
+                <NavButton active={currentView === ViewState.HOME} onClick={() => navigate(ViewState.HOME)} icon={<Home size={18} />} label={t.home} />
+                <NavButton active={currentView === ViewState.PACKAGES} onClick={() => navigate(ViewState.PACKAGES)} icon={<Package size={18} />} label={t.tools} />
+                <NavButton active={currentView === ViewState.SCRIPTS} onClick={() => navigate(ViewState.SCRIPTS)} icon={<Terminal size={18} />} label={t.script} />
+                <NavButton active={currentView === ViewState.AI_CHAT} onClick={() => navigate(ViewState.AI_CHAT)} icon={<Bot size={20} />} label={t.ai} />
+                <NavButton active={currentView === ViewState.GUIDES} onClick={() => navigate(ViewState.GUIDES)} icon={<BookOpen size={18} />} label={t.codex} />
+                <NavButton active={currentView === ViewState.ABOUT} onClick={() => navigate(ViewState.ABOUT)} icon={<User size={18} />} label={t.user} />
             </div>
         </nav>
       )}

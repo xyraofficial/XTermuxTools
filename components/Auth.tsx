@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { supabase } from '../supabase';
 import { Mail, Lock, Loader2, UserPlus, LogIn, Eye, EyeOff, KeyRound, MessageSquare, Shield, Globe, ChevronDown, MoreVertical } from 'lucide-react';
+import { LanguageProvider, useLanguage } from '../LanguageContext';
 import { showToast } from './Toast';
 
 export const Auth: React.FC = () => {
+  const { language, setLanguage } = useLanguage();
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -13,7 +15,6 @@ export const Auth: React.FC = () => {
   const [step, setStep] = useState<'welcome' | 'form' | 'support' | 'privacy' | 'terms'>('welcome');
   const [supportMessage, setSupportMessage] = useState('');
   const [showMenu, setShowMenu] = useState(false);
-  const [language, setLanguage] = useState<'en' | 'id' | 'hi'>('en');
   const [showLanguagePicker, setShowLanguagePicker] = useState(false);
   
   const translations = {

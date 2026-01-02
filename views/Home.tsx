@@ -7,7 +7,85 @@ interface HomeProps {
   onCommandStarted?: () => void;
 }
 
+import { LanguageProvider, useLanguage } from '../LanguageContext';
+
 const Home: React.FC<HomeProps> = ({ onNavigate }) => {
+  const { language } = useLanguage();
+  
+  const translations = {
+    en: {
+      status: "v1.0.0 Online",
+      description: "Professional tools & command helper for Android terminal enthusiasts.",
+      explore: "EXPLORE TOOLS",
+      docs: "DOCUMENTATION",
+      toolsCount: "Tools",
+      usersCount: "Users",
+      coreSystems: "Core Systems",
+      ai: "AI Assistant",
+      vault: "Tool Vault",
+      scripts: "Scripts",
+      codex: "Codex",
+      forge: "Forge",
+      profile: "Profile",
+      protocolStart: "Protocol Start",
+      disclaimer: "Disclaimer: Community tool. Not affiliated with official Termux.",
+      steps: [
+        "Install Termux from F-Droid",
+        "Execute update & upgrade",
+        "Pick tool from Vault",
+        "Paste & Run command"
+      ]
+    },
+    id: {
+      status: "v1.0.0 Online",
+      description: "Alat profesional & pembantu perintah untuk penggemar terminal Android.",
+      explore: "JELAJAHI ALAT",
+      docs: "DOKUMENTASI",
+      toolsCount: "Alat",
+      usersCount: "Pengguna",
+      coreSystems: "Sistem Inti",
+      ai: "Asisten AI",
+      vault: "Gudang Alat",
+      scripts: "Skrip",
+      codex: "Kodeks",
+      forge: "Tempa",
+      profile: "Profil",
+      protocolStart: "Mulai Protokol",
+      disclaimer: "Penafian: Alat komunitas. Tidak berafiliasi dengan Termux resmi.",
+      steps: [
+        "Instal Termux dari F-Droid",
+        "Jalankan update & upgrade",
+        "Pilih alat dari Vault",
+        "Tempel & Jalankan perintah"
+      ]
+    },
+    hi: {
+      status: "v1.0.0 ऑनलाइन",
+      description: "Android टर्मिनल उत्साही लोगों के लिए पेशेवर उपकरण और कमांड सहायक।",
+      explore: "टूल्स एक्सप्लोर करें",
+      docs: "दस्तावेज़",
+      toolsCount: "टूल्स",
+      usersCount: "उपयोगकर्ता",
+      coreSystems: "कोर सिस्टम",
+      ai: "AI सहायक",
+      vault: "टूल वॉल्ट",
+      scripts: "स्क्रिप्ट",
+      codex: "कोडेक्स",
+      forge: "फोर्ज",
+      profile: "प्रोफ़ाइल",
+      protocolStart: "प्रोटोकॉल शुरू करें",
+      disclaimer: "अस्वीकरण: सामुदायिक उपकरण। आधिकारिक Termux से संबद्ध नहीं है।",
+      steps: [
+        "F-Droid से Termux इंस्टॉल करें",
+        "update और upgrade चलाएं",
+        "वॉल्ट से टूल चुनें",
+        "कमांड पेस्ट करें और चलाएं"
+      ]
+    }
+  };
+
+  const t = translations[language];
+
   return (
     <div className="px-4 py-8 space-y-10 pb-32 max-w-3xl mx-auto">
       <div className="relative">
@@ -16,24 +94,24 @@ const Home: React.FC<HomeProps> = ({ onNavigate }) => {
         <div className="relative z-10 text-center space-y-6">
           <div className="inline-flex items-center gap-2 px-3 py-1 bg-accent/10 rounded-full border border-accent/20 mb-2">
             <div className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
-            <span className="text-[10px] font-black text-accent uppercase tracking-[0.2em]">v1.0.0 Online</span>
+            <span className="text-[10px] font-black text-accent uppercase tracking-[0.2em]">{t.status}</span>
           </div>
           
           <div className="space-y-2">
             <h2 className="text-5xl font-black text-white tracking-tighter uppercase">
               XTermux
             </h2>
-            <p className="text-zinc-500 font-medium text-sm max-w-xs mx-auto text-balance">Professional tools & command helper for Android terminal enthusiasts.</p>
+            <p className="text-zinc-500 font-medium text-sm max-w-xs mx-auto text-balance">{t.description}</p>
           </div>
 
           <div className="flex flex-col gap-3 max-w-xs mx-auto">
             <button onClick={() => onNavigate('PACKAGES')} className="w-full py-4 bg-accent text-black font-black rounded-2xl hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-3 shadow-xl shadow-accent/20">
               <Terminal size={20} />
-              EXPLORE TOOLS
+              {t.explore}
             </button>
             <button onClick={() => onNavigate('GUIDES')} className="w-full py-4 bg-zinc-900 border border-white/10 text-white font-black rounded-2xl hover:bg-zinc-800 transition-all flex items-center justify-center gap-3">
               <BookOpen size={20} />
-              DOCUMENTATION
+              {t.docs}
             </button>
           </div>
         </div>
@@ -41,26 +119,26 @@ const Home: React.FC<HomeProps> = ({ onNavigate }) => {
 
       <div className="grid grid-cols-2 gap-3">
         <div className="p-4 bg-zinc-900/50 border border-white/5 rounded-2xl space-y-1">
-          <div className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest text-center">Tools</div>
+          <div className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest text-center">{t.toolsCount}</div>
           <div className="text-2xl font-black text-white text-center">2.4k+</div>
         </div>
         <div className="p-4 bg-zinc-900/50 border border-white/5 rounded-2xl space-y-1">
-          <div className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest text-center">Users</div>
+          <div className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest text-center">{t.usersCount}</div>
           <div className="text-2xl font-black text-white text-center">10k+</div>
         </div>
       </div>
 
       {/* Feature Grid - Optimized for Mobile All Menus */}
       <div className="space-y-4">
-        <h3 className="text-[10px] font-black text-zinc-600 uppercase tracking-[0.3em] px-1">Core Systems</h3>
+        <h3 className="text-[10px] font-black text-zinc-600 uppercase tracking-[0.3em] px-1">{t.coreSystems}</h3>
         <div className="grid grid-cols-2 gap-3">
           {[
-            { id: 'AI_CHAT', icon: Bot, title: 'AI Assistant', color: 'accent' },
-            { id: 'PACKAGES', icon: Package, title: 'Tool Vault', color: 'purple-500' },
-            { id: 'SCRIPTS', icon: Terminal, title: 'Scripts', color: 'blue-500' },
-            { id: 'GUIDES', icon: BookOpen, title: 'Codex', color: 'orange-500' },
-            { id: 'ARCHITECT', icon: PenTool, title: 'Forge', color: 'red-500' },
-            { id: 'ABOUT', icon: User, title: 'Profile', color: 'zinc-400' }
+            { id: 'AI_CHAT', icon: Bot, title: t.ai, color: 'accent' },
+            { id: 'PACKAGES', icon: Package, title: t.vault, color: 'purple-500' },
+            { id: 'SCRIPTS', icon: Terminal, title: t.scripts, color: 'blue-500' },
+            { id: 'GUIDES', icon: BookOpen, title: t.codex, color: 'orange-500' },
+            { id: 'ARCHITECT', icon: PenTool, title: t.forge, color: 'red-500' },
+            { id: 'ABOUT', icon: User, title: t.profile, color: 'zinc-400' }
           ].map((item) => (
             <button key={item.id} onClick={() => onNavigate(item.id)} className="group relative w-full text-left active:scale-[0.98] transition-all duration-300">
               <div className="absolute inset-0 bg-zinc-900/40 backdrop-blur-sm border border-white/5 rounded-2xl group-hover:bg-zinc-900/60 transition-all" />
@@ -78,15 +156,10 @@ const Home: React.FC<HomeProps> = ({ onNavigate }) => {
       <div className="p-6 bg-zinc-900/30 border border-white/5 rounded-3xl space-y-6">
           <div className="flex items-center gap-3">
             <PenTool size={18} className="text-accent" />
-            <h3 className="text-xs font-black text-white uppercase tracking-widest">Protocol Start</h3>
+            <h3 className="text-xs font-black text-white uppercase tracking-widest">{t.protocolStart}</h3>
           </div>
           <div className="space-y-4">
-            {[
-              "Install Termux from F-Droid",
-              "Execute update & upgrade",
-              "Pick tool from Vault",
-              "Paste & Run command"
-            ].map((step, i) => (
+            {t.steps.map((step, i) => (
               <div key={i} className="flex items-start gap-4">
                 <div className="w-6 h-6 rounded-lg bg-zinc-800 flex items-center justify-center text-[10px] font-black text-zinc-500 shrink-0">
                   {i + 1}
@@ -99,7 +172,7 @@ const Home: React.FC<HomeProps> = ({ onNavigate }) => {
 
       <footer className="pt-10 border-t border-white/5 text-center space-y-4 pb-10">
         <p className="text-[10px] text-zinc-600 leading-relaxed max-w-[200px] mx-auto italic">
-          Disclaimer: Community tool. Not affiliated with official Termux.
+          {t.disclaimer}
         </p>
         <div className="text-[9px] font-bold text-zinc-700 uppercase tracking-[0.2em]">© 2026 XTermux Nexus</div>
       </footer>

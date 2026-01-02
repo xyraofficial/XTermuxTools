@@ -4,13 +4,50 @@ import { APP_VERSION } from '../constants';
 import { supabase } from '../supabase';
 import { showToast } from '../components/Toast';
 
+import { LanguageProvider, useLanguage } from '../LanguageContext';
+
 const About: React.FC = () => {
+  const { language } = useLanguage();
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [isSyncing, setIsSyncing] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
-  const [username, setUsername] = useState('');
-  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const translations = {
+    en: {
+      syncing: "Syncing Protocol",
+      link: "Neural Link Establishment...",
+      syncActive: "Sync Active",
+      joinDate: "Join Date",
+      security: "Security",
+      verified: "Verified",
+      social: "Social Nexus",
+      exit: "Exit Neural Protocol",
+      footerDesc: "Crafted for professional Android terminal orchestration."
+    },
+    id: {
+      syncing: "Protokol Sinkronisasi",
+      link: "Pembangunan Tautan Syaraf...",
+      syncActive: "Sinkronisasi Aktif",
+      joinDate: "Tanggal Bergabung",
+      security: "Keamanan",
+      verified: "Terverifikasi",
+      social: "Nexus Sosial",
+      exit: "Keluar Protokol Neural",
+      footerDesc: "Dibuat untuk orkestrasi terminal Android profesional."
+    },
+    hi: {
+      syncing: "सिंकिंग प्रोटोकॉल",
+      link: "न्यूरल लिंक स्थापना...",
+      syncActive: "सिंक सक्रिय",
+      joinDate: "शामिल होने की तिथि",
+      security: "सुरक्षा",
+      verified: "सत्यापित",
+      social: "सोशल नेक्सस",
+      exit: "न्यूरल प्रोटोकॉल से बाहर निकलें",
+      footerDesc: "पेशेवर Android टर्मिनल ऑर्केस्ट्रेशन के लिए तैयार किया गया।"
+    }
+  };
+
+  const t = translations[language];
 
   useEffect(() => {
     // Show loading for at least 3 seconds as requested for "sync" feel
@@ -70,8 +107,8 @@ const About: React.FC = () => {
         </div>
       </div>
       <div className="space-y-1 text-center">
-        <p className="text-[10px] font-black text-white uppercase tracking-[0.3em] animate-pulse">Syncing Protocol</p>
-        <p className="text-[8px] font-bold text-zinc-600 uppercase tracking-widest">Neural Link Establishment...</p>
+        <p className="text-[10px] font-black text-white uppercase tracking-[0.3em] animate-pulse">{t.syncing}</p>
+        <p className="text-[8px] font-bold text-zinc-600 uppercase tracking-widest">{t.link}</p>
       </div>
     </div>
   );
@@ -94,15 +131,15 @@ const About: React.FC = () => {
         </div>
 
         <div className="flex justify-center gap-3">
-          <span className="px-4 py-1.5 bg-accent/10 border border-accent/20 rounded-xl text-[10px] font-black text-accent uppercase tracking-widest">Sync Active</span>
+          <span className="px-4 py-1.5 bg-accent/10 border border-accent/20 rounded-xl text-[10px] font-black text-accent uppercase tracking-widest">{t.syncActive}</span>
           <span className="px-4 py-1.5 bg-white/5 border border-white/10 rounded-xl text-[10px] font-black text-zinc-500 uppercase tracking-widest">v{APP_VERSION}</span>
         </div>
       </div>
 
       <div className="grid grid-cols-2 gap-3">
         {[
-          { icon: <Calendar size={20} />, label: "Join Date", val: new Date(user?.created_at).toLocaleDateString() },
-          { icon: <Shield size={20} />, label: "Security", val: "Verified" }
+          { icon: <Calendar size={20} />, label: t.joinDate, val: new Date(user?.created_at).toLocaleDateString() },
+          { icon: <Shield size={20} />, label: t.security, val: t.verified }
         ].map((s, i) => (
           <div key={i} className="bg-zinc-900/30 border border-white/5 p-4 rounded-3xl text-center space-y-2">
             <div className="text-accent mx-auto w-fit">{s.icon}</div>
@@ -115,7 +152,7 @@ const About: React.FC = () => {
       </div>
 
       <div className="space-y-3">
-        <h3 className="text-[10px] font-black text-zinc-600 uppercase tracking-[0.3em] px-2">Social Nexus</h3>
+        <h3 className="text-[10px] font-black text-zinc-600 uppercase tracking-[0.3em] px-2">{t.social}</h3>
         <div className="flex gap-2">
           {[
             { icon: <Youtube size={20} />, color: "hover:text-red-500", url: "https://youtube.com/@kz.tutorial" },
@@ -130,12 +167,12 @@ const About: React.FC = () => {
       </div>
 
       <button onClick={handleSignOut} className="w-full py-5 bg-red-500/10 border border-red-500/20 text-red-500 font-black text-[11px] uppercase tracking-[0.2em] rounded-3xl active:scale-[0.98] transition-all flex items-center justify-center gap-3">
-        <LogOut size={18} /> Exit Neural Protocol
+        <LogOut size={18} /> {t.exit}
       </button>
 
       <div className="pt-8 text-center space-y-2 opacity-30">
         <p className="text-[9px] font-black text-zinc-600 uppercase tracking-[0.4em]">© 2026 XTermux Nexus</p>
-        <p className="text-[8px] font-bold text-zinc-700 uppercase tracking-widest italic text-balance px-10">Crafted for professional Android terminal orchestration.</p>
+        <p className="text-[8px] font-bold text-zinc-700 uppercase tracking-widest italic text-balance px-10">{t.footerDesc}</p>
       </div>
     </div>
   );

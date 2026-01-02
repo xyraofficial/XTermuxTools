@@ -95,19 +95,40 @@ export const Auth: React.FC = () => {
   const handleSupportSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    let body = `Support Message:\n${supportMessage}\n\n--Support Info--\nApp: XTermux\nLanguage: ${language}`;
-    
     const hasScreenshots = screenshots.some(s => s !== null);
-    if (hasScreenshots) {
-      body += '\n\n--Screenshots Attached--\n(Note: Large screenshots may be truncated due to email link limits)\n';
-      screenshots.forEach((s, i) => {
-        if (s) {
-          // Limit base64 length to prevent massive URLs that crash mail apps
-          // Most mail apps handle up to 2000-4000 chars total for the entire mailto URL
-          const truncatedBase64 = s.length > 1500 ? s.substring(0, 1500) + '...[truncated]' : s;
-          body += `\nScreenshot ${i + 1}:\n${truncatedBase64}\n`;
+    
+    if (hasScreenshots && navigator.share) {
+      try {
+        const files: File[] = [];
+        for (let i = 0; i < screenshots.length; i++) {
+          const src = screenshots[i];
+          if (src) {
+            const response = await fetch(src);
+            const blob = await response.blob();
+            files.push(new File([blob], `screenshot_${i + 1}.jpg`, { type: 'image/jpeg' }));
+          }
         }
-      });
+
+        if (navigator.canShare && navigator.canShare({ files })) {
+          await navigator.share({
+            files,
+            title: 'Support Request',
+            text: `Support Message:\n${supportMessage}\n\n--Support Info--\nApp: XTermux\nLanguage: ${language}`
+          });
+          setStep('welcome');
+          setSupportMessage('');
+          setScreenshots([null, null, null]);
+          return;
+        }
+      } catch (error) {
+        console.error('Error sharing files:', error);
+      }
+    }
+
+    // Fallback to mailto if sharing is not supported or fails
+    let body = `Support Message:\n${supportMessage}\n\n--Support Info--\nApp: XTermux\nLanguage: ${language}`;
+    if (hasScreenshots) {
+      body += '\n\n--Screenshots Captured--\nPlease attach the screenshots manually for better quality.';
     }
 
     const mailto = `mailto:xyraofficialsup@gmail.com?subject=${encodeURIComponent('Support Request')}&body=${encodeURIComponent(body)}`;

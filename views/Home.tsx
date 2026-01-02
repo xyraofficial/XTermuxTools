@@ -28,106 +28,144 @@ const Home: React.FC<HomeProps> = ({ onNavigate, initialCommand, onCommandStarte
   }, []);
 
   return (
-    <div className="p-5 space-y-10 pb-32 md:px-8 lg:px-12">
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-3xl font-black text-white tracking-tighter uppercase md:text-4xl">XTermux</h2>
-          <div className="flex items-center gap-1.5 mt-1">
-              <div className="w-1.5 h-1.5 rounded-full bg-accent animate-ping" />
-              <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">System Online</span>
+    <div className="p-6 space-y-12 pb-32 md:px-10 lg:px-16">
+      <div className="relative">
+        <div className="absolute -top-24 -left-24 w-64 h-64 bg-accent/20 rounded-full blur-[100px] pointer-events-none" />
+        <div className="absolute -top-24 -right-24 w-64 h-64 bg-blue-500/10 rounded-full blur-[100px] pointer-events-none" />
+        
+        <div className="flex items-center justify-between relative z-10">
+          <div>
+            <h2 className="text-4xl font-black text-white tracking-tighter uppercase md:text-5xl lg:text-6xl bg-clip-text text-transparent bg-gradient-to-br from-white via-white to-zinc-500">
+              XTermux
+            </h2>
+            <div className="flex items-center gap-2 mt-2">
+                <div className="flex gap-1">
+                  {[1, 2, 3].map((i) => (
+                    <div key={i} className="w-1 h-3 bg-accent/40 rounded-full overflow-hidden">
+                      <div className="w-full h-full bg-accent animate-pulse" style={{ animationDelay: `${i * 200}ms` }} />
+                    </div>
+                  ))}
+                </div>
+                <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em]">Operational Nexus</span>
+            </div>
           </div>
-        </div>
-        <div onClick={() => onNavigate('ABOUT')} className="w-12 h-12 rounded-2xl bg-zinc-900 border border-zinc-800 flex items-center justify-center shadow-lg cursor-pointer active:scale-90 transition-transform md:w-14 md:h-14">
-           <Hexagon size={24} className="text-accent md:w-7 md:h-7" />
+          <div onClick={() => onNavigate('ABOUT')} className="group relative">
+            <div className="absolute inset-0 bg-accent/20 rounded-2xl blur-lg group-hover:bg-accent/40 transition-all duration-500" />
+            <div className="relative w-14 h-14 rounded-2xl bg-zinc-900/50 backdrop-blur-xl border border-white/10 flex items-center justify-center shadow-2xl cursor-pointer active:scale-90 transition-all duration-300 md:w-16 md:h-16 overflow-hidden">
+               <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent" />
+               <Hexagon size={28} className="text-accent md:w-8 md:h-8 group-hover:rotate-12 transition-transform duration-500" />
+            </div>
+          </div>
         </div>
       </div>
 
       {/* Main Feature Grid */}
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {/* AI Chat Card */}
-          <button onClick={() => onNavigate('AI_CHAT')} className="bg-zinc-900 border border-zinc-800 rounded-[2rem] p-6 text-left relative overflow-hidden group active:scale-[0.98] transition-all min-h-[140px] hover:border-accent shadow-xl hover:shadow-accent/5">
-              <Bot size={120} className="absolute -right-4 -bottom-4 text-accent opacity-5 group-hover:opacity-10 transition-opacity" />
-              <div className="relative z-10">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="p-2.5 bg-accent rounded-xl shadow-[0_0_15px_rgba(34,197,94,0.3)]"><Bot size={20} className="text-black" /></div>
-                  <span className="text-[10px] font-black text-accent uppercase tracking-widest">X-Vision AI</span>
+          <button onClick={() => onNavigate('AI_CHAT')} className="group relative aspect-[4/3] md:aspect-auto min-h-[180px] text-left active:scale-[0.98] transition-all duration-300">
+              <div className="absolute inset-0 bg-zinc-900/40 backdrop-blur-sm border border-white/5 rounded-[2.5rem] group-hover:border-accent/50 group-hover:bg-zinc-900/60 transition-all duration-500" />
+              <div className="absolute inset-0 bg-gradient-to-br from-accent/5 via-transparent to-transparent rounded-[2.5rem] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              
+              <div className="relative h-full p-8 flex flex-col justify-between overflow-hidden">
+                <Bot size={160} className="absolute -right-8 -bottom-8 text-accent opacity-[0.03] group-hover:opacity-[0.08] group-hover:scale-110 group-hover:-rotate-12 transition-all duration-700 pointer-events-none" />
+                
+                <div className="space-y-4">
+                  <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-accent/10 rounded-full border border-accent/20 backdrop-blur-md">
+                    <Bot size={14} className="text-accent" />
+                    <span className="text-[9px] font-black text-accent uppercase tracking-widest">Neural core</span>
+                  </div>
+                  <div>
+                    <h3 className="text-2xl font-black text-white mb-2 tracking-tight">AI Insight</h3>
+                    <p className="text-sm text-zinc-500 font-medium leading-relaxed max-w-[200px]">Next-gen neural assistant for system diagnostics.</p>
+                  </div>
                 </div>
-                <h3 className="text-xl font-black text-white mb-1 tracking-tight">AI Intelligence</h3>
-                <p className="text-[12px] text-zinc-500 font-medium">Analyze errors and chat with neural AI.</p>
+                
+                <div className="flex items-center gap-2 text-accent text-[10px] font-bold uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-2 group-hover:translate-y-0">
+                  Initialize <Terminal size={12} />
+                </div>
               </div>
           </button>
 
           {/* Tools Registry Card */}
-          <button onClick={() => onNavigate('PACKAGES')} className="bg-zinc-900 border border-zinc-800 rounded-[2rem] p-6 text-left relative overflow-hidden group active:scale-[0.98] transition-all min-h-[140px] hover:border-purple-500 shadow-xl hover:shadow-purple-500/5">
-              <Package size={120} className="absolute -right-4 -bottom-4 text-purple-500 opacity-5 group-hover:opacity-10 transition-opacity" />
-              <div className="relative z-10">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="p-2.5 bg-purple-500 rounded-xl shadow-[0_0_15px_rgba(168,85,247,0.3)]"><Package size={20} className="text-black" /></div>
-                  <span className="text-[10px] font-black text-purple-500 uppercase tracking-widest">Registry</span>
+          <button onClick={() => onNavigate('PACKAGES')} className="group relative aspect-[4/3] md:aspect-auto min-h-[180px] text-left active:scale-[0.98] transition-all duration-300">
+              <div className="absolute inset-0 bg-zinc-900/40 backdrop-blur-sm border border-white/5 rounded-[2.5rem] group-hover:border-purple-500/50 group-hover:bg-zinc-900/60 transition-all duration-500" />
+              <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 via-transparent to-transparent rounded-[2.5rem] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              
+              <div className="relative h-full p-8 flex flex-col justify-between overflow-hidden">
+                <Package size={160} className="absolute -right-8 -bottom-8 text-purple-500 opacity-[0.03] group-hover:opacity-[0.08] group-hover:scale-110 group-hover:rotate-12 transition-all duration-700 pointer-events-none" />
+                
+                <div className="space-y-4">
+                  <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-purple-500/10 rounded-full border border-purple-500/20 backdrop-blur-md">
+                    <Package size={14} className="text-purple-500" />
+                    <span className="text-[9px] font-black text-purple-500 uppercase tracking-widest">Registry v2</span>
+                  </div>
+                  <div>
+                    <h3 className="text-2xl font-black text-white mb-2 tracking-tight">Vault</h3>
+                    <p className="text-sm text-zinc-500 font-medium leading-relaxed max-w-[200px]">Advanced repository with 2000+ curated modules.</p>
+                  </div>
                 </div>
-                <h3 className="text-xl font-black text-white mb-1 tracking-tight">Tools Library</h3>
-                <p className="text-[12px] text-zinc-500 font-medium">Search 2000+ packages and installations.</p>
+                
+                <div className="flex items-center gap-2 text-purple-500 text-[10px] font-bold uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-2 group-hover:translate-y-0">
+                  Explore <Terminal size={12} />
+                </div>
               </div>
           </button>
 
           {/* Guides Card */}
-          <button onClick={() => onNavigate('GUIDES')} className="bg-zinc-900 border border-zinc-800 rounded-[2rem] p-6 text-left relative overflow-hidden group active:scale-[0.98] transition-all min-h-[140px] hover:border-orange-500 shadow-xl hover:shadow-orange-500/5">
-              <BookOpen size={120} className="absolute -right-4 -bottom-4 text-orange-400 opacity-5 group-hover:opacity-10 transition-opacity" />
-              <div className="relative z-10">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="p-2.5 bg-orange-500 rounded-xl shadow-[0_0_15px_rgba(249,115,22,0.3)]"><BookOpen size={20} className="text-black" /></div>
-                  <span className="text-[10px] font-black text-orange-500 uppercase tracking-widest">Tutorials</span>
+          <button onClick={() => onNavigate('GUIDES')} className="group relative aspect-[4/3] md:aspect-auto min-h-[180px] text-left active:scale-[0.98] transition-all duration-300">
+              <div className="absolute inset-0 bg-zinc-900/40 backdrop-blur-sm border border-white/5 rounded-[2.5rem] group-hover:border-orange-500/50 group-hover:bg-zinc-900/60 transition-all duration-500" />
+              <div className="absolute inset-0 bg-gradient-to-br from-orange-500/5 via-transparent to-transparent rounded-[2.5rem] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              
+              <div className="relative h-full p-8 flex flex-col justify-between overflow-hidden">
+                <BookOpen size={160} className="absolute -right-8 -bottom-8 text-orange-500 opacity-[0.03] group-hover:opacity-[0.08] group-hover:scale-110 group-hover:-rotate-6 transition-all duration-700 pointer-events-none" />
+                
+                <div className="space-y-4">
+                  <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-orange-500/10 rounded-full border border-orange-500/20 backdrop-blur-md">
+                    <BookOpen size={14} className="text-orange-500" />
+                    <span className="text-[9px] font-black text-orange-500 uppercase tracking-widest">Codex</span>
+                  </div>
+                  <div>
+                    <h3 className="text-2xl font-black text-white mb-2 tracking-tight">Academy</h3>
+                    <p className="text-sm text-zinc-500 font-medium leading-relaxed max-w-[200px]">Master Termux through structured protocol guides.</p>
+                  </div>
                 </div>
-                <h3 className="text-xl font-black text-white mb-1 tracking-tight">User Guides</h3>
-                <p className="text-[12px] text-zinc-500 font-medium">Step-by-step Termux configurations.</p>
-              </div>
-          </button>
-
-          {/* GitHub Tools Card */}
-          <button onClick={() => onNavigate('SCRIPTS')} className="bg-zinc-900 border border-zinc-800 rounded-[2rem] p-6 text-left relative overflow-hidden group active:scale-[0.98] transition-all min-h-[140px]">
-              <Terminal size={120} className="absolute -right-4 -bottom-4 text-green-500 opacity-5 group-hover:opacity-10 transition-opacity" />
-              <div className="relative z-10">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="p-2.5 bg-green-500 rounded-xl shadow-[0_0_15px_rgba(34,197,94,0.3)]"><Terminal size={20} className="text-black" /></div>
-                  <span className="text-[10px] font-black text-green-500 uppercase tracking-widest">Repository</span>
+                
+                <div className="flex items-center gap-2 text-orange-500 text-[10px] font-bold uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-2 group-hover:translate-y-0">
+                  Learn <Terminal size={12} />
                 </div>
-                <h3 className="text-xl font-black text-white mb-1 tracking-tight">GitHub Scripts</h3>
-                <p className="text-[12px] text-zinc-500 font-medium">Install specialized tools and scripts.</p>
-              </div>
-          </button>
-
-          {/* Architect Card */}
-          <button onClick={() => onNavigate('ARCHITECT')} className="bg-zinc-900 border border-zinc-800 rounded-[2rem] p-6 text-left relative overflow-hidden group active:scale-[0.98] transition-all min-h-[140px] hover:border-blue-500 shadow-xl hover:shadow-blue-500/5">
-              <PenTool size={120} className="absolute -right-4 -bottom-4 text-blue-400 opacity-5 group-hover:opacity-10 transition-opacity" />
-              <div className="relative z-10">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="p-2.5 bg-blue-500 rounded-xl shadow-[0_0_15px_rgba(59,130,246,0.3)]"><PenTool size={20} className="text-black" /></div>
-                  <span className="text-[10px] font-black text-blue-400 uppercase tracking-widest">Forge</span>
-                </div>
-                <h3 className="text-xl font-black text-white mb-1 tracking-tight">X-Architect</h3>
-                <p className="text-[12px] text-zinc-500 font-medium">Generate complex script blueprints.</p>
               </div>
           </button>
       </div>
 
-      <div className="bg-zinc-900/40 border border-zinc-800 rounded-[2rem] p-5 md:p-8">
-          <div className="flex items-center justify-between mb-4">
-              <span className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">Command History</span>
-          </div>
-          <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
-              {history.length > 0 ? history.slice(0, 4).map((cmd, i) => (
-                  <div key={i} className="flex items-center justify-between p-3 bg-black/30 rounded-xl border border-zinc-800/50 group hover:border-accent/30 transition-colors">
-                      <code className="text-[11px] text-zinc-400 truncate flex-1 font-mono">{cmd} codes...</code>
-                      <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-all">
-                          <button onClick={() => { navigator.clipboard.writeText(cmd); showToast('Copied', 'success'); }} className="p-1.5 text-zinc-600 hover:text-accent">
-                              <Copy size={14} />
-                          </button>
-                      </div>
-                  </div>
-              )) : (
-                  <div className="py-2 text-center text-[10px] text-zinc-600 font-bold uppercase md:col-span-2">No recent activity</div>
-              )}
-          </div>
+      <div className="relative group">
+        <div className="absolute inset-0 bg-gradient-to-r from-accent/5 to-blue-500/5 rounded-[2.5rem] blur-xl opacity-50 group-hover:opacity-100 transition-opacity duration-700" />
+        <div className="relative bg-zinc-900/30 backdrop-blur-xl border border-white/5 rounded-[2.5rem] p-8 md:p-10">
+            <div className="flex items-center justify-between mb-8">
+                <div className="flex items-center gap-3">
+                  <div className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+                  <span className="text-[10px] font-black text-zinc-400 uppercase tracking-[0.3em]">Command Matrix</span>
+                </div>
+                <div className="text-[9px] font-bold text-zinc-600 uppercase">System History</div>
+            </div>
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                {history.length > 0 ? history.slice(0, 4).map((cmd, i) => (
+                    <div key={i} className="flex items-center justify-between p-4 bg-white/5 rounded-2xl border border-white/5 group/item hover:border-accent/30 hover:bg-white/10 transition-all duration-300">
+                        <div className="flex items-center gap-3 overflow-hidden">
+                          <Terminal size={14} className="text-zinc-500 shrink-0" />
+                          <code className="text-xs text-zinc-300 truncate font-mono">{cmd}</code>
+                        </div>
+                        <button onClick={() => { navigator.clipboard.writeText(cmd); showToast('Matrix Copied', 'success'); }} className="p-2 text-zinc-500 hover:text-accent transition-colors">
+                            <Copy size={14} />
+                        </button>
+                    </div>
+                )) : (
+                    <div className="py-8 text-center md:col-span-2">
+                      <div className="text-[10px] text-zinc-600 font-bold uppercase tracking-widest mb-1">No Trace Detected</div>
+                      <div className="text-[9px] text-zinc-700 font-medium">Activity logs are currently empty</div>
+                    </div>
+                )}
+            </div>
+        </div>
       </div>
     </div>
   );

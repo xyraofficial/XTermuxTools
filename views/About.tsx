@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Youtube, Mail, Facebook, ExternalLink, User, CheckCircle2, Star, Code, Heart, Smartphone, AlertTriangle, Shield, Hexagon, Camera, Calendar, Shield as SecurityShield, Edit2, Check, X, LogOut } from 'lucide-react';
+import { Youtube, Mail, Facebook, ExternalLink, User, CheckCircle2, Star, Code, Heart, Smartphone, AlertTriangle, Shield, Hexagon, Camera, Calendar, Shield as SecurityShield, Edit2, Check, X, LogOut, Loader2 } from 'lucide-react';
 import { APP_VERSION } from '../constants';
 import { supabase } from '../supabase';
 import { showToast } from '../components/Toast';
@@ -11,6 +11,8 @@ const About: React.FC = () => {
   const [tempUsername, setTempUsername] = useState('');
   const [avatar, setAvatar] = useState('');
   const [userEmail, setUserEmail] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [joinDate, setJoinDate] = useState<string>('');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -18,6 +20,7 @@ const About: React.FC = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
         setUserEmail(user.email || '');
+        setJoinDate(new Date(user.created_at).toLocaleDateString());
         
         const { data: profile } = await supabase
           .from('profiles')
@@ -52,6 +55,7 @@ const About: React.FC = () => {
           }
         }
       }
+      setLoading(false);
     };
     fetchProfile();
   }, []);
@@ -116,6 +120,15 @@ const About: React.FC = () => {
       showToast('Gagal keluar', 'error');
     }
   };
+
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh]">
+        <Loader2 className="text-accent animate-spin" size={32} />
+        <p className="mt-4 text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em]">Syncing Neural Link...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6 animate-fade-in pb-32 px-4 pt-4">
@@ -209,7 +222,7 @@ const About: React.FC = () => {
                 <Calendar className="text-accent" size={20} />
                 <div>
                   <p className="text-[10px] text-zinc-500 font-black uppercase tracking-widest">Initialization</p>
-                  <p className="text-sm font-bold">{new Date().toLocaleDateString()}</p>
+                  <p className="text-sm font-bold">{joinDate || new Date().toLocaleDateString()}</p>
                 </div>
               </div>
               <div className="p-4 bg-zinc-950/50 border border-zinc-800 rounded-2xl flex items-center gap-4 hover:border-accent/20 transition-colors">

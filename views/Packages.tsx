@@ -161,42 +161,60 @@ const Packages: React.FC = () => {
 
       <div className="p-4 space-y-6 pb-40">
         <div className="grid gap-4">
-            {visiblePackages.map((pkg) => {
-              const isFav = favorites.includes(pkg.id);
-              const isInQueue = installQueue.includes(pkg.id);
-              return (
-                <div key={pkg.id} className="group bg-zinc-900/40 border border-zinc-800/60 rounded-[1.5rem] p-5 hover:border-zinc-700 transition-all duration-300 relative">
-                  <div className="absolute top-5 right-5 flex items-center gap-2">
-                      <button 
-                        onClick={(e) => toggleQueue(e, pkg.id)}
-                        className={`p-2 rounded-xl transition-all active:scale-90 ${isInQueue ? 'bg-accent text-black' : 'bg-zinc-800 text-zinc-500 hover:text-white'}`}
-                        title="Add to Bulk Install Queue"
-                      >
-                        {isInQueue ? <Check size={18} /> : <Plus size={18} />}
-                      </button>
-                      <button 
-                        onClick={(e) => toggleFavorite(e, pkg.id)}
-                        className={`p-2 rounded-xl transition-all active:scale-90 ${isFav ? 'text-red-500 bg-red-500/10' : 'text-zinc-600 bg-zinc-800/50'}`}
-                      >
-                        <Heart size={18} className={isFav ? 'fill-current' : ''} />
-                      </button>
-                  </div>
-
-                  <div className="flex items-center gap-4 mb-4">
-                    <div className="w-12 h-12 rounded-2xl bg-zinc-950 border border-zinc-800 flex items-center justify-center group-hover:border-accent/30 transition-colors">
-                      <Package size={20} className="text-zinc-400 group-hover:text-accent" />
+            {visiblePackages.length > 0 ? (
+              visiblePackages.map((pkg) => {
+                const isFav = favorites.includes(pkg.id);
+                const isInQueue = installQueue.includes(pkg.id);
+                return (
+                  <div key={pkg.id} className="group bg-zinc-900/40 border border-zinc-800/60 rounded-[1.5rem] p-5 hover:border-zinc-700 transition-all duration-300 relative">
+                    <div className="absolute top-5 right-5 flex items-center gap-2">
+                        <button 
+                          onClick={(e) => toggleQueue(e, pkg.id)}
+                          className={`p-2 rounded-xl transition-all active:scale-90 ${isInQueue ? 'bg-accent text-black' : 'bg-zinc-800 text-zinc-500 hover:text-white'}`}
+                          title="Add to Bulk Install Queue"
+                        >
+                          {isInQueue ? <Check size={18} /> : <Plus size={18} />}
+                        </button>
+                        <button 
+                          onClick={(e) => toggleFavorite(e, pkg.id)}
+                          className={`p-2 rounded-xl transition-all active:scale-90 ${isFav ? 'text-red-500 bg-red-500/10' : 'text-zinc-600 bg-zinc-800/50'}`}
+                        >
+                          <Heart size={18} className={isFav ? 'fill-current' : ''} />
+                        </button>
                     </div>
-                    <div>
-                        <h4 className="font-bold text-white text-[16px] tracking-tight">{pkg.name}</h4>
-                        <span className="text-[9px] font-black text-zinc-600 uppercase tracking-widest">{pkg.category}</span>
-                    </div>
-                  </div>
 
-                  <p className="text-[13px] text-zinc-400 mb-5 leading-relaxed font-medium line-clamp-2 pr-12">{pkg.description}</p>
-                  <CodeBlock code={pkg.installCommand} />
+                    <div className="flex items-center gap-4 mb-4">
+                      <div className="w-12 h-12 rounded-2xl bg-zinc-950 border border-zinc-800 flex items-center justify-center group-hover:border-accent/30 transition-colors">
+                        <Package size={20} className="text-zinc-400 group-hover:text-accent" />
+                      </div>
+                      <div>
+                          <h4 className="font-bold text-white text-[16px] tracking-tight">{pkg.name}</h4>
+                          <span className="text-[9px] font-black text-zinc-600 uppercase tracking-widest">{pkg.category}</span>
+                      </div>
+                    </div>
+
+                    <p className="text-[13px] text-zinc-400 mb-5 leading-relaxed font-medium line-clamp-2 pr-12">{pkg.description}</p>
+                    <CodeBlock code={pkg.installCommand} />
+                  </div>
+                );
+              })
+            ) : (
+              <div className="py-20 flex flex-col items-center text-center space-y-4">
+                <div className="w-16 h-16 bg-zinc-900 rounded-full flex items-center justify-center border border-zinc-800 text-zinc-700">
+                  <Package size={32} />
                 </div>
-              );
-            })}
+                <div>
+                  <h3 className="text-white font-bold">No packages found</h3>
+                  <p className="text-xs text-zinc-500 mt-1 max-w-[200px]">Try adjusting your search or category filters.</p>
+                </div>
+                <button 
+                  onClick={() => { setSearchTerm(''); setSelectedCategory('All'); }}
+                  className="px-6 py-2 bg-accent/10 text-accent border border-accent/20 rounded-xl text-[10px] font-black uppercase tracking-widest"
+                >
+                  Reset Filters
+                </button>
+              </div>
+            )}
         </div>
 
         {visibleCount < filteredPackages.length && (

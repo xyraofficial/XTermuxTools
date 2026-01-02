@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Bot, Terminal, PenTool, Package, BookOpen, User } from 'lucide-react';
+import { Bot, Terminal, PenTool, Package, BookOpen, User, Shield } from 'lucide-react';
 
 interface HomeProps {
   onNavigate: (view: string) => void;
@@ -133,11 +133,12 @@ const Home: React.FC<HomeProps> = ({ onNavigate }) => {
         <h3 className="text-[10px] font-black text-zinc-600 uppercase tracking-[0.3em] px-1">{t.coreSystems}</h3>
         <div className="grid grid-cols-2 gap-3">
           {[
-            { id: 'AI_CHAT', icon: Bot, title: t.ai, color: 'accent' },
+            { id: 'AI_CHAT', icon: Bot, title: 'AI CHAT', color: 'accent' },
+            { id: 'AI_BUILDER', icon: PenTool, title: 'AI BUILDER', color: 'blue-500' },
             { id: 'PACKAGES', icon: Package, title: t.vault, color: 'purple-500' },
             { id: 'SCRIPTS', icon: Terminal, title: t.scripts, color: 'blue-500' },
             { id: 'GUIDES', icon: BookOpen, title: t.codex, color: 'orange-500' },
-            { id: 'ARCHITECT', icon: PenTool, title: t.forge, color: 'red-500' },
+            { id: 'ARCHITECT', icon: Shield, title: t.forge, color: 'red-500' },
             { id: 'ABOUT', icon: User, title: t.profile, color: 'zinc-400' }
           ].map((item) => (
             <button key={item.id} onClick={() => onNavigate(item.id)} className="group relative w-full text-left active:scale-[0.98] transition-all duration-300">

@@ -11,6 +11,7 @@ import HomeView from './views/Home';
 import PackagesView from './views/Packages';
 import GuidesView from './views/Guides';
 import AboutView from './views/About';
+import AIChatView from './views/AIChat';
 import ArchitectView from './views/Architect';
 import ScriptsView from './views/Scripts';
 import ConfirmEmailView from './views/ConfirmEmail';
@@ -30,9 +31,9 @@ const AppContent: React.FC = () => {
   const [session, setSession] = useState<Session | null>(null);
 
   const translations = {
-    en: { home: "Home", tools: "Tools", script: "Script", ai: "AI", codex: "Codex", user: "User" },
-    id: { home: "Beranda", tools: "Alat", script: "Skrip", ai: "AI", codex: "Kodeks", user: "Profil" },
-    hi: { home: "होम", tools: "टूल्स", script: "स्क्रिप्ट", ai: "AI", codex: "कोडेक्स", user: "उपयोगकर्ता" }
+    en: { home: "Home", tools: "Tools", script: "Script", ai: "AI Builder", chat: "AI Chat", codex: "Codex", user: "User" },
+    id: { home: "Beranda", tools: "Alat", script: "Skrip", ai: "AI Builder", chat: "AI Chat", codex: "Kodeks", user: "Profil" },
+    hi: { home: "होम", tools: "टूल्स", script: "स्क्रिप्ट", ai: "AI Builder", chat: "AI Chat", codex: "कोडेक्स", user: "उपयोगकर्ता" }
   };
 
   const t = translations[language];
@@ -63,7 +64,8 @@ const AppContent: React.FC = () => {
     if (path === '/packages') return ViewState.PACKAGES;
     if (path === '/guides') return ViewState.GUIDES;
     if (path === '/scripts') return ViewState.SCRIPTS;
-    if (path === '/ai') return ViewState.AI_CHAT;
+    if (path === '/ai-chat') return ViewState.AI_CHAT;
+    if (path === '/ai-builder') return ViewState.AI_BUILDER;
     
     // Improved detection for Supabase auth links
     if (path.includes('confirm-email') || search.includes('type=signup')) return ViewState.CONFIRM_EMAIL;
@@ -116,7 +118,8 @@ const AppContent: React.FC = () => {
       case ViewState.HOME: path = '/'; break;
       case ViewState.ARCHITECT: path = '/architect'; break;
       case ViewState.PACKAGES: path = '/packages'; break;
-      case ViewState.AI_CHAT: path = '/ai'; break;
+      case ViewState.AI_CHAT: path = '/ai-chat'; break;
+      case ViewState.AI_BUILDER: path = '/ai-builder'; break;
       case ViewState.GUIDES: path = '/guides'; break;
       case ViewState.SCRIPTS: path = '/scripts'; break;
       case ViewState.ABOUT: path = '/about'; break;
@@ -138,7 +141,8 @@ const AppContent: React.FC = () => {
       case ViewState.SCRIPTS: return <div {...viewProps}><ScriptsView /></div>;
       case ViewState.GUIDES: return <div {...viewProps}><GuidesView /></div>;
       case ViewState.ABOUT: return <div {...viewProps}><AboutView /></div>;
-      case ViewState.AI_CHAT: return <div {...viewProps}><ArchitectView /></div>;
+      case ViewState.AI_CHAT: return <div {...viewProps}><AIChatView /></div>;
+      case ViewState.AI_BUILDER: return <div {...viewProps}><ArchitectView /></div>;
       case ViewState.ARCHITECT: return <div {...viewProps}><AdminView /></div>;
       case ViewState.HELP: return <div {...viewProps}><HelpView onBack={() => navigate(ViewState.HOME)} /></div>;
       case ViewState.PRIVACY: return <div {...viewProps}><PrivacyView onBack={() => navigate(ViewState.HOME)} /></div>;
@@ -218,7 +222,8 @@ const AppContent: React.FC = () => {
                 <NavButton active={currentView === ViewState.HOME} onClick={() => navigate(ViewState.HOME)} icon={<Home size={18} />} label={t.home} />
                 <NavButton active={currentView === ViewState.PACKAGES} onClick={() => navigate(ViewState.PACKAGES)} icon={<Package size={18} />} label={t.tools} />
                 <NavButton active={currentView === ViewState.SCRIPTS} onClick={() => navigate(ViewState.SCRIPTS)} icon={<Terminal size={18} />} label={t.script} />
-                <NavButton active={currentView === ViewState.AI_CHAT} onClick={() => navigate(ViewState.AI_CHAT)} icon={<Bot size={20} />} label={t.ai} />
+                <NavButton active={currentView === ViewState.AI_CHAT} onClick={() => navigate(ViewState.AI_CHAT)} icon={<Bot size={20} />} label={t.chat} />
+                <NavButton active={currentView === ViewState.AI_BUILDER} onClick={() => navigate(ViewState.AI_BUILDER)} icon={<PenTool size={20} />} label={t.ai} />
                 <NavButton active={currentView === ViewState.GUIDES} onClick={() => navigate(ViewState.GUIDES)} icon={<BookOpen size={18} />} label={t.codex} />
                 <NavButton active={currentView === ViewState.ABOUT} onClick={() => navigate(ViewState.ABOUT)} icon={<User size={18} />} label={t.user} />
             </div>

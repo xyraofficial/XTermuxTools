@@ -190,22 +190,22 @@ const AIChat: React.FC = () => {
         <button onClick={() => setMessages([])} className="p-2 text-zinc-600"><Eraser size={18} /></button>
       </header>
 
-      <div className="flex-1 overflow-y-auto p-4 space-y-6 no-scrollbar pb-32">
+      <div className="flex-1 overflow-y-auto p-4 space-y-6 no-scrollbar pb-10">
         {messages.length === 0 ? (
-          <div className="h-full flex flex-col items-center justify-center space-y-8 animate-in fade-in duration-700">
-            <div className="relative">
+          <div className="min-h-full flex flex-col items-center justify-center space-y-6 py-10 animate-in fade-in duration-700">
+            <div className="relative shrink-0">
               <div className="absolute inset-0 bg-accent/20 blur-3xl rounded-full" />
-              <div className="relative w-20 h-20 bg-zinc-900 border border-white/10 rounded-[2.5rem] flex items-center justify-center">
-                <Bot size={40} className="text-accent animate-pulse" />
+              <div className="relative w-16 h-16 bg-zinc-900 border border-white/10 rounded-[2rem] flex items-center justify-center">
+                <Bot size={32} className="text-accent animate-pulse" />
               </div>
             </div>
             
-            <div className="text-center space-y-2">
-              <h3 className="text-xl font-black text-white uppercase tracking-tighter italic">Neural Link v4.0</h3>
-              <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-[0.3em]">Quantum Processing Active</p>
+            <div className="text-center space-y-1 shrink-0">
+              <h3 className="text-lg font-black text-white uppercase tracking-tighter italic">Neural Link v4.0</h3>
+              <p className="text-[9px] text-zinc-500 font-bold uppercase tracking-[0.3em]">Quantum Processing Active</p>
             </div>
 
-            <div className="grid grid-cols-2 gap-3 w-full max-w-sm px-4">
+            <div className="grid grid-cols-2 gap-2 w-full max-w-sm px-2">
               {[
                 "How to install scripts?",
                 "Best Termux tools?",
@@ -215,7 +215,7 @@ const AIChat: React.FC = () => {
                 <button 
                   key={i}
                   onClick={() => { setInput(suggestion); }}
-                  className="p-4 bg-zinc-900/50 border border-white/5 rounded-2xl text-[10px] font-black text-zinc-400 uppercase tracking-widest text-left hover:border-accent/30 hover:text-accent transition-all active:scale-95"
+                  className="p-3 bg-zinc-900/50 border border-white/5 rounded-xl text-[9px] font-black text-zinc-400 uppercase tracking-widest text-left hover:border-accent/30 hover:text-accent transition-all active:scale-95"
                 >
                   {suggestion}
                 </button>
@@ -237,7 +237,7 @@ const AIChat: React.FC = () => {
         <div ref={messagesEndRef} />
       </div>
 
-      <div className="p-4 bg-black/80 backdrop-blur-xl border-t border-white/5 pb-24">
+      <div className="p-4 bg-black/80 backdrop-blur-xl border-t border-white/5 pb-20 shrink-0">
         <div className="flex items-center gap-2 bg-zinc-900 p-1.5 rounded-2xl border border-white/5">
           <textarea value={input} onChange={(e) => setInput(e.target.value)} placeholder="Type a command..." className="flex-1 bg-transparent text-white py-2 px-3 resize-none focus:outline-none text-xs max-h-24 no-scrollbar" rows={1} />
           <button onClick={handleSend} disabled={!input.trim() || isLoading} className="p-3 bg-accent text-black rounded-xl active:scale-95 transition-all">

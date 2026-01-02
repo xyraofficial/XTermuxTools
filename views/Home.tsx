@@ -67,78 +67,81 @@ const Home: React.FC<HomeProps> = ({ onNavigate, initialCommand, onCommandStarte
       </div>
 
       {/* Main Feature Grid */}
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
           {/* AI Chat Card */}
-          <button onClick={() => onNavigate('AI_CHAT')} className="group relative aspect-[4/3] md:aspect-auto min-h-[180px] text-left active:scale-[0.98] transition-all duration-300">
-              <div className="absolute inset-0 bg-zinc-900/40 backdrop-blur-sm border border-white/5 rounded-[2.5rem] group-hover:border-accent/50 group-hover:bg-zinc-900/60 transition-all duration-500" />
-              <div className="absolute inset-0 bg-gradient-to-br from-accent/5 via-transparent to-transparent rounded-[2.5rem] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+          <button onClick={() => onNavigate('AI_CHAT')} className="group relative min-h-[220px] text-left active:scale-[0.98] transition-all duration-500">
+              <div className="absolute inset-0 bg-zinc-900/40 backdrop-blur-md border border-white/5 rounded-[2.5rem] group-hover:border-accent/50 group-hover:bg-zinc-900/80 transition-all duration-500 shadow-2xl" />
+              <div className="absolute inset-0 bg-gradient-to-br from-accent/10 via-accent/5 to-transparent rounded-[2.5rem] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               
-              <div className="relative h-full p-8 flex flex-col justify-between overflow-hidden">
-                <Bot size={160} className="absolute -right-8 -bottom-8 text-accent opacity-[0.03] group-hover:opacity-[0.08] group-hover:scale-110 group-hover:-rotate-12 transition-all duration-700 pointer-events-none" />
+              <div className="relative h-full p-10 flex flex-col justify-between overflow-hidden">
+                <div className="absolute -right-12 -bottom-12 w-48 h-48 bg-accent/10 rounded-full blur-3xl group-hover:bg-accent/20 transition-all duration-700" />
+                <Bot size={180} className="absolute -right-12 -bottom-12 text-accent opacity-[0.05] group-hover:opacity-[0.12] group-hover:scale-110 group-hover:-rotate-12 transition-all duration-700 pointer-events-none" />
                 
-                <div className="space-y-4">
-                  <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-accent/10 rounded-full border border-accent/20 backdrop-blur-md">
-                    <Bot size={14} className="text-accent" />
-                    <span className="text-[9px] font-black text-accent uppercase tracking-widest">Neural core</span>
+                <div className="space-y-5">
+                  <div className="inline-flex items-center gap-2.5 px-4 py-2 bg-accent/10 rounded-full border border-accent/20 backdrop-blur-md shadow-inner">
+                    <div className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+                    <span className="text-[10px] font-black text-accent uppercase tracking-[0.2em]">Neural Core v4</span>
                   </div>
                   <div>
-                    <h3 className="text-2xl font-black text-white mb-2 tracking-tight">AI Insight</h3>
-                    <p className="text-sm text-zinc-500 font-medium leading-relaxed max-w-[200px]">Next-gen neural assistant for system diagnostics.</p>
+                    <h3 className="text-3xl font-black text-white mb-2 tracking-tighter uppercase">AI Insight</h3>
+                    <p className="text-sm text-zinc-400 font-medium leading-relaxed max-w-[220px]">Advanced neural architecture for system diagnostics and logic processing.</p>
                   </div>
                 </div>
                 
-                <div className="flex items-center gap-2 text-accent text-[10px] font-bold uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-2 group-hover:translate-y-0">
-                  Initialize <Terminal size={12} />
+                <div className="flex items-center gap-2 text-accent text-[11px] font-black uppercase tracking-[0.2em] opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-4 group-hover:translate-y-0">
+                  Initialize Link <Terminal size={14} className="ml-1" />
                 </div>
               </div>
           </button>
 
           {/* Tools Registry Card */}
-          <button onClick={() => onNavigate('PACKAGES')} className="group relative aspect-[4/3] md:aspect-auto min-h-[180px] text-left active:scale-[0.98] transition-all duration-300">
-              <div className="absolute inset-0 bg-zinc-900/40 backdrop-blur-sm border border-white/5 rounded-[2.5rem] group-hover:border-purple-500/50 group-hover:bg-zinc-900/60 transition-all duration-500" />
-              <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 via-transparent to-transparent rounded-[2.5rem] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+          <button onClick={() => onNavigate('PACKAGES')} className="group relative min-h-[220px] text-left active:scale-[0.98] transition-all duration-500">
+              <div className="absolute inset-0 bg-zinc-900/40 backdrop-blur-md border border-white/5 rounded-[2.5rem] group-hover:border-purple-500/50 group-hover:bg-zinc-900/80 transition-all duration-500 shadow-2xl" />
+              <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-purple-500/5 to-transparent rounded-[2.5rem] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               
-              <div className="relative h-full p-8 flex flex-col justify-between overflow-hidden">
-                <Package size={160} className="absolute -right-8 -bottom-8 text-purple-500 opacity-[0.03] group-hover:opacity-[0.08] group-hover:scale-110 group-hover:rotate-12 transition-all duration-700 pointer-events-none" />
+              <div className="relative h-full p-10 flex flex-col justify-between overflow-hidden">
+                <div className="absolute -right-12 -bottom-12 w-48 h-48 bg-purple-500/10 rounded-full blur-3xl group-hover:bg-purple-500/20 transition-all duration-700" />
+                <Package size={180} className="absolute -right-12 -bottom-12 text-purple-500 opacity-[0.05] group-hover:opacity-[0.12] group-hover:scale-110 group-hover:rotate-12 transition-all duration-700 pointer-events-none" />
                 
-                <div className="space-y-4">
-                  <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-purple-500/10 rounded-full border border-purple-500/20 backdrop-blur-md">
-                    <Package size={14} className="text-purple-500" />
-                    <span className="text-[9px] font-black text-purple-500 uppercase tracking-widest">Registry v2</span>
+                <div className="space-y-5">
+                  <div className="inline-flex items-center gap-2.5 px-4 py-2 bg-purple-500/10 rounded-full border border-purple-500/20 backdrop-blur-md shadow-inner">
+                    <div className="w-1.5 h-1.5 rounded-full bg-purple-500 animate-pulse" />
+                    <span className="text-[10px] font-black text-purple-500 uppercase tracking-[0.2em]">Registry Nexus</span>
                   </div>
                   <div>
-                    <h3 className="text-2xl font-black text-white mb-2 tracking-tight">Vault</h3>
-                    <p className="text-sm text-zinc-500 font-medium leading-relaxed max-w-[200px]">Advanced repository with 2000+ curated modules.</p>
+                    <h3 className="text-3xl font-black text-white mb-2 tracking-tighter uppercase">Vault</h3>
+                    <p className="text-sm text-zinc-400 font-medium leading-relaxed max-w-[220px]">Decentralized repository containing 2000+ specialized toolkits.</p>
                   </div>
                 </div>
                 
-                <div className="flex items-center gap-2 text-purple-500 text-[10px] font-bold uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-2 group-hover:translate-y-0">
-                  Explore <Terminal size={12} />
+                <div className="flex items-center gap-2 text-purple-500 text-[11px] font-black uppercase tracking-[0.2em] opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-4 group-hover:translate-y-0">
+                  Access Archive <Terminal size={14} className="ml-1" />
                 </div>
               </div>
           </button>
 
           {/* Guides Card */}
-          <button onClick={() => onNavigate('GUIDES')} className="group relative aspect-[4/3] md:aspect-auto min-h-[180px] text-left active:scale-[0.98] transition-all duration-300">
-              <div className="absolute inset-0 bg-zinc-900/40 backdrop-blur-sm border border-white/5 rounded-[2.5rem] group-hover:border-orange-500/50 group-hover:bg-zinc-900/60 transition-all duration-500" />
-              <div className="absolute inset-0 bg-gradient-to-br from-orange-500/5 via-transparent to-transparent rounded-[2.5rem] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+          <button onClick={() => onNavigate('GUIDES')} className="group relative min-h-[220px] text-left active:scale-[0.98] transition-all duration-500">
+              <div className="absolute inset-0 bg-zinc-900/40 backdrop-blur-md border border-white/5 rounded-[2.5rem] group-hover:border-orange-500/50 group-hover:bg-zinc-900/80 transition-all duration-500 shadow-2xl" />
+              <div className="absolute inset-0 bg-gradient-to-br from-orange-500/10 via-orange-500/5 to-transparent rounded-[2.5rem] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               
-              <div className="relative h-full p-8 flex flex-col justify-between overflow-hidden">
-                <BookOpen size={160} className="absolute -right-8 -bottom-8 text-orange-500 opacity-[0.03] group-hover:opacity-[0.08] group-hover:scale-110 group-hover:-rotate-6 transition-all duration-700 pointer-events-none" />
+              <div className="relative h-full p-10 flex flex-col justify-between overflow-hidden">
+                <div className="absolute -right-12 -bottom-12 w-48 h-48 bg-orange-500/10 rounded-full blur-3xl group-hover:bg-orange-500/20 transition-all duration-700" />
+                <BookOpen size={180} className="absolute -right-12 -bottom-12 text-orange-500 opacity-[0.05] group-hover:opacity-[0.12] group-hover:scale-110 group-hover:-rotate-6 transition-all duration-700 pointer-events-none" />
                 
-                <div className="space-y-4">
-                  <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-orange-500/10 rounded-full border border-orange-500/20 backdrop-blur-md">
-                    <BookOpen size={14} className="text-orange-500" />
-                    <span className="text-[9px] font-black text-orange-500 uppercase tracking-widest">Codex</span>
+                <div className="space-y-5">
+                  <div className="inline-flex items-center gap-2.5 px-4 py-2 bg-orange-500/10 rounded-full border border-orange-500/20 backdrop-blur-md shadow-inner">
+                    <div className="w-1.5 h-1.5 rounded-full bg-orange-500 animate-pulse" />
+                    <span className="text-[10px] font-black text-orange-500 uppercase tracking-[0.2em]">Codex Prime</span>
                   </div>
                   <div>
-                    <h3 className="text-2xl font-black text-white mb-2 tracking-tight">Academy</h3>
-                    <p className="text-sm text-zinc-500 font-medium leading-relaxed max-w-[200px]">Master Termux through structured protocol guides.</p>
+                    <h3 className="text-3xl font-black text-white mb-2 tracking-tighter uppercase">Academy</h3>
+                    <p className="text-sm text-zinc-400 font-medium leading-relaxed max-w-[220px]">Comprehensive database for mastering terminal protocols.</p>
                   </div>
                 </div>
                 
-                <div className="flex items-center gap-2 text-orange-500 text-[10px] font-bold uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-2 group-hover:translate-y-0">
-                  Learn <Terminal size={12} />
+                <div className="flex items-center gap-2 text-orange-500 text-[11px] font-black uppercase tracking-[0.2em] opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-4 group-hover:translate-y-0">
+                  Begin Sequence <Terminal size={14} className="ml-1" />
                 </div>
               </div>
           </button>

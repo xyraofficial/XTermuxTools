@@ -78,7 +78,22 @@ const AIChat: React.FC = () => {
     }
   };
 
-  const handleSend = async () => {
+  const deleteSession = async (id: string) => {
+    try {
+      if (!supabase) return;
+      const { error } = await supabase.from('chat_sessions').delete().eq('id', id);
+      if (error) throw error;
+      
+      setSessions(prev => prev.filter(s => s.id !== id));
+      if (currentSessionId === id) {
+        setCurrentSessionId(null);
+        setMessages([]);
+      }
+      showToast("Conversation deleted", "success");
+    } catch (err) {
+      showToast("Delete failed", "error");
+    }
+  };
     if (!currentSessionId || !input.trim() || isLoading) return;
     const userMsg = input.trim();
     
@@ -175,16 +190,49 @@ const AIChat: React.FC = () => {
       </header>
 
       <div className="flex-1 overflow-y-auto p-4 space-y-6 no-scrollbar pb-32">
-        {messages.map((msg, i) => (
-          <div key={i} className={`flex gap-3 ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
-            <div className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 border ${msg.role === 'user' ? 'bg-zinc-800 border-white/10' : 'bg-zinc-900 border-accent/20'}`}>
-              {msg.role === 'user' ? <User size={14} className="text-zinc-400" /> : <Bot size={14} className="text-accent" />}
+        {messages.length === 0 ? (
+          <div className="h-full flex flex-col items-center justify-center space-y-8 animate-in fade-in duration-700">
+            <div className="relative">
+              <div className="absolute inset-0 bg-accent/20 blur-3xl rounded-full" />
+              <div className="relative w-20 h-20 bg-zinc-900 border border-white/10 rounded-[2.5rem] flex items-center justify-center">
+                <Bot size={40} className="text-accent animate-pulse" />
+              </div>
             </div>
-            <div className={`max-w-[85%] p-4 rounded-2xl text-xs leading-relaxed ${msg.role === 'user' ? 'bg-accent text-black font-bold rounded-tr-none' : 'bg-zinc-900/50 border border-white/5 text-zinc-300 rounded-tl-none'}`}>
-              <ReactMarkdown remarkPlugins={[remarkGfm]} components={{ code: ({ children }) => <code className="bg-white/10 px-1 rounded text-accent font-mono">{children}</code> }}>{msg.content}</ReactMarkdown>
+            
+            <div className="text-center space-y-2">
+              <h3 className="text-xl font-black text-white uppercase tracking-tighter italic">Neural Link v4.0</h3>
+              <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-[0.3em]">Quantum Processing Active</p>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3 w-full max-w-sm px-4">
+              {[
+                "How to install scripts?",
+                "Best Termux tools?",
+                "Optimization guide",
+                "Neural Link help"
+              ].map((suggestion, i) => (
+                <button 
+                  key={i}
+                  onClick={() => { setInput(suggestion); }}
+                  className="p-4 bg-zinc-900/50 border border-white/5 rounded-2xl text-[10px] font-black text-zinc-400 uppercase tracking-widest text-left hover:border-accent/30 hover:text-accent transition-all active:scale-95"
+                >
+                  {suggestion}
+                </button>
+              ))}
             </div>
           </div>
-        ))}
+        ) : (
+          messages.map((msg, i) => (
+            <div key={i} className={`flex gap-3 ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
+              <div className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 border ${msg.role === 'user' ? 'bg-zinc-800 border-white/10' : 'bg-zinc-900 border-accent/20'}`}>
+                {msg.role === 'user' ? <User size={14} className="text-zinc-400" /> : <Bot size={14} className="text-accent" />}
+              </div>
+              <div className={`max-w-[85%] p-4 rounded-2xl text-xs leading-relaxed ${msg.role === 'user' ? 'bg-accent text-black font-bold rounded-tr-none' : 'bg-zinc-900/50 border border-white/5 text-zinc-300 rounded-tl-none'}`}>
+                <ReactMarkdown remarkPlugins={[remarkGfm]} components={{ code: ({ children }) => <code className="bg-white/10 px-1 rounded text-accent font-mono">{children}</code> }}>{msg.content}</ReactMarkdown>
+              </div>
+            </div>
+          ))
+        )}
         <div ref={messagesEndRef} />
       </div>
 
@@ -218,8 +266,19 @@ const AIChat: React.FC = () => {
 
             <div className="flex-1 space-y-2 overflow-y-auto p-4 pt-0 no-scrollbar">
               {sessions.map(s => (
-                <div key={s.id} onClick={() => { setCurrentSessionId(s.id); setMessages(s.messages); setIsSidebarOpen(false); }} className={`p-3 rounded-xl border transition-all truncate text-xs font-bold ${currentSessionId === s.id ? 'bg-accent/10 border-accent/20 text-accent' : 'bg-transparent border-transparent text-zinc-500'}`}>
-                  {s.title}
+                <div key={s.id} className="group relative">
+                  <div 
+                    onClick={() => { setCurrentSessionId(s.id); setMessages(s.messages); setIsSidebarOpen(false); }} 
+                    className={`p-3 pr-10 rounded-xl border transition-all truncate text-xs font-bold ${currentSessionId === s.id ? 'bg-accent/10 border-accent/20 text-accent' : 'bg-transparent border-transparent text-zinc-500'}`}
+                  >
+                    {s.title}
+                  </div>
+                  <button 
+                    onClick={(e) => { e.stopPropagation(); deleteSession(s.id); }}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 text-zinc-600 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all"
+                  >
+                    <Trash2 size={14} />
+                  </button>
                 </div>
               ))}
             </div>

@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@google/genai": "latest",
+    "@supabase/supabase-js": "^2.89.0",
     "@vitejs/plugin-react": "^5.1.2",
     "firebase": "^12.7.0",
     "groq-sdk": "^0.37.0",

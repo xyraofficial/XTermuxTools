@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Home, Package, BookOpen, Bot, User, Palette, X } from 'lucide-react';
+import { Home, Package, BookOpen, Bot, User, Palette, X, Terminal } from 'lucide-react';
 import SystemMonitor from './components/SystemMonitor';
 import { ViewState } from './types';
 import { supabase } from './supabase';
@@ -178,26 +178,13 @@ const AppContent: React.FC = () => {
 
       {!isLegalView && (
         <nav className="fixed bottom-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-3xl border-t border-white/5 pb-safe">
-            <div className="max-w-lg mx-auto flex items-center justify-around h-[70px] px-2">
-                <NavButton active={currentView === ViewState.HOME} onClick={() => navigate(ViewState.HOME)} icon={<Home size={20} />} label="Home" />
-                <NavButton 
-                  active={currentView === ViewState.PACKAGES} 
-                  onClick={() => navigate(ViewState.PACKAGES)} 
-                  icon={
-                    <div className="relative">
-                      <Package size={20} />
-                      {savedCount > 0 && (
-                        <span className="absolute -top-1.5 -right-2 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-accent px-1 text-[8px] font-black text-black ring-1 ring-black">
-                          {savedCount}
-                        </span>
-                      )}
-                    </div>
-                  } 
-                  label="Tools" 
-                />
-                <NavButton active={currentView === ViewState.AI_CHAT} onClick={() => navigate(ViewState.AI_CHAT)} icon={<Bot size={22} />} label="AI" />
-                <NavButton active={currentView === ViewState.GUIDES} onClick={() => navigate(ViewState.GUIDES)} icon={<BookOpen size={20} />} label="Codex" />
-                <NavButton active={currentView === ViewState.ABOUT} onClick={() => navigate(ViewState.ABOUT)} icon={<User size={20} />} label="User" />
+            <div className="max-w-lg mx-auto flex items-center justify-around h-[70px] px-1">
+                <NavButton active={currentView === ViewState.HOME} onClick={() => navigate(ViewState.HOME)} icon={<Home size={18} />} label="Home" />
+                <NavButton active={currentView === ViewState.PACKAGES} onClick={() => navigate(ViewState.PACKAGES)} icon={<Package size={18} />} label="Tools" />
+                <NavButton active={currentView === ViewState.SCRIPTS} onClick={() => navigate(ViewState.SCRIPTS)} icon={<Terminal size={18} />} label="Script" />
+                <NavButton active={currentView === ViewState.AI_CHAT} onClick={() => navigate(ViewState.AI_CHAT)} icon={<Bot size={20} />} label="AI" />
+                <NavButton active={currentView === ViewState.GUIDES} onClick={() => navigate(ViewState.GUIDES)} icon={<BookOpen size={18} />} label="Codex" />
+                <NavButton active={currentView === ViewState.ABOUT} onClick={() => navigate(ViewState.ABOUT)} icon={<User size={18} />} label="User" />
             </div>
         </nav>
       )}

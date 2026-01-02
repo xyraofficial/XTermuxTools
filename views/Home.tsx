@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Bot, Terminal, PenTool, Package, BookOpen } from 'lucide-react';
+import { Bot, Terminal, PenTool, Package, BookOpen, User } from 'lucide-react';
 
 interface HomeProps {
   onNavigate: (view: string) => void;
@@ -50,24 +50,25 @@ const Home: React.FC<HomeProps> = ({ onNavigate }) => {
         </div>
       </div>
 
+      {/* Feature Grid - Optimized for Mobile All Menus */}
       <div className="space-y-4">
         <h3 className="text-[10px] font-black text-zinc-600 uppercase tracking-[0.3em] px-1">Core Systems</h3>
-        <div className="grid grid-cols-1 gap-3">
+        <div className="grid grid-cols-2 gap-3">
           {[
-            { id: 'AI_CHAT', icon: Bot, title: 'AI Assistant', desc: 'Neural diagnostics & script help', color: 'accent' },
-            { id: 'PACKAGES', icon: Package, title: 'Tool Vault', desc: 'Curated repository for Android', color: 'purple-500' },
-            { id: 'GUIDES', icon: BookOpen, title: 'Command Codex', desc: 'Master the terminal interface', color: 'orange-500' }
+            { id: 'AI_CHAT', icon: Bot, title: 'AI Assistant', color: 'accent' },
+            { id: 'PACKAGES', icon: Package, title: 'Tool Vault', color: 'purple-500' },
+            { id: 'SCRIPTS', icon: Terminal, title: 'Scripts', color: 'blue-500' },
+            { id: 'GUIDES', icon: BookOpen, title: 'Codex', color: 'orange-500' },
+            { id: 'ARCHITECT', icon: PenTool, title: 'Forge', color: 'red-500' },
+            { id: 'ABOUT', icon: User, title: 'Profile', color: 'zinc-400' }
           ].map((item) => (
             <button key={item.id} onClick={() => onNavigate(item.id)} className="group relative w-full text-left active:scale-[0.98] transition-all duration-300">
               <div className="absolute inset-0 bg-zinc-900/40 backdrop-blur-sm border border-white/5 rounded-2xl group-hover:bg-zinc-900/60 transition-all" />
-              <div className="relative p-5 flex items-center gap-4">
-                <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 bg-zinc-900 border border-white/5`}>
-                  <item.icon size={20} className="text-accent" />
+              <div className="relative p-4 flex flex-col items-center text-center gap-3">
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-zinc-900 border border-white/5">
+                  <item.icon size={18} className="text-accent" />
                 </div>
-                <div>
-                  <h4 className="text-base font-black text-white">{item.title}</h4>
-                  <p className="text-[10px] text-zinc-500 font-medium leading-tight">{item.desc}</p>
-                </div>
+                <h4 className="text-xs font-black text-white uppercase tracking-tighter">{item.title}</h4>
               </div>
             </button>
           ))}

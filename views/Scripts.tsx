@@ -91,54 +91,58 @@ const Scripts: React.FC = () => {
 
               {selectedScript.setupInfo && (
                 <div className="space-y-2">
-                  <span className="text-[10px] font-black text-zinc-600 uppercase tracking-widest">Complete Setup Guide (Termux)</span>
-                  <div className="p-4 bg-zinc-900 border border-white/5 rounded-2xl space-y-4">
-                    <p className="text-xs text-zinc-400 leading-relaxed">{selectedScript.setupInfo}</p>
+                  <span className="text-[10px] font-black text-zinc-600 uppercase tracking-widest">Setup Guide (Termux)</span>
+                  <div className="bg-zinc-900/50 border border-white/5 rounded-2xl overflow-hidden">
+                    <div className="p-4 border-b border-white/5">
+                      <p className="text-xs text-zinc-500 leading-relaxed italic">"{selectedScript.setupInfo}"</p>
+                    </div>
                     
-                    <div className="space-y-3 pt-4 border-t border-white/5">
-                      <div className="space-y-1">
-                        <div className="flex items-center justify-between">
-                          <p className="text-[9px] text-zinc-600 font-bold uppercase">1. Persiapan Environment:</p>
-                          <button onClick={() => { navigator.clipboard.writeText('termux-setup-storage && pkg update && pkg upgrade -y'); showToast('Copied!', 'success'); }} className="p-1.5 bg-zinc-800 rounded-lg text-zinc-500 hover:text-white transition-all active:scale-90">
+                    <div className="p-4 space-y-4">
+                      <div className="group relative">
+                        <div className="flex items-center justify-between mb-2">
+                          <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider flex items-center gap-2">
+                            <span className="w-1 h-1 bg-green-500 rounded-full"></span>
+                            1. System Preparation
+                          </p>
+                          <button onClick={() => { navigator.clipboard.writeText('termux-setup-storage && pkg update && pkg upgrade -y'); showToast('Copied!', 'success'); }} className="p-1.5 bg-zinc-800 border border-white/5 rounded-lg text-zinc-500 hover:text-white hover:border-green-500/30 transition-all active:scale-90">
                             <Copy size={12} />
                           </button>
                         </div>
-                        <code className="text-[10px] text-green-500/80 font-mono block bg-black/30 p-2 rounded-lg break-all">
+                        <div className="bg-black/40 p-3 rounded-xl border border-white/5 font-mono text-[10px] text-green-500/70 break-all leading-relaxed">
                           termux-setup-storage && pkg update && pkg upgrade -y
-                        </code>
+                        </div>
                       </div>
                       
                       {selectedScript.requiredPackages && selectedScript.requiredPackages.length > 0 && (
-                        <div className="space-y-1">
-                          <div className="flex items-center justify-between">
-                            <p className="text-[9px] text-zinc-600 font-bold uppercase">2. Install Dependencies:</p>
-                            <button onClick={() => { navigator.clipboard.writeText(`pkg install ${selectedScript.requiredPackages.join(' ')} -y`); showToast('Copied!', 'success'); }} className="p-1.5 bg-zinc-800 rounded-lg text-zinc-500 hover:text-white transition-all active:scale-90">
+                        <div className="group relative">
+                          <div className="flex items-center justify-between mb-2">
+                            <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider flex items-center gap-2">
+                              <span className="w-1 h-1 bg-green-500 rounded-full"></span>
+                              2. Dependency Setup
+                            </p>
+                            <button onClick={() => { navigator.clipboard.writeText(`pkg install ${selectedScript.requiredPackages.join(' ')} -y`); showToast('Copied!', 'success'); }} className="p-1.5 bg-zinc-800 border border-white/5 rounded-lg text-zinc-500 hover:text-white hover:border-green-500/30 transition-all active:scale-90">
                               <Copy size={12} />
                             </button>
                           </div>
-                          <code className="text-[10px] text-blue-400/80 font-mono block bg-black/30 p-2 rounded-lg break-all">
+                          <div className="bg-black/40 p-3 rounded-xl border border-white/5 font-mono text-[10px] text-green-500/70 break-all leading-relaxed">
                             pkg install {selectedScript.requiredPackages.join(' ')} -y
-                          </code>
+                          </div>
                         </div>
                       )}
                       
-                      <div className="space-y-1">
-                        <div className="flex items-center justify-between">
-                          <p className="text-[9px] text-zinc-600 font-bold uppercase">3. Execute Script:</p>
-                          <button onClick={() => { navigator.clipboard.writeText(selectedScript.installCommand); showToast('Copied!', 'success'); }} className="p-1.5 bg-zinc-800 rounded-lg text-zinc-500 hover:text-white transition-all active:scale-90">
+                      <div className="group relative">
+                        <div className="flex items-center justify-between mb-2">
+                          <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider flex items-center gap-2">
+                            <span className="w-1 h-1 bg-green-500 rounded-full"></span>
+                            3. Final Execution
+                          </p>
+                          <button onClick={() => { navigator.clipboard.writeText(selectedScript.installCommand); showToast('Copied!', 'success'); }} className="p-1.5 bg-zinc-800 border border-white/5 rounded-lg text-zinc-500 hover:text-white hover:border-green-500/30 transition-all active:scale-90">
                             <Copy size={12} />
                           </button>
                         </div>
-                        <code className="text-[10px] text-yellow-500/80 font-mono block bg-black/30 p-2 rounded-lg break-all">
+                        <div className="bg-black/40 p-3 rounded-xl border border-white/5 font-mono text-[10px] text-green-500/70 break-all leading-relaxed">
                           {selectedScript.installCommand}
-                        </code>
-                      </div>
-
-                      <div className="bg-blue-500/5 border border-blue-500/10 p-3 rounded-xl flex items-start gap-3 mt-4">
-                        <Info size={14} className="text-blue-500 shrink-0 mt-0.5" />
-                        <p className="text-[10px] text-zinc-500 leading-relaxed">
-                          Pastikan koneksi internet stabil. Jika muncul pilihan [Y/n], tekan <span className="text-white font-bold">Y</span> lalu <span className="text-white font-bold">Enter</span>.
-                        </p>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -146,9 +150,16 @@ const Scripts: React.FC = () => {
               )}
 
               <div className="space-y-2">
-                <span className="text-[10px] font-black text-zinc-600 uppercase tracking-widest">Preview / Example</span>
-                <div className="w-full">
-                  <CodeBlock code={selectedScript.previewOutput} label="Preview Output" showCopy={false} />
+                <span className="text-[10px] font-black text-zinc-600 uppercase tracking-widest">Live Output Preview</span>
+                <div className="bg-black border border-white/5 rounded-2xl overflow-hidden shadow-inner">
+                  <div className="flex items-center gap-1.5 px-4 py-2 bg-zinc-900/50 border-b border-white/5">
+                    <div className="w-2 h-2 rounded-full bg-red-500/20 border border-red-500/40"></div>
+                    <div className="w-2 h-2 rounded-full bg-yellow-500/20 border border-yellow-500/40"></div>
+                    <div className="w-2 h-2 rounded-full bg-green-500/20 border border-green-500/40"></div>
+                  </div>
+                  <div className="p-4 max-h-48 overflow-y-auto no-scrollbar font-mono text-[11px] text-green-500 opacity-80 leading-snug whitespace-pre-wrap select-none">
+                    {selectedScript.previewOutput}
+                  </div>
                 </div>
               </div>
               <button onClick={() => window.open(selectedScript.githubUrl, '_blank')} className="w-full py-4 bg-white/5 border border-white/5 rounded-2xl flex items-center justify-center gap-3 text-white font-black text-xs uppercase tracking-widest hover:bg-white/10 transition-colors">

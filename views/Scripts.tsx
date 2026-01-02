@@ -91,14 +91,40 @@ const Scripts: React.FC = () => {
 
               {selectedScript.setupInfo && (
                 <div className="space-y-2">
-                  <span className="text-[10px] font-black text-zinc-600 uppercase tracking-widest">Setup Info (Termux)</span>
-                  <div className="p-4 bg-zinc-900 border border-white/5 rounded-2xl space-y-3">
+                  <span className="text-[10px] font-black text-zinc-600 uppercase tracking-widest">Complete Setup Guide (Termux)</span>
+                  <div className="p-4 bg-zinc-900 border border-white/5 rounded-2xl space-y-4">
                     <p className="text-xs text-zinc-400 leading-relaxed">{selectedScript.setupInfo}</p>
-                    <div className="pt-2 border-t border-white/5">
-                      <p className="text-[9px] text-zinc-600 font-bold uppercase mb-2">Langkah Dasar:</p>
-                      <code className="text-[10px] text-green-500/80 font-mono block bg-black/30 p-2 rounded-lg break-all">
-                        pkg update && pkg upgrade
-                      </code>
+                    
+                    <div className="space-y-3 pt-4 border-t border-white/5">
+                      <div className="space-y-1">
+                        <p className="text-[9px] text-zinc-600 font-bold uppercase">1. Persiapan Environment:</p>
+                        <code className="text-[10px] text-green-500/80 font-mono block bg-black/30 p-2 rounded-lg break-all">
+                          termux-setup-storage && pkg update && pkg upgrade -y
+                        </code>
+                      </div>
+                      
+                      {selectedScript.requiredPackages && selectedScript.requiredPackages.length > 0 && (
+                        <div className="space-y-1">
+                          <p className="text-[9px] text-zinc-600 font-bold uppercase">2. Install Dependencies:</p>
+                          <code className="text-[10px] text-blue-400/80 font-mono block bg-black/30 p-2 rounded-lg break-all">
+                            pkg install {selectedScript.requiredPackages.join(' ')} -y
+                          </code>
+                        </div>
+                      )}
+                      
+                      <div className="space-y-1">
+                        <p className="text-[9px] text-zinc-600 font-bold uppercase">3. Clone & Run:</p>
+                        <code className="text-[10px] text-yellow-500/80 font-mono block bg-black/30 p-2 rounded-lg break-all">
+                          {selectedScript.installCommand}
+                        </code>
+                      </div>
+
+                      <div className="bg-blue-500/5 border border-blue-500/10 p-3 rounded-xl flex items-start gap-3 mt-4">
+                        <Info size={14} className="text-blue-500 shrink-0 mt-0.5" />
+                        <p className="text-[10px] text-zinc-500 leading-relaxed">
+                          Pastikan koneksi internet stabil. Jika muncul pilihan [Y/n], tekan <span className="text-white font-bold">Y</span> lalu <span className="text-white font-bold">Enter</span>.
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>

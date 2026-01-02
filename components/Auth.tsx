@@ -31,7 +31,8 @@ export const Auth: React.FC = () => {
       cancel: 'Cancel',
       enterEmail: 'Enter email',
       createAccount: 'Create account',
-      resetPassword: 'Reset password'
+      resetPassword: 'Reset password',
+      yourEmail: 'Your email'
     },
     id: {
       welcome: 'Selamat datang di XTermux',
@@ -46,7 +47,8 @@ export const Auth: React.FC = () => {
       cancel: 'Batal',
       enterEmail: 'Masukkan email',
       createAccount: 'Buat akun',
-      resetPassword: 'Atur ulang sandi'
+      resetPassword: 'Atur ulang sandi',
+      yourEmail: 'Email Anda'
     },
     hi: {
       welcome: 'XTermux में आपका स्वागत है',
@@ -61,7 +63,8 @@ export const Auth: React.FC = () => {
       cancel: 'रद्द करें',
       enterEmail: 'ईमेल दर्ज करें',
       createAccount: 'खाता बनाएं',
-      resetPassword: 'पासवर्ड रीसेट करें'
+      resetPassword: 'पासवर्ड रीसेट करें',
+      yourEmail: 'आपका ईमेल'
     }
   };
 
@@ -90,6 +93,8 @@ export const Auth: React.FC = () => {
     e.preventDefault();
     setLoading(true);
     try {
+      // Logic to send email would go here
+      // For now we'll just show success
       showToast('Support message sent successfully!', 'success');
       setStep('welcome');
       setSupportMessage('');
@@ -166,7 +171,18 @@ export const Auth: React.FC = () => {
           <h2 className="text-xl font-medium">{t.support}</h2>
         </div>
 
-        <div className="p-6 space-y-6 flex-1">
+        <div className="p-6 space-y-6 flex-1 overflow-y-auto">
+          <div className="space-y-2">
+            <p className="text-sm text-[#8696a0]">{t.yourEmail}</p>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="email@example.com"
+              className="w-full bg-[#202c33] rounded-lg p-4 outline-none border-none"
+            />
+          </div>
+
           <div className="space-y-2">
             <p className="text-sm text-[#8696a0]">{t.describe}</p>
             <textarea
@@ -203,13 +219,13 @@ export const Auth: React.FC = () => {
           </p>
         </div>
 
-        <div className="p-6 flex flex-col gap-4">
+        <div className="p-6 flex flex-col gap-4 bg-[#0b141a] border-t border-[#202c33]">
           <button onClick={handleHelpCenterClick} className="text-[#53bdeb] text-left text-sm font-medium">
             Visit our Help Center
           </button>
           <button
             onClick={handleSupportSubmit}
-            disabled={!supportMessage || loading}
+            disabled={!supportMessage || !email || loading}
             className="w-full bg-[#00a884] text-[#0b141a] font-medium py-3 rounded-full hover:bg-[#06cf9c] transition-colors active:scale-95 disabled:bg-[#111b21] disabled:text-[#8696a0]"
           >
             {t.next}

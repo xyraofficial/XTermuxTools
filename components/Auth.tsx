@@ -1,86 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../supabase';
-import { Mail, Lock, Loader2, UserPlus, LogIn, Eye, EyeOff, KeyRound, MessageSquare, Shield, Globe, ChevronDown, MoreVertical } from 'lucide-react';
+import { Mail, Lock, Loader2, LogIn, Eye, EyeOff, MessageSquare, Shield, Globe, ChevronDown, MoreVertical } from 'lucide-react';
 import { showToast } from './Toast';
 import Lottie from 'lottie-react';
-
-const splashAnimation = {
-  v: "5.7.1",
-  fr: 30,
-  ip: 0,
-  op: 60,
-  w: 200,
-  h: 200,
-  nm: "Splash",
-  ddd: 0,
-  assets: [],
-  layers: [
-    {
-      ddd: 0,
-      ind: 1,
-      ty: 4,
-      nm: "Shield",
-      sr: 1,
-      ks: {
-        o: { a: 0, k: 100, ix: 11 },
-        r: { a: 0, k: 0, ix: 10 },
-        p: { a: 0, k: [100, 100, 0], ix: 2 },
-        a: { a: 0, k: [0, 0, 0], ix: 1 },
-        s: {
-          a: 1,
-          k: [
-            { t: 0, s: [0, 0, 100], e: [100, 100, 100], i: { x: 0.667, y: 1 }, o: { x: 0.333, y: 0 } },
-            { t: 30, s: [100, 100, 100] }
-          ],
-          ix: 6
-        }
-      },
-      ao: 0,
-      shapes: [
-        {
-          ty: "gr",
-          it: [
-            {
-              ty: "rc",
-              d: 1,
-              s: { a: 0, k: [80, 100], ix: 2 },
-              p: { a: 0, k: [0, 0], ix: 3 },
-              r: { a: 0, k: 10, ix: 4 },
-              nm: "Rect",
-              mn: "ADBE Vector Shape - Rect",
-              hd: false
-            },
-            {
-              ty: "fl",
-              c: { a: 0, k: [0, 0.659, 0.518, 1], ix: 4 },
-              o: { a: 0, k: 100, ix: 5 },
-              r: 1,
-              bm: 0,
-              nm: "Fill",
-              mn: "ADBE Vector Graphic - Fill",
-              hd: false
-            },
-            {
-              ty: "tr",
-              p: { a: 0, k: [0, 0], ix: 2 },
-              a: { a: 0, k: [0, 0], ix: 1 },
-              s: { a: 0, k: [100, 100], ix: 3 },
-              r: { a: 0, k: 0, ix: 6 },
-              o: { a: 0, k: 100, ix: 7 },
-              sk: { a: 0, k: 0, ix: 4 },
-              sa: { a: 0, k: 0, ix: 5 },
-              nm: "Transform"
-            }
-          ]
-        }
-      ],
-      ip: 0,
-      op: 60,
-      st: 0,
-      bm: 0
-    }
-  ]
-};
 
 export const Auth: React.FC = () => {
   const [loading, setLoading] = useState(false);
@@ -94,7 +16,7 @@ export const Auth: React.FC = () => {
   const [showMenu, setShowMenu] = useState(false);
   const [language, setLanguage] = useState<'en' | 'id' | 'hi'>('en');
   const [showLanguagePicker, setShowLanguagePicker] = useState(false);
-  
+
   const translations = {
     en: {
       welcome: 'Welcome to XTermux',
@@ -153,7 +75,6 @@ export const Auth: React.FC = () => {
 
   const handleSupportSubmit = async (e: React.FormEvent, platform: 'email' | 'whatsapp') => {
     e.preventDefault();
-    
     const title = 'XTermux Support Request';
     const description = supportMessage;
     const supportInfo = `\n\n--Support Info--\nApp: XTermux\nLanguage: ${language}`;
@@ -166,7 +87,6 @@ export const Auth: React.FC = () => {
       const mailto = `mailto:xyraofficialsup@gmail.com?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(fullMessage)}`;
       window.location.href = mailto;
     }
-
     setStep('welcome');
     setSupportMessage('');
   };
@@ -187,14 +107,6 @@ export const Auth: React.FC = () => {
     setStep('terms');
   };
 
-  const handleHelpCenterClick = (e?: React.MouseEvent) => {
-    if (e) {
-      e.preventDefault();
-      e.stopPropagation();
-    }
-    setStep('support');
-  };
-
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -209,18 +121,15 @@ export const Auth: React.FC = () => {
         setStep('welcome');
       } else if (isSignUp) {
         const { data, error } = await supabase.auth.signUp({ email, password });
-        
         if (error) {
           if (error.message.includes('User already registered')) {
             throw new Error('This email is already registered. Please sign in.');
           }
           throw error;
         }
-
         if (data.user && !data.session && data.user.identities && data.user.identities.length === 0) {
           throw new Error('This email is already registered. Please sign in.');
         }
-
         showToast('Account created! Please check your email.', 'success');
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
@@ -321,7 +230,6 @@ export const Auth: React.FC = () => {
           </button>
           <h2 className="text-xl font-medium">{t.support}</h2>
         </div>
-
         <div className="p-6 space-y-6 flex-1 overflow-y-auto">
           <div className="space-y-2">
             <textarea
@@ -331,16 +239,11 @@ export const Auth: React.FC = () => {
               className="w-full bg-[#202c33] rounded-lg p-4 min-h-[150px] outline-none border-none resize-none"
             />
           </div>
-
           <p className="text-xs text-[#8696a0] leading-relaxed">
             Dengan melanjutkan, Anda mengizinkan Tim Dukungan XTermux meninjau informasi teknis tentang akun Anda guna membantu menjawab pertanyaan Anda. Pesan dari Tim Dukungan XTermux mungkin dibuat oleh AI menggunakan teknologi yang aman dari Meta. Pesan dan panggilan pribadi Anda tetap terenkripsi secara end-to-end. <span onClick={(e) => handlePrivacyClick(e)} className="text-[#53bdeb] cursor-pointer">Pelajari selengkapnya</span>.
           </p>
         </div>
-
         <div className="p-6 flex flex-col gap-4 bg-[#0b141a] border-t border-[#202c33]">
-          <button onClick={(e) => handleHelpCenterClick(e)} className="text-[#53bdeb] text-left text-sm font-medium">
-            Kunjungi Pusat Bantuan kami
-          </button>
           <div className="flex gap-3">
             <button
               onClick={(e) => handleSupportSubmit(e, 'email')}
@@ -402,18 +305,14 @@ export const Auth: React.FC = () => {
                   assets: [],
                   layers: [
                     {
-                      ddd: 0,
-                      ind: 1,
-                      ty: 4,
-                      nm: "Circle",
-                      sr: 1,
+                      ddd: 0, ind: 1, ty: 4, nm: "Circle", sr: 1,
                       ks: {
                         o: { a: 0, k: 30 },
                         r: { a: 0, k: 0 },
                         p: { a: 0, k: [200, 200] },
                         a: { a: 0, k: [0, 0] },
                         s: { a: 1, k: [
-                          { t: 0, s: [0, 0], e: [100, 100], i: { x: 0.6, y: 1 }, o: { x: 0.4, y: 0 } },
+                          { t: 0, s: [0, 0], e: [100, 100] },
                           { t: 30, s: [100, 100] }
                         ]}
                       },
@@ -435,83 +334,28 @@ export const Auth: React.FC = () => {
                         r: { a: 0, k: 0 },
                         p: { a: 0, k: [200, 220] },
                         a: { a: 0, k: [0, 0] },
-                        s: {
-                          a: 1,
-                          k: [
-                            { t: 0, s: [0, 0], e: [100, 100], i: { x: 0.6, y: 1 }, o: { x: 0.4, y: 0 } },
-                            { t: 20, s: [100, 100] }
-                          ]
-                        }
+                        s: { a: 1, k: [
+                          { t: 0, s: [0, 0], e: [100, 100] },
+                          { t: 20, s: [100, 100] }
+                        ]}
                       },
                       shapes: [
                         {
                           ty: "gr",
                           it: [
                             { ty: "rc", s: { a: 0, k: [80, 100] }, r: 20 },
-                            { ty: "fl", c: { a: 0, k: [0, 0.66, 0.52, 1] } }
+                            { ty: "fl", c: { a: 0, k: [1, 1, 1, 1] } }
                           ]
                         }
                       ],
                       ip: 0, op: 60, st: 0
-                    },
-                    {
-                      ddd: 0, ind: 3, ty: 4, nm: "LeftIcon", sr: 1,
-                      ks: {
-                        o: { a: 0, k: 100 },
-                        r: { a: 0, k: -12 },
-                        p: { a: 1, k: [
-                          { t: 5, s: [200, 200], e: [150, 160] },
-                          { t: 25, s: [150, 160] }
-                        ]},
-                        a: { a: 0, k: [0, 0] },
-                        s: { a: 1, k: [
-                          { t: 5, s: [0, 0], e: [100, 100] },
-                          { t: 25, s: [100, 100] }
-                        ]}
-                      },
-                      shapes: [
-                        {
-                          ty: "gr",
-                          it: [
-                            { ty: "rc", s: { a: 0, k: [60, 60] }, r: 15 },
-                            { ty: "fl", c: { a: 0, k: [0.15, 0.83, 0.4, 1] } }
-                          ]
-                        }
-                      ],
-                      ip: 5, op: 60, st: 5
-                    },
-                    {
-                      ddd: 0, ind: 4, ty: 4, nm: "RightIcon", sr: 1,
-                      ks: {
-                        o: { a: 0, k: 100 },
-                        r: { a: 0, k: 12 },
-                        p: { a: 1, k: [
-                          { t: 10, s: [200, 200], e: [250, 160] },
-                          { t: 30, s: [250, 160] }
-                        ]},
-                        a: { a: 0, k: [0, 0] },
-                        s: { a: 1, k: [
-                          { t: 10, s: [0, 0], e: [100, 100] },
-                          { t: 30, s: [100, 100] }
-                        ]}
-                      },
-                      shapes: [
-                        {
-                          ty: "gr",
-                          it: [
-                            { ty: "rc", s: { a: 0, k: [60, 60] }, r: 15 },
-                            { ty: "fl", c: { a: 0, k: [0.2, 0.72, 0.95, 1] } }
-                          ]
-                        }
-                      ],
-                      ip: 10, op: 60, st: 10
                     }
                   ]
                 }}
                 loop={true}
                 autoplay={true}
                 className="w-full h-full"
-                style={{ width: '100%', height: '100%' }}
+                style={{ width: '100%', height: '100%', display: 'block' }}
               />
             </div>
           </div>
@@ -534,28 +378,22 @@ export const Auth: React.FC = () => {
               </span>
               <ChevronDown size={16} />
             </div>
-
             {showLanguagePicker && (
-              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 bg-[#233138] rounded-lg shadow-xl py-2 border border-white/5 animate-in fade-in slide-in-from-bottom-2 duration-200">
-                {[
-                  { id: 'en', label: 'English' },
-                  { id: 'id', label: 'Bahasa Indonesia' },
-                  { id: 'hi', label: 'हिंदी (Hindi)' }
-                ].map((lang) => (
+              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 bg-[#233138] rounded-lg shadow-xl py-2 border border-white/5 z-50 animate-in fade-in slide-in-from-bottom-2 duration-200">
+                {['en', 'id', 'hi'].map((id) => (
                   <button
-                    key={lang.id}
+                    key={id}
                     onClick={() => {
-                      setLanguage(lang.id as any);
+                      setLanguage(id as any);
                       setShowLanguagePicker(false);
                     }}
-                    className={`w-full text-left px-4 py-3 hover:bg-[#111b21] transition-colors text-sm ${language === lang.id ? 'text-[#00a884]' : 'text-[#e9edef]'}`}
+                    className={`w-full text-left px-4 py-3 hover:bg-[#111b21] transition-colors text-sm ${language === id ? 'text-[#00a884]' : 'text-[#e9edef]'}`}
                   >
-                    {lang.label}
+                    {id === 'en' ? 'English' : id === 'id' ? 'Bahasa Indonesia' : 'हिंदी (Hindi)'}
                   </button>
                 ))}
               </div>
             )}
-
             <button
               onClick={() => setStep('form')}
               className="w-full bg-[#00a884] text-[#0b141a] font-medium py-3 rounded-full hover:bg-[#06cf9c] transition-colors active:scale-95"
@@ -564,7 +402,6 @@ export const Auth: React.FC = () => {
             </button>
           </div>
         </div>
-
         <div className="py-6 text-center">
           <p className="text-[#8696a0] text-[10px] uppercase tracking-widest font-bold">from REPLIT</p>
         </div>
@@ -575,38 +412,22 @@ export const Auth: React.FC = () => {
   return (
     <div className="flex flex-col items-center min-h-screen bg-[#0b141a] text-[#e9edef] p-6">
       <div className="w-full flex items-center justify-between mb-8">
-        <button 
-          onClick={() => setStep('welcome')}
-          className="text-[#00a884] font-medium"
-        >
-          {t.cancel}
-        </button>
-        <h2 className="text-xl font-medium">
-          {isResetting ? t.resetPassword : (isSignUp ? t.createAccount : t.enterEmail)}
-        </h2>
-        <button className="p-2 text-[#8696a0]">
-          <MoreVertical size={20} />
-        </button>
+        <button onClick={() => setStep('welcome')} className="text-[#00a884] font-medium">{t.cancel}</button>
+        <h2 className="text-xl font-medium">{isResetting ? t.resetPassword : (isSignUp ? t.createAccount : t.enterEmail)}</h2>
+        <div className="w-8" />
       </div>
-
       <div className="w-full max-w-sm space-y-8">
         <div className="text-center">
           <p className="text-[#8696a0] text-sm leading-relaxed">
-            {isResetting 
-              ? 'XTermux will send an email to verify your address.'
-              : 'XTermux will need to verify your email address.'}
+            {isResetting ? 'XTermux will send an email to verify your address.' : 'XTermux will need to verify your email address.'}
           </p>
-          <button className="text-[#53bdeb] text-sm mt-2 font-medium">
-            What's my email?
-          </button>
         </div>
-
         <form onSubmit={handleAuth} className="space-y-6">
           <div className="group space-y-2">
-            <div className="flex items-center justify-between text-[#8696a0] text-xs font-semibold uppercase tracking-wider transition-colors group-focus-within:text-[#00a884] px-1">
+            <div className="flex items-center justify-between text-[#8696a0] text-xs font-semibold uppercase tracking-wider px-1">
               <span>{t.yourEmail}</span>
             </div>
-            <div className="relative bg-[#233138] rounded-xl p-4 transition-all border border-transparent group-focus-within:border-[#00a884]/30 group-focus-within:bg-[#2a3942]">
+            <div className="relative bg-[#233138] rounded-xl p-4 border border-transparent focus-within:border-[#00a884]/30">
               <div className="flex items-center gap-3">
                 <Mail size={20} className="text-[#8696a0]" />
                 <input
@@ -614,89 +435,57 @@ export const Auth: React.FC = () => {
                   placeholder="email@example.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full bg-transparent border-none outline-none text-[#e9edef] text-lg placeholder:text-[#8696a0]/30"
+                  className="w-full bg-transparent border-none outline-none text-[#e9edef] text-lg"
                   required
                 />
               </div>
             </div>
           </div>
-
           {!isResetting && (
             <div className="group space-y-2">
-              <div className="flex items-center justify-between text-[#8696a0] text-xs font-semibold uppercase tracking-wider transition-colors group-focus-within:text-[#00a884] px-1">
+              <div className="flex items-center justify-between text-[#8696a0] text-xs font-semibold uppercase tracking-wider px-1">
                 <span>Password</span>
               </div>
-              <div className="relative bg-[#233138] rounded-xl transition-all border border-transparent group-focus-within:border-[#00a884]/30 group-focus-within:bg-[#2a3942] overflow-hidden">
-                <div className="flex items-center px-4 py-4">
+              <div className="relative bg-[#233138] rounded-xl p-4 border border-transparent focus-within:border-[#00a884]/30">
+                <div className="flex items-center gap-3">
                   <Lock size={20} className="text-[#8696a0]" />
                   <input
                     type={showPassword ? 'text' : 'password'}
                     placeholder="••••••••"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="flex-1 bg-transparent border-none outline-none text-[#e9edef] text-lg placeholder:text-[#8696a0]/30 tracking-wider pr-2 ml-3"
+                    className="flex-1 bg-transparent border-none outline-none text-[#e9edef] text-lg ml-3"
                     required
                   />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="text-[#8696a0] hover:text-[#00a884] transition-colors flex items-center justify-center p-1"
-                  >
+                  <button type="button" onClick={() => setShowPassword(!showPassword)} className="text-[#8696a0]">
                     {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                   </button>
                 </div>
               </div>
             </div>
           )}
-
           <div className="pt-4">
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-[#00a884] text-[#0b141a] font-bold py-4 rounded-xl hover:bg-[#06cf9c] shadow-lg shadow-[#00a884]/10 transition-all active:scale-[0.98] disabled:bg-[#111b21] disabled:text-[#8696a0] flex items-center justify-center gap-2"
+              className="w-full bg-[#00a884] text-[#0b141a] font-bold py-4 rounded-xl hover:bg-[#06cf9c] transition-all disabled:opacity-50 flex items-center justify-center gap-2"
             >
               {loading && <Loader2 className="animate-spin" size={20} />}
-              <span className="tracking-wide">
-                {isResetting ? 'SEND RESET LINK' : (isSignUp ? 'CREATE ACCOUNT' : 'SIGN IN')}
-              </span>
+              <span>{isResetting ? 'SEND RESET LINK' : (isSignUp ? 'CREATE ACCOUNT' : 'SIGN IN')}</span>
             </button>
           </div>
         </form>
-
         <div className="flex flex-col gap-4 text-center">
           {!isResetting && !isSignUp && (
-            <button
-              type="button"
-              onClick={() => setIsResetting(true)}
-              className="text-[#53bdeb] text-sm font-medium"
-            >
-              Forgot password?
-            </button>
+            <button type="button" onClick={() => setIsResetting(true)} className="text-[#53bdeb] text-sm">Forgot password?</button>
           )}
-          
           <button
-            onClick={() => {
-              if (isResetting) {
-                setIsResetting(false);
-              } else {
-                setIsSignUp(!isSignUp);
-              }
-            }}
+            onClick={() => isResetting ? setIsResetting(false) : setIsSignUp(!isSignUp)}
             className="text-[#8696a0] text-sm"
           >
-            {isResetting ? 'Back to login' : (
-              isSignUp ? (
-                <>Already have an account? <span className="text-[#53bdeb]">Sign in</span></>
-              ) : (
-                <>Don't have an account? <span className="text-[#53bdeb]">Sign up</span></>
-              )
-            )}
+            {isResetting ? 'Back to login' : (isSignUp ? <>Already have an account? <span className="text-[#53bdeb]">Sign in</span></> : <>Don't have an account? <span className="text-[#53bdeb]">Sign up</span></>)}
           </button>
         </div>
-      </div>
-
-      <div className="mt-auto py-6 text-center text-[#8696a0] text-[12px]">
-        <p>You must be at least 13 years old to register. Learn how XTermux works with the <span className="text-[#53bdeb]">Meta Companies</span>.</p>
       </div>
     </div>
   );

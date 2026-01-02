@@ -45,41 +45,41 @@ const Home: React.FC<HomeProps> = ({ onNavigate, initialCommand, onCommandStarte
       {/* Main Feature Grid */}
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {/* AI Chat Card */}
-          <button onClick={() => onNavigate('AI_CHAT')} className="bg-zinc-900 border border-zinc-800 rounded-[2rem] p-6 text-left relative overflow-hidden group active:scale-[0.98] transition-all min-h-[140px]">
+          <button onClick={() => onNavigate('AI_CHAT')} className="bg-zinc-900 border border-zinc-800 rounded-[2rem] p-6 text-left relative overflow-hidden group active:scale-[0.98] transition-all min-h-[140px] hover:border-accent shadow-xl hover:shadow-accent/5">
               <Bot size={120} className="absolute -right-4 -bottom-4 text-accent opacity-5 group-hover:opacity-10 transition-opacity" />
               <div className="relative z-10">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="p-2.5 bg-accent rounded-xl"><Bot size={20} className="text-black" /></div>
+                  <div className="p-2.5 bg-accent rounded-xl shadow-[0_0_15px_rgba(34,197,94,0.3)]"><Bot size={20} className="text-black" /></div>
                   <span className="text-[10px] font-black text-accent uppercase tracking-widest">X-Vision AI</span>
                 </div>
-                <h3 className="text-xl font-black text-white mb-1">AI Intelligence</h3>
-                <p className="text-[12px] text-zinc-500">Analyze errors and chat with neural AI.</p>
+                <h3 className="text-xl font-black text-white mb-1 tracking-tight">AI Intelligence</h3>
+                <p className="text-[12px] text-zinc-500 font-medium">Analyze errors and chat with neural AI.</p>
               </div>
           </button>
 
           {/* Tools Registry Card */}
-          <button onClick={() => onNavigate('PACKAGES')} className="bg-zinc-900 border border-zinc-800 rounded-[2rem] p-6 text-left relative overflow-hidden group active:scale-[0.98] transition-all min-h-[140px]">
+          <button onClick={() => onNavigate('PACKAGES')} className="bg-zinc-900 border border-zinc-800 rounded-[2rem] p-6 text-left relative overflow-hidden group active:scale-[0.98] transition-all min-h-[140px] hover:border-purple-500 shadow-xl hover:shadow-purple-500/5">
               <Package size={120} className="absolute -right-4 -bottom-4 text-purple-500 opacity-5 group-hover:opacity-10 transition-opacity" />
               <div className="relative z-10">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="p-2.5 bg-purple-500 rounded-xl"><Package size={20} className="text-black" /></div>
+                  <div className="p-2.5 bg-purple-500 rounded-xl shadow-[0_0_15px_rgba(168,85,247,0.3)]"><Package size={20} className="text-black" /></div>
                   <span className="text-[10px] font-black text-purple-500 uppercase tracking-widest">Registry</span>
                 </div>
-                <h3 className="text-xl font-black text-white mb-1">Tools Library</h3>
-                <p className="text-[12px] text-zinc-500">Search 2000+ packages and installations.</p>
+                <h3 className="text-xl font-black text-white mb-1 tracking-tight">Tools Library</h3>
+                <p className="text-[12px] text-zinc-500 font-medium">Search 2000+ packages and installations.</p>
               </div>
           </button>
 
           {/* Guides Card */}
-          <button onClick={() => onNavigate('GUIDES')} className="bg-zinc-900 border border-zinc-800 rounded-[2rem] p-6 text-left relative overflow-hidden group active:scale-[0.98] transition-all min-h-[140px]">
+          <button onClick={() => onNavigate('GUIDES')} className="bg-zinc-900 border border-zinc-800 rounded-[2rem] p-6 text-left relative overflow-hidden group active:scale-[0.98] transition-all min-h-[140px] hover:border-orange-500 shadow-xl hover:shadow-orange-500/5">
               <BookOpen size={120} className="absolute -right-4 -bottom-4 text-orange-400 opacity-5 group-hover:opacity-10 transition-opacity" />
               <div className="relative z-10">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="p-2.5 bg-orange-500 rounded-xl"><BookOpen size={20} className="text-black" /></div>
+                  <div className="p-2.5 bg-orange-500 rounded-xl shadow-[0_0_15px_rgba(249,115,22,0.3)]"><BookOpen size={20} className="text-black" /></div>
                   <span className="text-[10px] font-black text-orange-500 uppercase tracking-widest">Tutorials</span>
                 </div>
-                <h3 className="text-xl font-black text-white mb-1">User Guides</h3>
-                <p className="text-[12px] text-zinc-500">Step-by-step Termux configurations.</p>
+                <h3 className="text-xl font-black text-white mb-1 tracking-tight">User Guides</h3>
+                <p className="text-[12px] text-zinc-500 font-medium">Step-by-step Termux configurations.</p>
               </div>
           </button>
 
@@ -88,24 +88,24 @@ const Home: React.FC<HomeProps> = ({ onNavigate, initialCommand, onCommandStarte
               <Terminal size={120} className="absolute -right-4 -bottom-4 text-green-500 opacity-5 group-hover:opacity-10 transition-opacity" />
               <div className="relative z-10">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="p-2.5 bg-green-500 rounded-xl"><Terminal size={20} className="text-black" /></div>
+                  <div className="p-2.5 bg-green-500 rounded-xl shadow-[0_0_15px_rgba(34,197,94,0.3)]"><Terminal size={20} className="text-black" /></div>
                   <span className="text-[10px] font-black text-green-500 uppercase tracking-widest">Repository</span>
                 </div>
-                <h3 className="text-xl font-black text-white mb-1">GitHub Scripts</h3>
-                <p className="text-[12px] text-zinc-500">Install specialized tools and scripts.</p>
+                <h3 className="text-xl font-black text-white mb-1 tracking-tight">GitHub Scripts</h3>
+                <p className="text-[12px] text-zinc-500 font-medium">Install specialized tools and scripts.</p>
               </div>
           </button>
 
           {/* Architect Card */}
-          <button onClick={() => onNavigate('ARCHITECT')} className="bg-zinc-900 border border-zinc-800 rounded-[2rem] p-6 text-left relative overflow-hidden group active:scale-[0.98] transition-all min-h-[140px]">
+          <button onClick={() => onNavigate('ARCHITECT')} className="bg-zinc-900 border border-zinc-800 rounded-[2rem] p-6 text-left relative overflow-hidden group active:scale-[0.98] transition-all min-h-[140px] hover:border-blue-500 shadow-xl hover:shadow-blue-500/5">
               <PenTool size={120} className="absolute -right-4 -bottom-4 text-blue-400 opacity-5 group-hover:opacity-10 transition-opacity" />
               <div className="relative z-10">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="p-2.5 bg-blue-500 rounded-xl"><PenTool size={20} className="text-black" /></div>
+                  <div className="p-2.5 bg-blue-500 rounded-xl shadow-[0_0_15px_rgba(59,130,246,0.3)]"><PenTool size={20} className="text-black" /></div>
                   <span className="text-[10px] font-black text-blue-400 uppercase tracking-widest">Forge</span>
                 </div>
-                <h3 className="text-xl font-black text-white mb-1">X-Architect</h3>
-                <p className="text-[12px] text-zinc-500">Generate complex script blueprints.</p>
+                <h3 className="text-xl font-black text-white mb-1 tracking-tight">X-Architect</h3>
+                <p className="text-[12px] text-zinc-500 font-medium">Generate complex script blueprints.</p>
               </div>
           </button>
       </div>

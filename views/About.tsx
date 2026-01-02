@@ -136,12 +136,12 @@ const About: React.FC = () => {
       
       {/* Profile Section */}
       <div className="max-w-2xl mx-auto">
-        <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 shadow-xl relative mt-8">
+        <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 shadow-xl relative mt-8 hover:border-accent/40 transition-all duration-300">
           <div className="absolute -top-12 left-6">
             <div className="relative group/avatar">
               <div 
                 onClick={handleImageClick}
-                className="w-24 h-24 bg-zinc-900 rounded-3xl border-4 border-zinc-950 flex items-center justify-center overflow-hidden shadow-2xl cursor-pointer hover:border-accent/50 transition-all"
+                className="w-24 h-24 bg-zinc-900 rounded-3xl border-4 border-zinc-950 flex items-center justify-center overflow-hidden shadow-2xl cursor-pointer hover:border-accent transition-all duration-500 group-hover/avatar:scale-105"
               >
                 {avatar ? (
                   <img src={avatar} alt="Profile" className="w-full h-full object-cover" />
@@ -200,7 +200,7 @@ const About: React.FC = () => {
                   </div>
                 )}
                 <p className="text-[10px] text-zinc-500 font-black uppercase tracking-widest mt-1">{userEmail}</p>
-                <div className="mt-2">
+                <div className="mt-2 flex items-center gap-2">
                   <span className={`text-[9px] font-black px-2 py-0.5 rounded-md border tracking-widest ${
                     role === 'ADMIN' 
                       ? 'bg-red-500/10 text-red-500 border-red-500/20' 
@@ -208,6 +208,12 @@ const About: React.FC = () => {
                   }`}>
                     {role}
                   </span>
+                  {role === 'ADMIN' && (
+                    <div className="flex items-center gap-1 bg-accent/10 text-accent border border-accent/20 px-2 py-0.5 rounded-md">
+                      <SecurityShield size={10} />
+                      <span className="text-[9px] font-black uppercase tracking-widest">Verified Developer</span>
+                    </div>
+                  )}
                 </div>
               </div>
               <button 
@@ -220,20 +226,26 @@ const About: React.FC = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="p-4 bg-zinc-950/50 border border-zinc-800 rounded-2xl flex items-center gap-4 hover:border-accent/20 transition-colors">
+              <div className="p-4 bg-zinc-950/50 border border-zinc-800 rounded-2xl flex items-center gap-4 hover:border-accent/20 transition-all hover:bg-zinc-950">
                 <Calendar className="text-accent" size={20} />
                 <div>
                   <p className="text-[10px] text-zinc-500 font-black uppercase tracking-widest">Initialization</p>
                   <p className="text-sm font-bold">{joinDate || new Date().toLocaleDateString()}</p>
                 </div>
               </div>
-              <div className="p-4 bg-zinc-950/50 border border-zinc-800 rounded-2xl flex items-center gap-4 hover:border-accent/20 transition-colors">
+              <div className="p-4 bg-zinc-950/50 border border-zinc-800 rounded-2xl flex items-center gap-4 hover:border-blue-400/20 transition-all hover:bg-zinc-950">
                 <SecurityShield className="text-blue-400" size={20} />
                 <div>
                   <p className="text-[10px] text-zinc-500 font-black uppercase tracking-widest">Security Status</p>
                   <p className="text-sm font-bold text-green-500">Cloud Sync Active</p>
                 </div>
               </div>
+            </div>
+            
+            <div className="flex items-center justify-center gap-6 pt-4 border-t border-zinc-800/50">
+              <a href="https://youtube.com/@kz.tutorial" target="_blank" rel="noopener noreferrer" className="text-zinc-500 hover:text-[#FF0000] transition-colors"><Youtube size={20} /></a>
+              <a href="https://facebook.com/kz.tutorial" target="_blank" rel="noopener noreferrer" className="text-zinc-500 hover:text-[#1877F2] transition-colors"><Facebook size={20} /></a>
+              <a href="mailto:xyraofficialsup@gmail.com" className="text-zinc-500 hover:text-accent transition-colors"><Mail size={20} /></a>
             </div>
           </div>
         </div>

@@ -10,12 +10,12 @@ type CategoryType = 'All' | 'Development' | 'System' | 'Network' | 'Utility' | '
 type SortOrder = 'AZ' | 'ZA';
 
 const CATEGORIES: { name: CategoryType; icon: React.ReactNode }[] = [
-  { name: 'All', icon: <Package size={14} /> },
-  { name: 'Saved', icon: <Heart size={14} /> },
-  { name: 'Development', icon: <Code size={14} /> },
-  { name: 'System', icon: <Settings size={14} /> },
-  { name: 'Network', icon: <Globe size={14} /> },
-  { name: 'Utility', icon: <Wrench size={14} /> },
+    { name: 'All', icon: <Package size={14} /> },
+    { name: 'Saved', icon: <Heart size={14} /> },
+    { name: 'Development', icon: <Code size={14} /> },
+    { name: 'System', icon: <Settings size={14} /> },
+    { name: 'Network', icon: <Globe size={14} /> },
+    { name: 'Utility', icon: <Wrench size={14} /> },
 ];
 
 const RECENTLY_VIEWED_KEY = 'xtermux_recently_viewed';

@@ -11,7 +11,7 @@ const AdminView: React.FC = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
         const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single();
-        setIsAdmin(profile?.role === 'ADMIN');
+        setIsAdmin(profile?.role === 'admin');
       } else {
         setIsAdmin(false);
       }

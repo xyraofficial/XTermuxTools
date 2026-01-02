@@ -80,7 +80,7 @@ const About: React.FC = () => {
         // If profile doesn't exist, create it
         if (!profile) {
           const { data: newProfile } = await supabase.from('profiles').insert([
-            { id: user.id, username: 'X-User', role: 'USER' }
+            { id: user.id, username: 'X-User', role: 'user' }
           ]).select().single();
           const freshUserData = { ...user, profile: newProfile };
           setUser(freshUserData);

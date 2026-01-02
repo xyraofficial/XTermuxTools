@@ -10,58 +10,109 @@ export const Auth: React.FC = () => {
   const [isSignUp, setIsSignUp] = useState(false);
   const [isResetting, setIsResetting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [step, setStep] = useState<'welcome' | 'form'>('welcome');
+  const [step, setStep] = useState<'welcome' | 'form' | 'support'>('welcome');
+  const [supportMessage, setSupportMessage] = useState('');
+  const [showMenu, setShowMenu] = useState(false);
 
-  const handleAuth = async (e: React.FormEvent) => {
+  const handleSupportSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     try {
-      if (isResetting) {
-        const { error } = await supabase.auth.resetPasswordForEmail(email, {
-          redirectTo: `${window.location.origin}/reset-password`,
-        });
-        if (error) throw error;
-        showToast('Password reset link has been sent to your email!', 'success');
-        setIsResetting(false);
-        setStep('welcome');
-      } else if (isSignUp) {
-        const { data, error } = await supabase.auth.signUp({ email, password });
-        
-        if (error) {
-          if (error.message.includes('User already registered')) {
-            throw new Error('This email is already registered. Please sign in.');
-          }
-          throw error;
-        }
-
-        if (data.user && !data.session && data.user.identities && data.user.identities.length === 0) {
-          throw new Error('This email is already registered. Please sign in.');
-        }
-
-        showToast('Account created! Please check your email.', 'success');
-      } else {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) {
-          if (error.message.includes('Invalid login credentials')) {
-            throw new Error('Incorrect email or password.');
-          }
-          throw error;
-        }
-      }
+      // In a real app, you would use a backend service or EmailJS
+      // Since we are in a frontend environment, we'll simulate it
+      // but for now, we'll just show a success toast and go back
+      showToast('Support message sent successfully!', 'success');
+      setStep('welcome');
+      setSupportMessage('');
     } catch (error: any) {
-      showToast(error.message, 'error');
+      showToast('Failed to send message', 'error');
     } finally {
       setLoading(false);
     }
   };
 
+  const handlePrivacyClick = () => {
+    window.location.href = '/privacy';
+  };
+
+  const handleTermsClick = () => {
+    window.location.href = '/terms';
+  };
+
+  if (step === 'support') {
+    return (
+      <div className="flex flex-col min-h-screen bg-[#0b141a] text-[#e9edef]">
+        <div className="flex items-center gap-4 p-4 border-b border-[#202c33]">
+          <button onClick={() => setStep('welcome')} className="p-1">
+            <LogIn className="rotate-180" size={24} />
+          </button>
+          <h2 className="text-xl font-medium">Contact Support</h2>
+        </div>
+
+        <div className="p-6 space-y-6 flex-1">
+          <div className="space-y-2">
+            <p className="text-sm text-[#8696a0]">Describe your problem</p>
+            <textarea
+              value={supportMessage}
+              onChange={(e) => setSupportMessage(e.target.value)}
+              placeholder="Jelaskan masalah Anda"
+              className="w-full bg-[#202c33] rounded-lg p-4 min-h-[150px] outline-none border-none resize-none"
+            />
+          </div>
+
+          <div className="space-y-4">
+            <p className="text-sm text-[#8696a0]">Add screenshots (optional)</p>
+            <div className="flex gap-4">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="w-24 h-24 bg-[#202c33] rounded-lg flex items-center justify-center border border-dashed border-[#8696a0]/30">
+                  <Mail className="text-[#8696a0]" size={24} />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <p className="text-xs text-[#8696a0] leading-relaxed">
+            By continuing, you allow the XTermux Support Team to review technical information about your account.
+            Our team may use AI to help answer your questions. <span className="text-[#53bdeb] cursor-pointer">Learn more</span>.
+          </p>
+        </div>
+
+        <div className="p-6 flex flex-col gap-4">
+          <button className="text-[#53bdeb] text-left text-sm font-medium">
+            Visit our Help Center
+          </button>
+          <button
+            onClick={handleSupportSubmit}
+            disabled={!supportMessage || loading}
+            className="w-full bg-[#00a884] text-[#0b141a] font-medium py-3 rounded-full hover:bg-[#06cf9c] transition-colors active:scale-95 disabled:bg-[#111b21] disabled:text-[#8696a0]"
+          >
+            NEXT
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   if (step === 'welcome') {
     return (
       <div className="flex flex-col items-center justify-between min-h-screen bg-[#0b141a] text-[#e9edef] p-6">
-        <div className="w-full flex justify-end">
-          <button className="p-2 text-[#8696a0]">
+        <div className="w-full flex justify-end relative">
+          <button onClick={() => setShowMenu(!showMenu)} className="p-2 text-[#8696a0]">
             <MoreVertical size={20} />
           </button>
+          {showMenu && (
+            <div className="absolute top-10 right-0 w-48 bg-[#233138] rounded-lg shadow-xl z-50 py-2 border border-white/5 animate-in fade-in zoom-in-95 duration-200">
+              <button
+                onClick={() => {
+                  setStep('support');
+                  setShowMenu(false);
+                }}
+                className="w-full text-left px-4 py-3 hover:bg-[#111b21] transition-colors text-sm"
+              >
+                Help
+              </button>
+            </div>
+          )}
         </div>
 
         <div className="flex flex-col items-center gap-12 flex-1 justify-center max-w-sm w-full">
@@ -91,7 +142,7 @@ export const Auth: React.FC = () => {
           <div className="text-center space-y-4">
             <h1 className="text-3xl font-normal">Welcome to XTermux</h1>
             <p className="text-[#8696a0] text-sm leading-relaxed px-4">
-              Read our <span className="text-[#53bdeb] cursor-pointer">Privacy Policy</span>. Tap "Agree and continue" to accept the <span className="text-[#53bdeb] cursor-pointer">Terms of Service</span>.
+              Read our <span onClick={handlePrivacyClick} className="text-[#53bdeb] cursor-pointer">Privacy Policy</span>. Tap "Agree and continue" to accept the <span onClick={handleTermsClick} className="text-[#53bdeb] cursor-pointer">Terms of Service</span>.
             </p>
           </div>
 

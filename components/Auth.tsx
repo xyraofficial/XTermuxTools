@@ -475,13 +475,6 @@ export const Auth: React.FC = () => {
             <div className="group space-y-2">
               <div className="flex items-center justify-between text-[#8696a0] text-xs font-semibold uppercase tracking-wider transition-colors group-focus-within:text-[#00a884] px-1">
                 <span>Password</span>
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="text-[#8696a0] hover:text-[#00a884] transition-colors"
-                >
-                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                </button>
               </div>
               <div className="relative bg-[#233138] rounded-xl p-4 transition-all border border-transparent group-focus-within:border-[#00a884]/30 group-focus-within:bg-[#2a3942]">
                 <div className="flex items-center gap-3">
@@ -491,9 +484,16 @@ export const Auth: React.FC = () => {
                     placeholder="••••••••"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full bg-transparent border-none outline-none text-[#e9edef] text-lg placeholder:text-[#8696a0]/30 tracking-wider"
+                    className="w-full bg-transparent border-none outline-none text-[#e9edef] text-lg placeholder:text-[#8696a0]/30 tracking-wider pr-10"
                     required
                   />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-[#8696a0] hover:text-[#00a884] transition-colors flex items-center justify-center p-1"
+                  >
+                    {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                  </button>
                 </div>
               </div>
             </div>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Bot, Terminal, PenTool, Package, BookOpen, User, Shield } from 'lucide-react';
+import { Bot, Terminal, PenTool, Package, BookOpen, User, ShieldCheck as Shield } from 'lucide-react';
 
 interface HomeProps {
   onNavigate: (view: string) => void;

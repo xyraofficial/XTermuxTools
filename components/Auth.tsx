@@ -163,39 +163,48 @@ export const Auth: React.FC = () => {
           <button onClick={() => setStep('welcome')} className="p-1">
             <LogIn className="rotate-180" size={24} />
           </button>
-          <h2 className="text-xl font-medium">Contact Support</h2>
+          <h2 className="text-xl font-medium">{t.support}</h2>
         </div>
 
         <div className="p-6 space-y-6 flex-1">
           <div className="space-y-2">
-            <p className="text-sm text-[#8696a0]">Describe your problem</p>
+            <p className="text-sm text-[#8696a0]">{t.describe}</p>
             <textarea
               value={supportMessage}
               onChange={(e) => setSupportMessage(e.target.value)}
-              placeholder="Jelaskan masalah Anda"
+              placeholder={t.describe}
               className="w-full bg-[#202c33] rounded-lg p-4 min-h-[150px] outline-none border-none resize-none"
             />
           </div>
 
           <div className="space-y-4">
-            <p className="text-sm text-[#8696a0]">Add screenshots (optional)</p>
+            <p className="text-sm text-[#8696a0]">{t.screenshot}</p>
             <div className="flex gap-4">
-              {[1, 2, 3].map((i) => (
-                <div key={i} className="w-24 h-24 bg-[#202c33] rounded-lg flex items-center justify-center border border-dashed border-[#8696a0]/30">
-                  <Mail className="text-[#8696a0]" size={24} />
-                </div>
+              {screenshots.map((src, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  onClick={() => handleScreenshotClick(i)}
+                  className="w-24 h-24 bg-[#202c33] rounded-lg flex items-center justify-center border border-dashed border-[#8696a0]/30 overflow-hidden"
+                >
+                  {src ? (
+                    <img src={src} alt="Screenshot" className="w-full h-full object-cover" />
+                  ) : (
+                    <Mail className="text-[#8696a0]" size={24} />
+                  )}
+                </button>
               ))}
             </div>
           </div>
 
           <p className="text-xs text-[#8696a0] leading-relaxed">
             By continuing, you allow the XTermux Support Team to review technical information about your account.
-            Our team may use AI to help answer your questions. <span className="text-[#53bdeb] cursor-pointer">Learn more</span>.
+            Our team may use AI to help answer your questions. <span onClick={handlePrivacyClick} className="text-[#53bdeb] cursor-pointer">Learn more</span>.
           </p>
         </div>
 
         <div className="p-6 flex flex-col gap-4">
-          <button className="text-[#53bdeb] text-left text-sm font-medium">
+          <button onClick={handleHelpCenterClick} className="text-[#53bdeb] text-left text-sm font-medium">
             Visit our Help Center
           </button>
           <button
@@ -203,7 +212,7 @@ export const Auth: React.FC = () => {
             disabled={!supportMessage || loading}
             className="w-full bg-[#00a884] text-[#0b141a] font-medium py-3 rounded-full hover:bg-[#06cf9c] transition-colors active:scale-95 disabled:bg-[#111b21] disabled:text-[#8696a0]"
           >
-            NEXT
+            {t.next}
           </button>
         </div>
       </div>
@@ -226,7 +235,7 @@ export const Auth: React.FC = () => {
                 }}
                 className="w-full text-left px-4 py-3 hover:bg-[#111b21] transition-colors text-sm"
               >
-                Help
+                {t.help}
               </button>
             </div>
           )}
@@ -257,24 +266,50 @@ export const Auth: React.FC = () => {
           </div>
 
           <div className="text-center space-y-4">
-            <h1 className="text-3xl font-normal">Welcome to XTermux</h1>
+            <h1 className="text-3xl font-normal">{t.welcome}</h1>
             <p className="text-[#8696a0] text-sm leading-relaxed px-4">
-              Read our <span onClick={handlePrivacyClick} className="text-[#53bdeb] cursor-pointer">Privacy Policy</span>. Tap "Agree and continue" to accept the <span onClick={handleTermsClick} className="text-[#53bdeb] cursor-pointer">Terms of Service</span>.
+              Read our <span onClick={handlePrivacyClick} className="text-[#53bdeb] cursor-pointer">{t.privacy}</span>. Tap "{t.agree}" to accept the <span onClick={handleTermsClick} className="text-[#53bdeb] cursor-pointer">{t.terms}</span>.
             </p>
           </div>
 
-          <div className="w-full space-y-6">
-            <div className="flex items-center justify-center gap-2 text-[#00a884] bg-[#111b21] py-2 px-4 rounded-full w-fit mx-auto cursor-pointer hover:bg-[#202c33] transition-colors">
+          <div className="w-full space-y-6 relative">
+            <div 
+              onClick={() => setShowLanguagePicker(!showLanguagePicker)}
+              className="flex items-center justify-center gap-2 text-[#00a884] bg-[#111b21] py-2 px-4 rounded-full w-fit mx-auto cursor-pointer hover:bg-[#202c33] transition-colors"
+            >
               <Globe size={18} />
-              <span className="text-sm">English</span>
+              <span className="text-sm">
+                {language === 'en' ? 'English' : language === 'id' ? 'Bahasa Indonesia' : 'हिंदी (Hindi)'}
+              </span>
               <ChevronDown size={16} />
             </div>
+
+            {showLanguagePicker && (
+              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 bg-[#233138] rounded-lg shadow-xl py-2 border border-white/5 animate-in fade-in slide-in-from-bottom-2 duration-200">
+                {[
+                  { id: 'en', label: 'English' },
+                  { id: 'id', label: 'Bahasa Indonesia' },
+                  { id: 'hi', label: 'हिंदी (Hindi)' }
+                ].map((lang) => (
+                  <button
+                    key={lang.id}
+                    onClick={() => {
+                      setLanguage(lang.id as any);
+                      setShowLanguagePicker(false);
+                    }}
+                    className={`w-full text-left px-4 py-3 hover:bg-[#111b21] transition-colors text-sm ${language === lang.id ? 'text-[#00a884]' : 'text-[#e9edef]'}`}
+                  >
+                    {lang.label}
+                  </button>
+                ))}
+              </div>
+            )}
 
             <button
               onClick={() => setStep('form')}
               className="w-full bg-[#00a884] text-[#0b141a] font-medium py-3 rounded-full hover:bg-[#06cf9c] transition-colors active:scale-95"
             >
-              Agree and continue
+              {t.agree}
             </button>
           </div>
         </div>
@@ -293,10 +328,10 @@ export const Auth: React.FC = () => {
           onClick={() => setStep('welcome')}
           className="text-[#00a884] font-medium"
         >
-          Cancel
+          {t.cancel}
         </button>
         <h2 className="text-xl font-medium">
-          {isResetting ? 'Reset password' : (isSignUp ? 'Create account' : 'Enter email')}
+          {isResetting ? t.resetPassword : (isSignUp ? t.createAccount : t.enterEmail)}
         </h2>
         <button className="p-2 text-[#8696a0]">
           <MoreVertical size={20} />

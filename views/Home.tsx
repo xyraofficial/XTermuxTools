@@ -28,7 +28,7 @@ const Home: React.FC<HomeProps> = ({ onNavigate, initialCommand, onCommandStarte
   }, []);
 
   return (
-    <div className="p-5 space-y-6 pb-32 md:px-8 lg:px-12">
+    <div className="p-5 space-y-10 pb-32 md:px-8 lg:px-12">
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-3xl font-black text-white tracking-tighter uppercase md:text-4xl">XTermux</h2>
@@ -40,11 +40,6 @@ const Home: React.FC<HomeProps> = ({ onNavigate, initialCommand, onCommandStarte
         <div onClick={() => onNavigate('ABOUT')} className="w-12 h-12 rounded-2xl bg-zinc-900 border border-zinc-800 flex items-center justify-center shadow-lg cursor-pointer active:scale-90 transition-transform md:w-14 md:h-14">
            <Hexagon size={24} className="text-accent md:w-7 md:h-7" />
         </div>
-      </div>
-
-      <div className="grid grid-cols-2 gap-4 lg:grid-cols-2">
-          <MetricItem label="CPU Usage" value={`${sysStats.cpu}%`} color="text-accent" progress={sysStats.cpu} />
-          <MetricItem label="RAM Usage" value={`${sysStats.ram}%`} color="text-blue-400" progress={sysStats.ram} />
       </div>
 
       {/* Main Feature Grid */}

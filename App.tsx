@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Home, Package, BookOpen, Bot, User, Palette } from 'lucide-react';
+import SystemMonitor from './components/SystemMonitor';
 import { ViewState } from './types';
 import { supabase } from './supabase';
 import { Auth } from './components/Auth';
@@ -182,12 +183,15 @@ const AppContent: React.FC = () => {
                 </div>
                 <h1 className="text-lg font-bold text-white tracking-tight">{getTitle()}</h1>
               </div>
-              <button 
-                onClick={() => setShowThemePicker(!showThemePicker)}
-                className="p-2 text-zinc-400 hover:text-white transition-colors bg-zinc-900 rounded-xl border border-zinc-800"
-              >
-                <Palette size={18} />
-              </button>
+              <div className="flex items-center gap-3">
+                <SystemMonitor />
+                <button 
+                  onClick={() => setShowThemePicker(!showThemePicker)}
+                  className="p-2 text-zinc-400 hover:text-white transition-colors bg-zinc-900 rounded-xl border border-zinc-800"
+                >
+                  <Palette size={18} />
+                </button>
+              </div>
             </div>
           </header>
       )}

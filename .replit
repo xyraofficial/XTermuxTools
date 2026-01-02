@@ -55,6 +55,7 @@ run = ["sh", "-c", "npm run dev"]
 
 [userenv.shared]
 VITE_SUPABASE_URL = "https://phdhtvkfiqhhkfhxkdgh.supabase.co"
+VITE_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBoZGh0dmtmaXFoaGtmaHhrZGdoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjczMzU2OTAsImV4cCI6MjA4MjkxMTY5MH0.PYJurX71i85qJTuVDJaffXhSgHYsy4lug2kmMOTM4tM"
 
 [objectStorage]
 defaultBucketID = "replit-objstore-c35f67d7-2dce-415e-b5b0-52f0df0da6fa"

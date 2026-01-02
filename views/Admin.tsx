@@ -41,8 +41,8 @@ const AdminView: React.FC = () => {
   return (
     <div className="p-6 space-y-8 pb-32 bg-black min-h-full">
       <div className="space-y-2">
-        <h1 className="text-3xl font-black text-white uppercase tracking-tighter italic">AI ARCHITECT</h1>
-        <p className="text-[10px] text-zinc-600 font-bold uppercase tracking-[0.3em]">System Design & Automation</p>
+        <h1 className="text-3xl font-black text-white uppercase tracking-tighter italic">TEMPA (ADMIN)</h1>
+        <p className="text-[10px] text-zinc-600 font-bold uppercase tracking-[0.3em]">Central System Control</p>
       </div>
 
       <div className="grid grid-cols-1 gap-4">
@@ -50,8 +50,8 @@ const AdminView: React.FC = () => {
           <div className="flex items-center gap-4">
             <div className="p-3 bg-accent/10 rounded-2xl text-accent"><Users size={24} /></div>
             <div>
-              <h3 className="text-lg font-bold text-white uppercase tracking-tight">System Architect</h3>
-              <p className="text-[10px] text-zinc-500 uppercase font-bold tracking-widest">Neural Design Interface</p>
+              <h3 className="text-lg font-bold text-white uppercase tracking-tight">User Management</h3>
+              <p className="text-[10px] text-zinc-500 uppercase font-bold tracking-widest">Manage User Roles & Access</p>
             </div>
           </div>
         </div>
@@ -60,8 +60,8 @@ const AdminView: React.FC = () => {
           <div className="flex items-center gap-4">
             <div className="p-3 bg-blue-500/10 rounded-2xl text-blue-500"><Database size={24} /></div>
             <div>
-              <h3 className="text-lg font-bold text-white uppercase tracking-tight">Core Templates</h3>
-              <p className="text-[10px] text-zinc-500 uppercase font-bold tracking-widest">System Foundation Blueprints</p>
+              <h3 className="text-lg font-bold text-white uppercase tracking-tight">System Resources</h3>
+              <p className="text-[10px] text-zinc-500 uppercase font-bold tracking-widest">Database & Storage Control</p>
             </div>
           </div>
         </div>
@@ -70,8 +70,8 @@ const AdminView: React.FC = () => {
           <div className="flex items-center gap-4">
             <div className="p-3 bg-yellow-500/10 rounded-2xl text-yellow-500"><AlertTriangle size={24} /></div>
             <div>
-              <h3 className="text-lg font-bold text-white uppercase tracking-tight">Neural Sync</h3>
-              <p className="text-[10px] text-zinc-500 uppercase font-bold tracking-widest">Real-time Automation Logs</p>
+              <h3 className="text-lg font-bold text-white uppercase tracking-tight">Audit Control</h3>
+              <p className="text-[10px] text-zinc-500 uppercase font-bold tracking-widest">View Security Logs</p>
             </div>
           </div>
         </div>

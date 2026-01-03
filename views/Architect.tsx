@@ -279,8 +279,15 @@ const Architect: React.FC = () => {
                                 <Info size={12} className="text-blue-500" /> Deployment Instructions
                             </h4>
                             <div className="bg-black/30 border border-zinc-800/50 rounded-[2rem] p-6 md:p-10 shadow-inner">
-                                <div className="prose prose-invert prose-xs max-w-none prose-p:my-1 prose-li:my-1 prose-strong:text-blue-400 marker:text-blue-500 text-[13px]">
-                                    <ReactMarkdown remarkPlugins={[remarkGfm]}>{result.instructions}</ReactMarkdown>
+                                <div className="prose prose-invert prose-xs max-w-none prose-p:my-1 prose-li:my-1 prose-strong:text-blue-400 prose-strong:font-bold marker:text-blue-500 text-[13px]">
+                                    <ReactMarkdown 
+                                        remarkPlugins={[remarkGfm]}
+                                        components={{
+                                            strong: ({node, ...props}) => <span className="text-blue-400 font-bold" {...props} />
+                                        }}
+                                    >
+                                        {result.instructions.replace(/\*\*/g, '')}
+                                    </ReactMarkdown>
                                 </div>
                             </div>
                         </div>
@@ -298,7 +305,7 @@ const Architect: React.FC = () => {
       </div>
 
       {/* iOS Centered Input Bar - Positioned at Bottom like AI Chat */}
-      <div className="p-4 bg-transparent shrink-0 relative z-20 mb-4">
+      <div className="px-4 pb-8 bg-transparent shrink-0 relative z-20">
         <div className="max-w-4xl mx-auto">
             <div className="bg-zinc-900/70 backdrop-blur-2xl p-2 rounded-[2.5rem] border border-zinc-800/50 flex items-center gap-2 shadow-[0_20px_50px_rgba(0,0,0,0.4)] focus-within:ring-2 focus-within:ring-blue-500/20 transition-all overflow-hidden">
                 <textarea

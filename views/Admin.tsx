@@ -206,7 +206,7 @@ const Admin: React.FC = () => {
                   </div>
                   <div>
                     <p className="text-xs font-black text-white">{user.username || 'Anonymous'}</p>
-                    <p className="text-[9px] text-zinc-500">{user.email}</p>
+                    <p className="text-[9px] text-zinc-500 font-mono">{user.email || 'No Email'}</p>
                   </div>
                 </div>
                 <button 

@@ -26,6 +26,8 @@ const Admin: React.FC = () => {
   });
 
   const [selectedUser, setSelectedUser] = useState<any>(null);
+  const [revokeConfirm, setRevokeConfirm] = useState<{show: boolean, lic: any}>({ show: false, lic: null });
+  const [editDuration, setEditDuration] = useState<{show: boolean, lic: any, days: string}>({ show: false, lic: null, days: '' });
 
   useEffect(() => {
     checkAdmin();
@@ -133,9 +135,6 @@ const Admin: React.FC = () => {
   };
 
   const handleRemoveLicense = async (lic: any) => {
-    const confirmed = window.confirm(`Revoke premium for ${lic.used_by_email || lic.key}?`);
-    if (!confirmed) return;
-    
     setLoading(true);
     try {
       if (lic.is_used && lic.used_by) {
@@ -157,8 +156,30 @@ const Admin: React.FC = () => {
       if (error) throw error;
 
       showToast('System Reset Complete', 'success');
+      setRevokeConfirm({ show: false, lic: null });
       fetchRecentLicenses();
       if (activeTab === 'analytics') fetchAnalytics();
+    } catch (err: any) {
+      showToast(err.message, 'error');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleUpdateDuration = async () => {
+    if (!editDuration.lic || !editDuration.days) return;
+    setLoading(true);
+    try {
+      const { error } = await supabase
+        .from('licenses')
+        .update({ duration_days: parseInt(editDuration.days) })
+        .eq('id', editDuration.lic.id);
+
+      if (error) throw error;
+      
+      showToast('Duration updated', 'success');
+      setEditDuration({ show: false, lic: null, days: '' });
+      fetchRecentLicenses();
     } catch (err: any) {
       showToast(err.message, 'error');
     } finally {
@@ -232,8 +253,11 @@ const Admin: React.FC = () => {
                   </div>
                 </div>
                 <div className="flex gap-1">
-                  <button onClick={() => copyToClipboard(lic.key)} className="p-2 text-zinc-500 hover:text-white"><Copy size={16} /></button>
-                  <button onClick={() => handleRemoveLicense(lic)} className="p-2 text-zinc-500 hover:text-red-500"><Trash2 size={16} /></button>
+                  <button onClick={() => setEditDuration({ show: true, lic: lic, days: lic.duration_days.toString() })} className="p-2 text-zinc-500 hover:text-blue-500 transition-colors">
+                    <Calendar size={16} />
+                  </button>
+                  <button onClick={() => copyToClipboard(lic.key)} className="p-2 text-zinc-500 hover:text-white transition-colors"><Copy size={16} /></button>
+                  <button onClick={() => setRevokeConfirm({ show: true, lic: lic })} className="p-2 text-zinc-500 hover:text-red-500 transition-colors"><Trash2 size={16} /></button>
                 </div>
               </div>
             ))}
@@ -388,6 +412,93 @@ const Admin: React.FC = () => {
               >
                 {selectedUser.is_premium ? 'Revoke Premium Access' : 'Grant Premium Access'}
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Revoke Confirmation Modal */}
+      {revokeConfirm.show && (
+        <div className="fixed inset-0 z-[200] flex items-center justify-center p-6 bg-black/80 backdrop-blur-xl animate-in fade-in duration-300">
+          <div className="w-full max-w-sm bg-zinc-900 border border-white/10 rounded-[2.5rem] p-8 shadow-2xl relative overflow-hidden">
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-red-500 to-transparent" />
+            
+            <div className="space-y-6 text-center">
+              <div className="w-20 h-20 bg-red-500/10 rounded-[2rem] flex items-center justify-center mx-auto border border-red-500/20">
+                <Trash2 size={32} className="text-red-500" />
+              </div>
+              
+              <div className="space-y-2">
+                <h3 className="text-xl font-black text-white uppercase italic">Revoke Access?</h3>
+                <p className="text-xs text-zinc-500 font-medium leading-relaxed">
+                  Revoke premium for <span className="text-white font-mono">{revokeConfirm.lic.used_by_email || revokeConfirm.lic.key}</span>? This action cannot be undone.
+                </p>
+              </div>
+
+              <div className="flex gap-3 pt-2">
+                <button 
+                  onClick={() => setRevokeConfirm({ show: false, lic: null })}
+                  className="flex-1 py-4 bg-zinc-800 text-zinc-400 font-black rounded-3xl text-[11px] uppercase tracking-widest hover:bg-zinc-700 transition-colors"
+                >
+                  Batal
+                </button>
+                <button 
+                  onClick={() => handleRemoveLicense(revokeConfirm.lic)}
+                  disabled={loading}
+                  className="flex-1 py-4 bg-red-500 text-white font-black rounded-3xl text-[11px] uppercase tracking-widest hover:bg-red-600 transition-all active:scale-95 disabled:opacity-50"
+                >
+                  {loading ? <Loader2 className="animate-spin mx-auto" size={16} /> : 'Oke'}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Duration Modal */}
+      {editDuration.show && (
+        <div className="fixed inset-0 z-[200] flex items-center justify-center p-6 bg-black/80 backdrop-blur-xl animate-in fade-in duration-300">
+          <div className="w-full max-w-sm bg-zinc-900 border border-white/10 rounded-[2.5rem] p-8 shadow-2xl relative overflow-hidden">
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent" />
+            
+            <div className="space-y-6">
+              <div className="flex justify-between items-center">
+                <h3 className="text-lg font-black text-white uppercase italic">License Protocol</h3>
+                <button onClick={() => setEditDuration({ show: false, lic: null, days: '' })} className="text-zinc-500 hover:text-white transition-colors">
+                  <X size={20} />
+                </button>
+              </div>
+
+              <div className="space-y-4">
+                <div className="bg-black/40 p-4 rounded-2xl border border-white/5 space-y-1">
+                  <p className="text-[8px] font-black text-zinc-600 uppercase">Target Key</p>
+                  <p className="text-xs font-mono text-white truncate">{editDuration.lic.key}</p>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black text-zinc-600 uppercase px-1">Duration Adjust</label>
+                  <select 
+                    value={editDuration.days} 
+                    onChange={(e) => setEditDuration(prev => ({ ...prev, days: e.target.value }))}
+                    className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 text-white text-sm outline-none appearance-none"
+                  >
+                    <option value="1">1 Day</option>
+                    <option value="7">7 Days</option>
+                    <option value="30">30 Days</option>
+                    <option value="90">90 Days</option>
+                    <option value="365">365 Days</option>
+                  </select>
+                </div>
+
+                <button 
+                  onClick={handleUpdateDuration}
+                  disabled={loading}
+                  className="w-full py-4 bg-blue-500 text-white font-black rounded-3xl text-[11px] uppercase tracking-widest hover:bg-blue-600 transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2"
+                >
+                  {loading ? <Loader2 className="animate-spin" size={16} /> : <Calendar size={16} />} 
+                  Update Protocol
+                </button>
+              </div>
             </div>
           </div>
         </div>

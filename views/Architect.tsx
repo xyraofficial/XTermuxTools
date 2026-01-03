@@ -17,8 +17,11 @@ interface ArchitectResponse {
     dependencies: string[];
     code: string;
     instructions: string;
-    sourceName?: string;
-    sourceUrl?: string;
+    sources?: Array<{
+        title: string;
+        domain: string;
+        url: string;
+    }>;
 }
 
 const BUILD_PHASES = [
@@ -131,9 +134,15 @@ const Architect: React.FC = () => {
               "dependencies": ["pkg1", "pkg2"],
               "code": "The full code here",
               "instructions": "Step-by-step markdown list on how to install and run this specific script. Use bold text sparingly.",
-              "sourceName": "Name of a real reputable website or GitHub repository where similar logic is found",
-              "sourceUrl": "Direct URL to the reputable source"
-            }`
+              "sources": [
+                {
+                  "title": "Reputable Source Title",
+                  "domain": "domain.com",
+                  "url": "https://direct-link-to-source.com"
+                }
+              ]
+            }
+            Search and include at least 3-5 real reputable sources from GitHub or technical sites that are relevant to the requested script logic.`
           },
           { 
             role: "user", 
@@ -227,9 +236,9 @@ const Architect: React.FC = () => {
         )}
 
         {result && (
-            <div ref={resultRef} className="max-w-4xl mx-auto space-y-4 pb-4 animate-in fade-in slide-in-from-bottom-10 duration-1000">
+            <div ref={resultRef} className="max-w-4xl mx-auto space-y-4 pb-32 animate-in fade-in slide-in-from-bottom-10 duration-1000">
                 {/* Result Hero Card */}
-                <div className="bg-zinc-900/60 backdrop-blur-2xl border border-zinc-800/80 rounded-[2.5rem] p-6 md:p-12 shadow-[0_40px_100px_rgba(0,0,0,0.5)] relative overflow-hidden">
+                <div className="bg-zinc-900/60 backdrop-blur-2xl border border-zinc-800/80 rounded-[2.5rem] p-5 md:p-12 shadow-[0_40px_100px_rgba(0,0,0,0.5)] relative overflow-hidden">
                     <div className="absolute top-0 right-0 p-8 opacity-[0.03] text-blue-400">
                         <Box size={200} />
                     </div>
@@ -309,29 +318,23 @@ const Architect: React.FC = () => {
                                     </div>
                                     <div className="flex items-center gap-2 text-[10px] font-bold text-zinc-500 uppercase tracking-widest">
                                         <Search size={12} className="text-blue-500" />
-                                        <span>20 sources</span>
+                                        <span>{result.sources?.length || 0} sources</span>
                                     </div>
                                 </div>
                                 
-                                <div className="space-y-3 px-2">
-                                    {[
-                                        { title: "Top 10 Termux Scripts That Save Time and Effo...", domain: "dev.to", url: "https://dev.to/terminaltools/top-10-termux-scripts-that-save-time-and-effort-3e26" },
-                                        { title: "GitHub - T4P4N/Awesome-Termux: Aweso...", domain: "github.com", url: "https://github.com/T4P4N/Awesome-Termux" },
-                                        { title: "GitHub - schnatterer/termux-scripts: Colle...", domain: "github.com", url: "https://github.com/schnatterer/termux-scripts" },
-                                        { title: "The best Termux open-source scripts and ...", domain: "linuxpip.org", url: "https://linuxpip.org/the-best-termux-open-source-scripts-and-projects/" },
-                                        { title: "Termux Best Script | TikTok", domain: "tiktok.com", url: "https://www.tiktok.com/discover/termux-best-script" }
-                                    ].map((source, i) => (
+                                <div className="space-y-3 px-1 md:px-2">
+                                    {(result.sources || []).map((source, i) => (
                                         <a 
                                             key={i}
                                             href={source.url}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="flex items-center justify-between group hover:bg-white/5 p-2 rounded-lg transition-colors border border-transparent hover:border-white/10"
+                                            className="flex items-center justify-between group hover:bg-white/5 p-2.5 rounded-xl transition-all border border-transparent hover:border-white/10 active:scale-[0.98]"
                                         >
-                                            <span className="text-[11px] text-zinc-300 group-hover:text-blue-400 transition-colors truncate max-w-[280px]">
+                                            <span className="text-[11px] text-zinc-300 group-hover:text-blue-400 transition-colors truncate flex-1 pr-4">
                                                 {source.title}
                                             </span>
-                                            <span className="text-[10px] text-zinc-600 font-medium lowercase">
+                                            <span className="text-[9px] text-zinc-600 font-bold lowercase bg-zinc-800/50 px-2 py-0.5 rounded-md">
                                                 {source.domain}
                                             </span>
                                         </a>
@@ -340,7 +343,7 @@ const Architect: React.FC = () => {
 
                                 <div className="flex flex-col items-center gap-2 pt-2 border-t border-zinc-800/30">
                                     <span className="text-[9px] font-black text-blue-500/60 uppercase tracking-[0.2em]">Verified by X-Architect Neural Engine</span>
-                                    <span className="text-[8px] text-zinc-600 italic">Searched the web for "best termux script resource..."</span>
+                                    <span className="text-[8px] text-zinc-600 italic">Context-aware search completed for "{result.scriptName}"</span>
                                 </div>
                             </div>
                         </div>

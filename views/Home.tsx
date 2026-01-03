@@ -15,6 +15,7 @@ const Home: React.FC<HomeProps> = ({ onNavigate }) => {
   const { language } = useLanguage();
   const [isPremium, setIsPremium] = useState(false);
   const [showPremiumModal, setShowPremiumModal] = useState(false);
+  const [showRestrictedDialog, setShowRestrictedDialog] = useState<{show: boolean, title: string}>({ show: false, title: '' });
   
   useEffect(() => {
     const checkPremium = async () => {
@@ -29,7 +30,10 @@ const Home: React.FC<HomeProps> = ({ onNavigate }) => {
 
   const handleNavigate = (viewId: string) => {
     if ((viewId === 'AI_BUILDER' || viewId === 'SCRIPTS') && !isPremium) {
-      setShowPremiumModal(true);
+      setShowRestrictedDialog({ 
+        show: true, 
+        title: viewId === 'AI_BUILDER' ? 'AI BUILDER' : 'SCRIPTS' 
+      });
       return;
     }
     onNavigate(viewId);
@@ -118,6 +122,42 @@ const Home: React.FC<HomeProps> = ({ onNavigate }) => {
           setIsPremium(true);
         }}
       />
+
+      {showRestrictedDialog.show && (
+        <div className="fixed inset-0 z-[200] flex items-center justify-center p-6 bg-black/80 backdrop-blur-xl animate-in fade-in duration-300">
+          <div className="w-full max-w-xs bg-zinc-900 border border-white/10 rounded-[2rem] p-6 shadow-2xl relative overflow-hidden text-center">
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-amber-500 to-transparent" />
+            
+            <div className="w-16 h-16 bg-amber-500/10 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-amber-500/20">
+              <Crown size={28} className="text-amber-500" />
+            </div>
+
+            <h3 className="text-lg font-black text-white uppercase italic mb-2">Akses Terbatas</h3>
+            <p className="text-[10px] text-zinc-500 font-medium leading-relaxed mb-6">
+              Fitur <span className="text-white font-black">{showRestrictedDialog.title}</span> hanya tersedia untuk anggota Premium. Tingkatkan protokol Anda sekarang.
+            </p>
+
+            <div className="flex flex-col gap-2">
+              <button 
+                onClick={() => {
+                  setShowRestrictedDialog({ show: false, title: '' });
+                  setShowPremiumModal(true);
+                }}
+                className="w-full py-3.5 bg-amber-500 text-black text-[11px] font-black uppercase rounded-xl hover:bg-amber-400 active:scale-95 transition-all"
+              >
+                Upgrade Ke Premium
+              </button>
+              <button 
+                onClick={() => setShowRestrictedDialog({ show: false, title: '' })}
+                className="w-full py-3.5 bg-zinc-800 text-zinc-400 text-[11px] font-black uppercase rounded-xl hover:bg-zinc-700 transition-all"
+              >
+                Nanti Saja
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="relative">
         <div className="absolute -top-20 -left-20 w-48 h-48 bg-accent/10 rounded-full blur-[80px] pointer-events-none" />
         

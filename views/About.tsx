@@ -4,7 +4,7 @@ import { APP_VERSION } from '../constants';
 import { supabase } from '../supabase';
 import { showToast } from '../components/Toast';
 
-import { LanguageProvider, useLanguage } from '../LanguageContext';
+import IOSModal from '../components/IOSModal';
 
 const About: React.FC = () => {
   const { language } = useLanguage();
@@ -125,20 +125,25 @@ const About: React.FC = () => {
     window.location.reload();
   };
 
-  const handleUpdateProfile = async (newUsername: string) => {
+  const [showEditName, setShowEditName] = useState(false);
+  const [newName, setNewName] = useState('');
+
+  const handleUpdateProfile = async (targetName: string) => {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
+      if (!targetName.trim()) return;
+      const { data: { user: currentUser } } = await supabase.auth.getUser();
+      if (!currentUser) return;
 
       const { error } = await supabase
         .from('profiles')
-        .update({ username: newUsername, updated_at: new Date().toISOString() })
-        .eq('id', user.id);
+        .update({ username: targetName, updated_at: new Date().toISOString() })
+        .eq('id', currentUser.id);
 
       if (error) throw error;
       
       showToast('Profile updated successfully', 'success');
       fetchUser();
+      setShowEditName(false);
     } catch (err: any) {
       showToast(err.message || 'Error updating profile', 'error');
     }
@@ -212,15 +217,15 @@ const About: React.FC = () => {
             {user?.profile?.role === 'admin' && (
               <div className="relative flex items-center justify-center group/badge shrink-0">
                 <div className="absolute inset-0 bg-blue-500 rounded-full blur-md opacity-50 group-hover/badge:opacity-100 transition-opacity" />
-                <div className="relative bg-blue-500 p-0.5 rounded-full shadow-[0_0_10px_rgba(59,130,246,0.5)] border border-white/20 flex items-center justify-center">
-                  <Check size={8} className="text-white stroke-[4px]" />
+                <div className="relative bg-blue-400 p-0.5 rounded-full shadow-[0_0_15px_rgba(59,130,246,1)] border border-white/40 flex items-center justify-center w-4.5 h-4.5">
+                  <Check size={12} className="text-white stroke-[4px]" />
                 </div>
               </div>
             )}
             <button 
               onClick={() => {
-                const newName = prompt('Enter new username:', username);
-                if (newName && newName !== username) handleUpdateProfile(newName);
+                setNewName(username);
+                setShowEditName(true);
               }}
               className="p-1 text-zinc-600 hover:text-accent transition-colors"
             >
@@ -293,6 +298,45 @@ const About: React.FC = () => {
         <p className="text-[9px] font-black text-zinc-600 uppercase tracking-[0.4em]">© 2026 XTermux Nexus</p>
         <p className="text-[8px] font-bold text-zinc-700 uppercase tracking-widest italic text-balance px-10">{t.footerDesc}</p>
       </div>
+
+      {showEditName && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="w-full max-w-[270px] bg-[#1c1c1e]/90 backdrop-blur-xl rounded-[20px] overflow-hidden flex flex-col shadow-2xl animate-in zoom-in-95 duration-200 border border-white/10">
+            <div className="p-5 flex flex-col items-center text-center space-y-3">
+              <div className="w-12 h-12 bg-accent/10 rounded-2xl flex items-center justify-center text-accent">
+                <Edit2 size={24} />
+              </div>
+              <div>
+                <h3 className="text-[17px] font-bold text-white leading-tight">Neural Identity</h3>
+                <p className="mt-1 text-[12px] text-zinc-500 leading-tight">Update your system designation</p>
+              </div>
+              <input
+                type="text"
+                value={newName}
+                onChange={(e) => setNewName(e.target.value)}
+                className="w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2.5 text-white text-center text-sm focus:border-accent/50 outline-none transition-all mt-2"
+                placeholder="New Identity..."
+                autoFocus
+              />
+            </div>
+            
+            <div className="flex border-t border-white/10 h-12">
+              <button 
+                onClick={() => setShowEditName(false)}
+                className="flex-1 text-[15px] text-zinc-500 font-bold uppercase tracking-widest border-r border-white/10 active:bg-white/5 transition-colors"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={() => handleUpdateProfile(newName)}
+                className="flex-1 text-[15px] text-accent font-bold uppercase tracking-widest active:bg-white/5 transition-colors"
+              >
+                Sync
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

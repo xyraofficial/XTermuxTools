@@ -324,7 +324,9 @@ const About: React.FC = () => {
       <div className="grid grid-cols-2 gap-3">
         {[
           { icon: <Calendar size={20} />, label: t.joinDate, val: new Date(user?.created_at).toLocaleDateString() },
-          { icon: <Shield size={20} />, label: t.security, val: t.verified }
+          { icon: <Shield size={20} />, label: t.security, val: t.verified },
+          { icon: <Package size={20} />, label: "Tools Vault", val: "3.5k+" },
+          { icon: <Terminal size={20} />, label: "Pro Scripts", val: "1.2k+" }
         ].map((s, i) => (
           <div key={i} className="bg-zinc-900/30 border border-white/5 p-4 rounded-3xl text-center space-y-2">
             <div className="text-accent mx-auto w-fit">{s.icon}</div>

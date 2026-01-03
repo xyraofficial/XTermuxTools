@@ -217,9 +217,9 @@ const About: React.FC = () => {
             <h2 className="text-2xl font-black text-white uppercase tracking-tighter italic">{username}</h2>
             {user?.profile?.role === 'admin' && (
               <div className="relative flex items-center justify-center group/badge shrink-0">
-                <div className="absolute inset-0 bg-blue-500 rounded-full blur-md opacity-50 group-hover/badge:opacity-100 transition-opacity" />
-                <div className="relative bg-blue-400 p-0.5 rounded-full shadow-[0_0_15px_rgba(59,130,246,1)] border border-white/40 flex items-center justify-center w-4.5 h-4.5">
-                  <Check size={12} className="text-white stroke-[4px]" />
+                <div className="absolute inset-0 bg-blue-500/20 rounded-full blur-md" />
+                <div className="relative bg-blue-500 p-0.5 rounded-full shadow-[0_0_10px_rgba(59,130,246,0.3)] border border-white/10 flex items-center justify-center w-4 h-4">
+                  <Check size={10} className="text-zinc-100 stroke-[3px]" />
                 </div>
               </div>
             )}

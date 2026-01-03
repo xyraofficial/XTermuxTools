@@ -276,7 +276,7 @@ const About: React.FC = () => {
                 </div>
               </div>
             )}
-            {isPremium && user?.profile?.role !== 'admin' && (
+            {isPremium && (
               <div className="relative flex items-center justify-center group/badge shrink-0">
                 <div className="absolute inset-0 bg-amber-500/20 rounded-full blur-md" />
                 <div className="relative bg-amber-500 p-0.5 rounded-full shadow-[0_0_10px_rgba(245,158,11,0.3)] border border-white/10 flex items-center justify-center w-4 h-4">

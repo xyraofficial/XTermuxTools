@@ -14,16 +14,19 @@ import { supabase } from '../supabase';
 const Home: React.FC<HomeProps> = ({ onNavigate }) => {
   const { language } = useLanguage();
   const [isPremium, setIsPremium] = useState(false);
+  const [isSyncing, setIsSyncing] = useState(false);
   const [showPremiumModal, setShowPremiumModal] = useState(false);
   const [showRestrictedDialog, setShowRestrictedDialog] = useState<{show: boolean, title: string}>({ show: false, title: '' });
   
   useEffect(() => {
     const checkPremium = async () => {
+      setIsSyncing(true);
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
         const { data: profile } = await supabase.from('profiles').select('is_premium').eq('id', user.id).single();
         setIsPremium(!!profile?.is_premium);
       }
+      setTimeout(() => setIsSyncing(false), 1500);
     };
     checkPremium();
   }, []);
@@ -162,9 +165,23 @@ const Home: React.FC<HomeProps> = ({ onNavigate }) => {
         <div className="absolute -top-20 -left-20 w-48 h-48 bg-accent/10 rounded-full blur-[80px] pointer-events-none" />
         
         <div className="relative z-10 text-center space-y-6">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-accent/10 rounded-full border border-accent/20 mb-2">
-            <div className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
-            <span className="text-[10px] font-black text-accent uppercase tracking-[0.2em]">{t.status}</span>
+          <div className="flex flex-col items-center gap-4">
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-accent/10 rounded-full border border-accent/20 mb-2">
+              <div className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+              <span className="text-[10px] font-black text-accent uppercase tracking-[0.2em]">{t.status}</span>
+            </div>
+
+            {isSyncing ? (
+              <div className="flex items-center gap-2 px-3 py-1 bg-white/5 rounded-full border border-white/10 animate-pulse">
+                <div className="w-2 h-2 border border-accent border-t-transparent rounded-full animate-spin" />
+                <span className="text-[8px] font-black text-zinc-400 uppercase tracking-widest italic">Syncing Protocol...</span>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2 px-3 py-1 bg-accent/5 rounded-full border border-accent/10">
+                <div className="w-1 h-1 bg-accent rounded-full shadow-[0_0_5px_rgba(var(--accent-rgb),0.5)]" />
+                <span className="text-[8px] font-black text-accent uppercase tracking-widest italic">Neural Link Active</span>
+              </div>
+            )}
           </div>
           
           <div className="space-y-2">

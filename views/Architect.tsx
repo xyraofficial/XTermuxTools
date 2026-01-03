@@ -28,7 +28,7 @@ const BUILD_PHASES = [
 ];
 
 const groq = new Groq({
-  apiKey: process.env.GROQ_API_KEY || process.env.API_KEY || '',
+  apiKey: import.meta.env.VITE_GROQ_API_KEY || '',
   dangerouslyAllowBrowser: true
 });
 
@@ -106,7 +106,7 @@ const Architect: React.FC = () => {
     setPendingResult(null);
 
     try {
-      const apiKey = process.env.GROQ_API_KEY || process.env.API_KEY;
+      const apiKey = import.meta.env.VITE_GROQ_API_KEY;
       if (!apiKey) {
         showToast('API Key missing', 'error');
         setIsGenerating(false);
@@ -119,6 +119,7 @@ const Architect: React.FC = () => {
             role: "system", 
             content: `You are a professional Termux script architect. 
             You MUST return ONLY a valid JSON object.
+            Ensure markdown content for instructions uses proper formatting but avoid double asterisks if they cause issues.
             
             JSON Structure:
             {
@@ -127,7 +128,7 @@ const Architect: React.FC = () => {
               "language": "bash/python",
               "dependencies": ["pkg1", "pkg2"],
               "code": "The full code here",
-              "instructions": "Step-by-step markdown list on how to install and run this specific script."
+              "instructions": "Step-by-step markdown list on how to install and run this specific script. Use bold text sparingly."
             }`
           },
           { 
@@ -222,7 +223,7 @@ const Architect: React.FC = () => {
         )}
 
         {result && (
-            <div ref={resultRef} className="max-w-4xl mx-auto space-y-4 pb-20 animate-in fade-in slide-in-from-bottom-10 duration-1000">
+            <div ref={resultRef} className="max-w-4xl mx-auto space-y-4 pb-4 animate-in fade-in slide-in-from-bottom-10 duration-1000">
                 {/* Result Hero Card */}
                 <div className="bg-zinc-900/60 backdrop-blur-2xl border border-zinc-800/80 rounded-[2.5rem] p-6 md:p-12 shadow-[0_40px_100px_rgba(0,0,0,0.5)] relative overflow-hidden">
                     <div className="absolute top-0 right-0 p-8 opacity-[0.03] text-blue-400">
@@ -312,7 +313,7 @@ const Architect: React.FC = () => {
                     onClick={handleGenerate} 
                     disabled={!prompt.trim() || isGenerating} 
                     className={`p-3.5 rounded-full transition-all shadow-xl active:scale-90 shrink-0 ${
-                        prompt.trim() && !isGenerating 
+                    prompt.trim() && !isGenerating 
                         ? 'bg-blue-600 text-white hover:bg-blue-500 shadow-blue-600/20' 
                         : 'bg-zinc-800 text-zinc-600 opacity-50'
                     }`}

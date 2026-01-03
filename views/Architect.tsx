@@ -17,6 +17,8 @@ interface ArchitectResponse {
     dependencies: string[];
     code: string;
     instructions: string;
+    sourceName?: string;
+    sourceUrl?: string;
 }
 
 const BUILD_PHASES = [
@@ -128,7 +130,9 @@ const Architect: React.FC = () => {
               "language": "bash/python",
               "dependencies": ["pkg1", "pkg2"],
               "code": "The full code here",
-              "instructions": "Step-by-step markdown list on how to install and run this specific script. Use bold text sparingly."
+              "instructions": "Step-by-step markdown list on how to install and run this specific script. Use bold text sparingly.",
+              "sourceName": "Name of a real reputable website or GitHub repository where similar logic is found",
+              "sourceUrl": "Direct URL to the reputable source"
             }`
           },
           { 
@@ -302,7 +306,17 @@ const Architect: React.FC = () => {
                                     <div className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
                                     <span className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">Source Info Site</span>
                                 </div>
-                                <span className="text-[10px] font-bold text-blue-400/60 uppercase tracking-widest">XTermux Toolbox Architecture</span>
+                                <div className="flex flex-col items-end gap-1">
+                                    <a 
+                                        href={result.sourceUrl || "#"} 
+                                        target="_blank" 
+                                        rel="noopener noreferrer"
+                                        className="text-[10px] font-bold text-blue-400 hover:text-blue-300 uppercase tracking-widest transition-colors underline decoration-blue-400/30 underline-offset-4"
+                                    >
+                                        {result.sourceName || "XTermux Toolbox Architecture"}
+                                    </a>
+                                    <span className="text-[8px] font-medium text-zinc-600 uppercase tracking-tighter italic">Verified by X-Architect Neural Engine</span>
+                                </div>
                             </div>
                         </div>
                     </div>

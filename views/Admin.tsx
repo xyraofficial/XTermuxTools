@@ -6,6 +6,7 @@ import { showToast } from '../components/Toast';
 const Admin: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [checkingAuth, setCheckingAuth] = useState(true);
   const [activeTab, setActiveTab] = useState<'licenses' | 'users' | 'analytics'>('licenses');
   
   // License State
@@ -37,10 +38,15 @@ const Admin: React.FC = () => {
   }, [activeTab]);
 
   const checkAdmin = async () => {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (user) {
-      const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single();
-      setIsAdmin(profile?.role === 'admin');
+    setCheckingAuth(true);
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single();
+        setIsAdmin(profile?.role === 'admin');
+      }
+    } finally {
+      setCheckingAuth(false);
     }
   };
 
@@ -191,6 +197,15 @@ const Admin: React.FC = () => {
     navigator.clipboard.writeText(text);
     showToast('Copied', 'success');
   };
+
+  if (checkingAuth) {
+    return (
+      <div className="h-full flex flex-col items-center justify-center bg-black p-6">
+        <Loader2 size={48} className="text-red-500 animate-spin mb-4" />
+        <p className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] animate-pulse">Synchronizing Terminal...</p>
+      </div>
+    );
+  }
 
   if (!isAdmin) {
     return (

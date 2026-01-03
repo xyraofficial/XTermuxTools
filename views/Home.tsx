@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Bot, Terminal, PenTool, Package, BookOpen, User, ShieldCheck as Shield } from 'lucide-react';
+import { Bot, Terminal, PenTool, Package, BookOpen, User, ShieldCheck as Shield, Crown } from 'lucide-react';
+import PremiumModal from '../components/PremiumModal';
 
 interface HomeProps {
   onNavigate: (view: string) => void;
@@ -8,9 +9,31 @@ interface HomeProps {
 }
 
 import { LanguageProvider, useLanguage } from '../LanguageContext';
+import { supabase } from '../supabase';
 
 const Home: React.FC<HomeProps> = ({ onNavigate }) => {
   const { language } = useLanguage();
+  const [isPremium, setIsPremium] = useState(false);
+  const [showPremiumModal, setShowPremiumModal] = useState(false);
+  
+  useEffect(() => {
+    const checkPremium = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const { data: profile } = await supabase.from('profiles').select('is_premium').eq('id', user.id).single();
+        setIsPremium(!!profile?.is_premium);
+      }
+    };
+    checkPremium();
+  }, []);
+
+  const handleNavigate = (viewId: string) => {
+    if ((viewId === 'AI_BUILDER' || viewId === 'SCRIPTS') && !isPremium) {
+      setShowPremiumModal(true);
+      return;
+    }
+    onNavigate(viewId);
+  };
   
   const translations = {
     en: {
@@ -88,6 +111,13 @@ const Home: React.FC<HomeProps> = ({ onNavigate }) => {
 
   return (
     <div className="px-4 py-8 space-y-10 pb-32 max-w-3xl mx-auto">
+      <PremiumModal 
+        isOpen={showPremiumModal} 
+        onClose={() => setShowPremiumModal(false)} 
+        onUpgrade={() => {
+          window.location.href = 'mailto:xyraofficialsup@gmail.com?subject=Premium%20Upgrade%20Request';
+        }}
+      />
       <div className="relative">
         <div className="absolute -top-20 -left-20 w-48 h-48 bg-accent/10 rounded-full blur-[80px] pointer-events-none" />
         
@@ -133,16 +163,19 @@ const Home: React.FC<HomeProps> = ({ onNavigate }) => {
         <h3 className="text-[10px] font-black text-zinc-600 uppercase tracking-[0.3em] px-1">{t.coreSystems}</h3>
         <div className="grid grid-cols-2 gap-3">
           {[
-            { id: 'AI_BUILDER', icon: PenTool, title: 'AI BUILDER', color: 'blue-500' },
-            { id: 'SCRIPTS', icon: Terminal, title: t.scripts, color: 'blue-500' }
+            { id: 'AI_BUILDER', icon: PenTool, title: 'AI BUILDER', color: 'blue-500', premium: true },
+            { id: 'SCRIPTS', icon: Terminal, title: t.scripts, color: 'blue-500', premium: true }
           ].map((item) => (
-            <button key={item.id} onClick={() => onNavigate(item.id)} className="group relative w-full text-left active:scale-[0.98] transition-all duration-300">
+            <button key={item.id} onClick={() => handleNavigate(item.id)} className="group relative w-full text-left active:scale-[0.98] transition-all duration-300">
               <div className="absolute inset-0 bg-zinc-900/40 backdrop-blur-sm border border-white/5 rounded-2xl group-hover:bg-zinc-900/60 transition-all" />
               <div className="relative p-4 flex flex-col items-center text-center gap-3">
                 <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-zinc-900 border border-white/5">
                   <item.icon size={18} className="text-accent" />
                 </div>
-                <h4 className="text-xs font-black text-white uppercase tracking-tighter">{item.title}</h4>
+                <div className="flex items-center gap-2">
+                  <h4 className="text-xs font-black text-white uppercase tracking-tighter">{item.title}</h4>
+                  {item.premium && !isPremium && <Crown size={12} className="text-amber-500" />}
+                </div>
               </div>
             </button>
           ))}

@@ -1,17 +1,20 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Youtube, Mail, Facebook, User, Camera, Calendar, Shield, Edit2, Check, X, LogOut, Loader2, Smartphone, Code, Star, Heart } from 'lucide-react';
+import { Youtube, Mail, Facebook, User, Camera, Calendar, Shield, Edit2, Check, X, LogOut, Loader2, Smartphone, Code, Star, Heart, Crown } from 'lucide-react';
 import { APP_VERSION } from '../constants';
 import { supabase } from '../supabase';
 import { showToast } from '../components/Toast';
 
 import { LanguageProvider, useLanguage } from '../LanguageContext';
 import IOSModal from '../components/IOSModal';
+import PremiumModal from '../components/PremiumModal';
 
 const About: React.FC = () => {
   const { language } = useLanguage();
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [username, setUsername] = useState('');
+  const [isPremium, setIsPremium] = useState(false);
+  const [showPremiumModal, setShowPremiumModal] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const translations = {
@@ -24,7 +27,11 @@ const About: React.FC = () => {
       verified: "Verified",
       social: "Social Nexus",
       exit: "Exit Neural Protocol",
-      footerDesc: "Crafted for professional Android terminal orchestration."
+      footerDesc: "Crafted for professional Android terminal orchestration.",
+      premium: "Premium Status",
+      free: "Free Member",
+      pro: "Nexus Premium",
+      upgrade: "Initialize Upgrade"
     },
     id: {
       syncing: "Protokol Sinkronisasi",
@@ -35,7 +42,11 @@ const About: React.FC = () => {
       verified: "Terverifikasi",
       social: "Nexus Sosial",
       exit: "Keluar Protokol Neural",
-      footerDesc: "Dibuat untuk orkestrasi terminal Android profesional."
+      footerDesc: "Dibuat untuk orkestrasi terminal Android profesional.",
+      premium: "Status Premium",
+      free: "Anggota Gratis",
+      pro: "Nexus Premium",
+      upgrade: "Mulai Upgrade"
     },
     hi: {
       syncing: "सिंकिंग प्रोटोकॉल",
@@ -46,7 +57,11 @@ const About: React.FC = () => {
       verified: "सत्यापित",
       social: "सोशल नेक्सस",
       exit: "न्यूरल प्रोटोकॉल से बाहर निकलें",
-      footerDesc: "पेशेवर Android टर्मिनल ऑर्केस्ट्रेशन के लिए तैयार किया गया।"
+      footerDesc: "पेशेवर Android टर्मिनल ऑर्केस्ट्रेशन के लिए तैयार किया गया।",
+      premium: "प्रीमियम स्थिति",
+      free: "मुफ़्त सदस्य",
+      pro: "Nexus प्रीमियम",
+      upgrade: "अपग्रेड शुरू करें"
     }
   };
 
@@ -68,6 +83,7 @@ const About: React.FC = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
         const { data: profile } = await supabase.from('profiles').select('*').eq('id', user.id).single();
+        setIsPremium(!!profile?.is_premium);
         
         // If profile doesn't exist, create it
         if (!profile) {
@@ -208,6 +224,13 @@ const About: React.FC = () => {
 
   return (
     <div className="p-4 space-y-8 pb-32 bg-black min-h-full">
+      <PremiumModal 
+        isOpen={showPremiumModal} 
+        onClose={() => setShowPremiumModal(false)} 
+        onUpgrade={() => {
+          window.location.href = 'mailto:xyraofficialsup@gmail.com?subject=Premium%20Upgrade%20Request';
+        }}
+      />
       <div className="bg-zinc-900/50 border border-white/5 rounded-[2.5rem] p-6 text-center space-y-6 relative overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-accent/50 to-transparent" />
         <div className="relative inline-block group">
@@ -221,6 +244,14 @@ const About: React.FC = () => {
         <div className="space-y-1">
           <div className="flex items-center justify-center gap-2">
             <h2 className="text-2xl font-black text-white uppercase tracking-tighter italic">{username}</h2>
+            {isPremium && (
+              <div className="relative flex items-center justify-center group/badge shrink-0">
+                <div className="absolute inset-0 bg-amber-500/20 rounded-full blur-md" />
+                <div className="relative bg-amber-500 p-0.5 rounded-full shadow-[0_0_10px_rgba(245,158,11,0.3)] border border-white/10 flex items-center justify-center w-4 h-4">
+                  <Crown size={10} className="text-zinc-900 stroke-[3px]" />
+                </div>
+              </div>
+            )}
             <button 
               onClick={() => {
                 setNewName(username);
@@ -235,10 +266,27 @@ const About: React.FC = () => {
         </div>
 
         <div className="flex flex-wrap justify-center items-center gap-3">
-          <span className="px-4 py-1.5 bg-accent/10 border border-accent/20 rounded-xl text-[10px] font-black text-accent uppercase tracking-widest">{user?.profile?.role || 'USER'}</span>
+          <span className={`px-4 py-1.5 border rounded-xl text-[10px] font-black uppercase tracking-widest ${isPremium ? 'bg-amber-500/10 border-amber-500/20 text-amber-500' : 'bg-accent/10 border-accent/20 text-accent'}`}>
+            {isPremium ? t.pro : t.free}
+          </span>
           <span className="px-4 py-1.5 bg-accent/10 border border-accent/20 rounded-xl text-[10px] font-black text-accent uppercase tracking-widest">{t.syncActive}</span>
           <span className="px-4 py-1.5 bg-white/5 border border-white/10 rounded-xl text-[10px] font-black text-zinc-500 uppercase tracking-widest">v{APP_VERSION}</span>
         </div>
+
+        {!isPremium && (
+          <div className="pt-4 border-t border-white/5">
+            <button 
+              onClick={() => setShowPremiumModal(true)}
+              className="group relative w-full py-4 bg-gradient-to-r from-amber-500/10 to-amber-600/10 border border-amber-500/20 rounded-3xl flex items-center justify-center gap-3 overflow-hidden transition-all duration-300 hover:scale-[1.02] active:scale-95"
+            >
+              <Crown size={20} className="text-amber-500 group-hover:rotate-12 transition-transform duration-300" />
+              <div className="text-left">
+                <p className="text-[11px] font-black text-amber-500 uppercase tracking-[0.2em]">{t.upgrade}</p>
+                <p className="text-[8px] font-bold text-amber-500/40 uppercase tracking-widest">Access AI Builder & Pro Scripts</p>
+              </div>
+            </button>
+          </div>
+        )}
       </div>
 
       <div className="grid grid-cols-2 gap-3">

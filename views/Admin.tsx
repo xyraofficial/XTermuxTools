@@ -50,9 +50,17 @@ const AdminView: React.FC = () => {
 
   const fetchUsers = async () => {
     try {
-      const { data, error } = await supabase.from('profiles').select('*').order('created_at', { ascending: false }).limit(50);
+      const { data, error } = await supabase.from('profiles').select('*').limit(50);
       if (error) throw error;
-      if (data) setUsers(data);
+      if (data) {
+        // Sort in memory if created_at is missing or just to be safe
+        const sortedData = [...data].sort((a: any, b: any) => {
+          const dateA = new Date(a.updated_at || 0).getTime();
+          const dateB = new Date(b.updated_at || 0).getTime();
+          return dateB - dateA;
+        });
+        setUsers(sortedData);
+      }
     } catch (err) {
       console.error('Error fetching users:', err);
       showToast('Failed to fetch users', 'error');

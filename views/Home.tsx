@@ -115,7 +115,7 @@ const Home: React.FC<HomeProps> = ({ onNavigate }) => {
         isOpen={showPremiumModal} 
         onClose={() => setShowPremiumModal(false)} 
         onUpgrade={() => {
-          window.location.href = 'mailto:xyraofficialsup@gmail.com?subject=Premium%20Upgrade%20Request';
+          setIsPremium(true);
         }}
       />
       <div className="relative">

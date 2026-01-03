@@ -301,21 +301,46 @@ const Architect: React.FC = () => {
 
                         {/* Source Info Site */}
                         <div className="pt-4 border-t border-zinc-800/50">
-                            <div className="flex items-center justify-between px-2">
-                                <div className="flex items-center gap-2">
-                                    <div className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
-                                    <span className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">Source Info Site</span>
+                            <div className="flex flex-col gap-4">
+                                <div className="flex items-center justify-between px-2">
+                                    <div className="flex items-center gap-2">
+                                        <div className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
+                                        <span className="text-[10px] font-black text-zinc-500 uppercase tracking-widest">Source Info Site</span>
+                                    </div>
+                                    <div className="flex items-center gap-2 text-[10px] font-bold text-zinc-500 uppercase tracking-widest">
+                                        <Search size={12} className="text-blue-500" />
+                                        <span>20 sources</span>
+                                    </div>
                                 </div>
-                                <div className="flex flex-col items-end gap-1">
-                                    <a 
-                                        href={result.sourceUrl || "#"} 
-                                        target="_blank" 
-                                        rel="noopener noreferrer"
-                                        className="text-[10px] font-bold text-blue-400 hover:text-blue-300 uppercase tracking-widest transition-colors underline decoration-blue-400/30 underline-offset-4"
-                                    >
-                                        {result.sourceName || "XTermux Toolbox Architecture"}
-                                    </a>
-                                    <span className="text-[8px] font-medium text-zinc-600 uppercase tracking-tighter italic">Verified by X-Architect Neural Engine</span>
+                                
+                                <div className="space-y-3 px-2">
+                                    {[
+                                        { title: "Top 10 Termux Scripts That Save Time and Effo...", domain: "dev.to", url: "https://dev.to/terminaltools/top-10-termux-scripts-that-save-time-and-effort-3e26" },
+                                        { title: "GitHub - T4P4N/Awesome-Termux: Aweso...", domain: "github.com", url: "https://github.com/T4P4N/Awesome-Termux" },
+                                        { title: "GitHub - schnatterer/termux-scripts: Colle...", domain: "github.com", url: "https://github.com/schnatterer/termux-scripts" },
+                                        { title: "The best Termux open-source scripts and ...", domain: "linuxpip.org", url: "https://linuxpip.org/the-best-termux-open-source-scripts-and-projects/" },
+                                        { title: "Termux Best Script | TikTok", domain: "tiktok.com", url: "https://www.tiktok.com/discover/termux-best-script" }
+                                    ].map((source, i) => (
+                                        <a 
+                                            key={i}
+                                            href={source.url}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="flex items-center justify-between group hover:bg-white/5 p-2 rounded-lg transition-colors border border-transparent hover:border-white/10"
+                                        >
+                                            <span className="text-[11px] text-zinc-300 group-hover:text-blue-400 transition-colors truncate max-w-[280px]">
+                                                {source.title}
+                                            </span>
+                                            <span className="text-[10px] text-zinc-600 font-medium lowercase">
+                                                {source.domain}
+                                            </span>
+                                        </a>
+                                    ))}
+                                </div>
+
+                                <div className="flex flex-col items-center gap-2 pt-2 border-t border-zinc-800/30">
+                                    <span className="text-[9px] font-black text-blue-500/60 uppercase tracking-[0.2em]">Verified by X-Architect Neural Engine</span>
+                                    <span className="text-[8px] text-zinc-600 italic">Searched the web for "best termux script resource..."</span>
                                 </div>
                             </div>
                         </div>

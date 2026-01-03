@@ -118,6 +118,41 @@ const Admin: React.FC = () => {
     }
   };
 
+  const handleRemoveLicense = async (lic: any) => {
+    if (!window.confirm(`Are you sure you want to delete license ${lic.key}?`)) return;
+    
+    setLoading(true);
+    try {
+      // 1. If used, revoke premium from user
+      if (lic.is_used && lic.used_by) {
+        await supabase
+          .from('profiles')
+          .update({ 
+            is_premium: false, 
+            license_key: null, 
+            license_expiry: null 
+          })
+          .eq('id', lic.used_by);
+      }
+
+      // 2. Delete from licenses table
+      const { error } = await supabase
+        .from('licenses')
+        .delete()
+        .eq('id', lic.id);
+
+      if (error) throw error;
+
+      showToast('License and associated premium status removed', 'success');
+      fetchRecentLicenses();
+      if (activeTab === 'analytics') fetchAnalytics();
+    } catch (err: any) {
+      showToast(err.message, 'error');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
     showToast('Copied', 'success');
@@ -179,7 +214,10 @@ const Admin: React.FC = () => {
                     {lic.is_used ? `USED BY: ${lic.used_by_email || 'Unknown'}` : 'ACTIVE'} • {lic.duration_days} DAYS
                   </p>
                 </div>
-                <button onClick={() => copyToClipboard(lic.key)} className="p-2 text-zinc-500 hover:text-white"><Copy size={16} /></button>
+                <div className="flex gap-1">
+                  <button onClick={() => copyToClipboard(lic.key)} className="p-2 text-zinc-500 hover:text-white"><Copy size={16} /></button>
+                  <button onClick={() => handleRemoveLicense(lic)} className="p-2 text-zinc-500 hover:text-red-500"><Trash2 size={16} /></button>
+                </div>
               </div>
             ))}
           </div>

@@ -133,7 +133,7 @@ const Architect: React.FC = () => {
               "language": "bash/python",
               "dependencies": ["pkg1", "pkg2"],
               "code": "The full code here",
-              "instructions": "Step-by-step plain text list on how to install and run this specific script. Do not use markdown bolding (double asterisks) or complex formatting.",
+              "instructions": "Step-by-step markdown list on how to install and run this specific script. Use bold text sparingly.",
               "sources": [
                 {
                   "title": "Reputable Source Title",
@@ -142,7 +142,7 @@ const Architect: React.FC = () => {
                 }
               ]
             }
-            Search and include at least 3-5 real reputable sources from GitHub or technical sites that are relevant to the requested script logic. Keep instructions as a simple array-like string without complex markdown.`
+            Search and include at least 3-5 real reputable sources from GitHub or technical sites that are relevant to the requested script logic.`
           },
           { 
             role: "user", 
@@ -299,22 +299,10 @@ const Architect: React.FC = () => {
                                             strong: ({node, ...props}) => <span className="text-blue-400 font-bold" {...props} />,
                                             p: ({node, ...props}) => <p className="mb-4 last:mb-0" {...props} />,
                                             ul: ({node, ...props}) => <ul className="space-y-2 list-disc pl-4" {...props} />,
-                                            li: ({node, ...props}) => <li className="pl-1" {...props} />,
-                                            code: ({node, className, children, ...props}: any) => {
-                                                const inline = !className;
-                                                return inline ? (
-                                                    <code className="bg-zinc-800 px-1.5 py-0.5 rounded text-blue-400 font-mono text-[11px]" {...props}>
-                                                        {children}
-                                                    </code>
-                                                ) : (
-                                                    <code className={className} {...props}>
-                                                        {children}
-                                                    </code>
-                                                )
-                                            }
+                                            li: ({node, ...props}) => <li className="pl-1" {...props} />
                                         }}
                                     >
-                                        {result.instructions}
+                                        {result.instructions.replace(/\*\*/g, '')}
                                     </ReactMarkdown>
                                 </div>
                             </div>

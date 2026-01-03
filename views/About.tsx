@@ -8,6 +8,8 @@ import { LanguageProvider, useLanguage } from '../LanguageContext';
 import IOSModal from '../components/IOSModal';
 import PremiumModal from '../components/PremiumModal';
 
+import { SCRIPTS, PACKAGES } from '../constants';
+
 const About: React.FC = () => {
   const { language } = useLanguage();
   const [user, setUser] = useState<any>(null);
@@ -323,6 +325,8 @@ const About: React.FC = () => {
 
       <div className="grid grid-cols-2 gap-3">
         {[
+          { icon: <Package size={20} />, label: "Total Tools", val: `${PACKAGES.length}+` },
+          { icon: <Terminal size={20} />, label: "Total Scripts", val: `${SCRIPTS.length}+` },
           { icon: <Calendar size={20} />, label: t.joinDate, val: new Date(user?.created_at).toLocaleDateString() },
           { icon: <Shield size={20} />, label: t.security, val: t.verified }
         ].map((s, i) => (

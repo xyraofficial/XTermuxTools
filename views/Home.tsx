@@ -209,17 +209,6 @@ const Home: React.FC<HomeProps> = ({ onNavigate }) => {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-3">
-        <div className="p-4 bg-zinc-900/50 border border-white/5 rounded-2xl space-y-1">
-          <div className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest text-center">{t.toolsCount}</div>
-          <div className="text-2xl font-black text-white text-center">{PACKAGES.length}+</div>
-        </div>
-        <div className="p-4 bg-zinc-900/50 border border-white/5 rounded-2xl space-y-1">
-          <div className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest text-center">{t.usersCount}</div>
-          <div className="text-2xl font-black text-white text-center">{SCRIPTS.length}+</div>
-        </div>
-      </div>
-
       {/* Feature Grid - Optimized for Mobile All Menus */}
       <div className="space-y-4">
         <h3 className="text-[10px] font-black text-zinc-600 uppercase tracking-[0.3em] px-1">{t.coreSystems}</h3>
@@ -253,8 +242,7 @@ const Home: React.FC<HomeProps> = ({ onNavigate }) => {
 
         <div className="grid grid-cols-2 gap-3">
           {[
-            { id: 'AI_BUILDER', icon: PenTool, title: 'AI BUILDER', color: 'blue-500', premium: true },
-            { id: 'SCRIPTS', icon: Terminal, title: t.scripts, color: 'blue-500', premium: true }
+            { id: 'profile', icon: User, title: 'Profile', color: 'accent' },
           ].map((item) => (
             <button 
               key={item.id} 

@@ -305,9 +305,9 @@ const Architect: React.FC = () => {
       </div>
 
       {/* iOS Centered Input Bar - Positioned at Bottom like AI Chat */}
-      <div className="px-4 pb-8 bg-transparent shrink-0 relative z-20">
+      <div className="px-4 pb-12 md:pb-8 bg-transparent shrink-0 relative z-20">
         <div className="max-w-4xl mx-auto">
-            <div className="bg-zinc-900/70 backdrop-blur-2xl p-2 rounded-[2.5rem] border border-zinc-800/50 flex items-center gap-2 shadow-[0_20px_50px_rgba(0,0,0,0.4)] focus-within:ring-2 focus-within:ring-blue-500/20 transition-all overflow-hidden">
+            <div className="bg-zinc-900/70 backdrop-blur-2xl p-2 rounded-[2.5rem] border border-zinc-800/50 flex items-center gap-2 shadow-[0_20px_50px_rgba(0,0,0,0.4)] focus-within:ring-2 focus-within:ring-blue-500/20 transition-all overflow-hidden mb-safe">
                 <textarea
                     value={prompt}
                     onChange={(e) => setPrompt(e.target.value)}

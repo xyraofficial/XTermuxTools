@@ -221,14 +221,6 @@ const About: React.FC = () => {
         <div className="space-y-1">
           <div className="flex items-center justify-center gap-2">
             <h2 className="text-2xl font-black text-white uppercase tracking-tighter italic">{username}</h2>
-            {user?.profile?.role === 'admin' && (
-              <div className="relative flex items-center justify-center group/badge shrink-0">
-                <div className="absolute inset-0 bg-blue-500/20 rounded-full blur-md" />
-                <div className="relative bg-blue-500 p-0.5 rounded-full shadow-[0_0_10px_rgba(59,130,246,0.3)] border border-white/10 flex items-center justify-center w-4 h-4">
-                  <Check size={10} className="text-zinc-100 stroke-[3px]" />
-                </div>
-              </div>
-            )}
             <button 
               onClick={() => {
                 setNewName(username);
@@ -247,24 +239,6 @@ const About: React.FC = () => {
           <span className="px-4 py-1.5 bg-accent/10 border border-accent/20 rounded-xl text-[10px] font-black text-accent uppercase tracking-widest">{t.syncActive}</span>
           <span className="px-4 py-1.5 bg-white/5 border border-white/10 rounded-xl text-[10px] font-black text-zinc-500 uppercase tracking-widest">v{APP_VERSION}</span>
         </div>
-
-        {user?.profile?.role === 'admin' && (
-          <div className="pt-4 border-t border-white/5">
-            <button 
-              onClick={() => {
-                window.dispatchEvent(new CustomEvent('navigate-to-admin'));
-              }}
-              className="group relative w-full py-4 bg-gradient-to-r from-red-500/10 to-red-600/10 border border-red-500/20 rounded-3xl flex items-center justify-center gap-3 overflow-hidden transition-all duration-300 hover:scale-[1.02] active:scale-95"
-            >
-              <div className="absolute inset-0 bg-red-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
-              <Shield size={20} className="text-red-500 group-hover:rotate-12 transition-transform duration-300" />
-              <div className="text-left">
-                <p className="text-[11px] font-black text-red-500 uppercase tracking-[0.2em]">Admin Control Panel</p>
-                <p className="text-[8px] font-bold text-red-500/40 uppercase tracking-widest">Access System Architect & Scripts</p>
-              </div>
-            </button>
-          </div>
-        )}
       </div>
 
       <div className="grid grid-cols-2 gap-3">

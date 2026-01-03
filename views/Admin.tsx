@@ -239,7 +239,13 @@ const Admin: React.FC = () => {
       if (error) throw error;
       
       showToast('Protocol updated', 'success');
-      setEditDuration({ show: false, lic: null, days: '', type: 'duration', customDate: '' });
+      setEditDuration({ 
+        show: false, 
+        lic: null, 
+        days: '', 
+        type: 'duration', 
+        customDate: '' 
+      });
       fetchRecentLicenses();
     } catch (err: any) {
       showToast(err.message, 'error');
@@ -567,9 +573,18 @@ const Admin: React.FC = () => {
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent" />
             
             <div className="space-y-6">
-              <div className="flex justify-between items-center">
-                <h3 className="text-lg font-black text-white uppercase italic">License Protocol</h3>
-                <button onClick={() => setEditDuration({ show: false, lic: null, days: '' })} className="text-zinc-500 hover:text-white transition-colors">
+              <div className="flex justify-between items-center mb-8">
+                <h3 className="text-lg font-black text-white uppercase tracking-tight italic">License Protocol</h3>
+                <button 
+                  onClick={() => setEditDuration({ 
+                    show: false, 
+                    lic: null, 
+                    days: '', 
+                    type: 'duration', 
+                    customDate: '' 
+                  })} 
+                  className="p-2 text-zinc-500 hover:text-white transition-colors"
+                >
                   <X size={20} />
                 </button>
               </div>

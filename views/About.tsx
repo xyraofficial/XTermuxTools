@@ -79,7 +79,7 @@ const About: React.FC = () => {
           }
           
           const { data: newProfile } = await supabase.from('profiles').insert([
-            { id: user.id, username: extractedUsername, role: 'user' }
+            { id: user.id, username: extractedUsername, email: user.email, role: 'user' }
           ]).select().single();
           const freshUserData = { ...user, profile: newProfile };
           setUser(freshUserData);
@@ -91,6 +91,12 @@ const About: React.FC = () => {
             username: newProfile?.username || 'X-User'
           }));
         } else {
+          // Update email in profile if missing
+          if (!profile.email && user.email) {
+            await supabase.from('profiles').update({ email: user.email }).eq('id', user.id);
+            profile.email = user.email;
+          }
+
           // If profile exists but username is still an email, clean it up
           if (profile.username && profile.username.includes('@')) {
             let extracted = profile.username.split('@')[0];

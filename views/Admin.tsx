@@ -210,9 +210,14 @@ const Admin: React.FC = () => {
               <div key={i} className="bg-zinc-900/30 border border-white/5 p-4 rounded-3xl flex items-center justify-between">
                 <div>
                   <p className="text-xs font-mono text-white">{lic.key}</p>
-                  <p className="text-[9px] text-zinc-500 uppercase">
-                    {lic.is_used ? `USED BY: ${lic.used_by_email || 'Unknown'}` : 'ACTIVE'} • {lic.duration_days} DAYS
-                  </p>
+                  <div className="flex items-center gap-2 mt-1">
+                    <span className={`text-[8px] font-black px-1.5 py-0.5 rounded uppercase tracking-tighter ${lic.is_used ? 'bg-red-500/20 text-red-500 border border-red-500/30' : 'bg-green-500/20 text-green-500 border border-green-500/30'}`}>
+                      {lic.is_used ? 'Used' : 'Available'}
+                    </span>
+                    <p className="text-[9px] text-zinc-500 uppercase">
+                      {lic.is_used ? `BY: ${lic.used_by_email || 'Unknown'}` : 'Unused'} • {lic.duration_days}D
+                    </p>
+                  </div>
                 </div>
                 <div className="flex gap-1">
                   <button onClick={() => copyToClipboard(lic.key)} className="p-2 text-zinc-500 hover:text-white"><Copy size={16} /></button>

@@ -1,19 +1,36 @@
 import React, { useState, useEffect } from 'react';
-import { Shield, Plus, Key, Calendar, User as UserIcon, Loader2, Copy, CheckCircle2 } from 'lucide-react';
+import { Shield, Plus, Key, Calendar, User as UserIcon, Loader2, Copy, Users, BarChart3, Bell, Trash2, Search } from 'lucide-react';
 import { supabase } from '../supabase';
 import { showToast } from '../components/Toast';
 
 const Admin: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [activeTab, setActiveTab] = useState<'licenses' | 'users' | 'analytics'>('licenses');
+  
+  // License State
   const [licenseKey, setLicenseKey] = useState('');
   const [days, setDays] = useState('30');
   const [recentLicenses, setRecentLicenses] = useState<any[]>([]);
 
+  // Users State
+  const [users, setUsers] = useState<any[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  // Analytics State
+  const [stats, setStats] = useState({
+    totalUsers: 0,
+    premiumUsers: 0,
+    totalLicenses: 0,
+    usedLicenses: 0
+  });
+
   useEffect(() => {
     checkAdmin();
-    fetchRecentLicenses();
-  }, []);
+    if (activeTab === 'licenses') fetchRecentLicenses();
+    if (activeTab === 'users') fetchUsers();
+    if (activeTab === 'analytics') fetchAnalytics();
+  }, [activeTab]);
 
   const checkAdmin = async () => {
     const { data: { user } } = await supabase.auth.getUser();
@@ -25,12 +42,36 @@ const Admin: React.FC = () => {
 
   const fetchRecentLicenses = async () => {
     const { data } = await supabase
-      .from('profiles')
-      .select('username, license_key, license_expiry, email')
-      .not('license_key', 'is', null)
-      .order('updated_at', { ascending: false })
-      .limit(5);
+      .from('licenses')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(10);
     if (data) setRecentLicenses(data);
+  };
+
+  const fetchUsers = async () => {
+    let query = supabase.from('profiles').select('*').order('created_at', { ascending: false });
+    if (searchQuery) {
+      query = query.or(`username.ilike.%${searchQuery}%,email.ilike.%${searchQuery}%`);
+    }
+    const { data } = await query.limit(20);
+    if (data) setUsers(data);
+  };
+
+  const fetchAnalytics = async () => {
+    const [uCount, pCount, lCount, ulCount] = await Promise.all([
+      supabase.from('profiles').select('*', { count: 'exact', head: true }),
+      supabase.from('profiles').select('*', { count: 'exact', head: true }).eq('is_premium', true),
+      supabase.from('licenses').select('*', { count: 'exact', head: true }),
+      supabase.from('licenses').select('*', { count: 'exact', head: true }).eq('is_used', true)
+    ]);
+    
+    setStats({
+      totalUsers: uCount.count || 0,
+      premiumUsers: pCount.count || 0,
+      totalLicenses: lCount.count || 0,
+      usedLicenses: ulCount.count || 0
+    });
   };
 
   const generateKey = () => {
@@ -54,25 +95,32 @@ const Admin: React.FC = () => {
     try {
       const { error } = await supabase
         .from('licenses')
-        .insert([{ 
-          key: licenseKey, 
-          duration_days: parseInt(days)
-        }]);
-
+        .insert([{ key: licenseKey, duration_days: parseInt(days) }]);
       if (error) throw error;
-
-      showToast('License key saved to database', 'success');
+      showToast('License key saved', 'success');
       setLicenseKey('');
+      fetchRecentLicenses();
     } catch (err: any) {
-      showToast(err.message || 'Failed to save license', 'error');
+      showToast(err.message, 'error');
     } finally {
       setLoading(false);
     }
   };
 
+  const togglePremium = async (userId: string, currentStatus: boolean) => {
+    const { error } = await supabase
+      .from('profiles')
+      .update({ is_premium: !currentStatus })
+      .eq('id', userId);
+    if (!error) {
+      showToast('User status updated', 'success');
+      fetchUsers();
+    }
+  };
+
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
-    showToast('Copied to clipboard', 'success');
+    showToast('Copied', 'success');
   };
 
   if (!isAdmin) {
@@ -80,97 +128,121 @@ const Admin: React.FC = () => {
       <div className="h-full flex flex-col items-center justify-center bg-black p-6 text-center">
         <Shield size={48} className="text-red-500 mb-4" />
         <h2 className="text-xl font-black text-white uppercase italic">Access Denied</h2>
-        <p className="text-zinc-500 text-sm mt-2">Restricted to System Administrators only.</p>
       </div>
     );
   }
 
   return (
-    <div className="p-4 space-y-8 pb-32 bg-black min-h-full">
-      <div className="bg-zinc-900/50 border border-white/5 rounded-[2.5rem] p-8 space-y-6 relative overflow-hidden">
-        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-red-500 to-transparent" />
-        <div className="flex items-center gap-4">
-          <div className="w-12 h-12 bg-red-500/10 rounded-2xl flex items-center justify-center border border-red-500/20">
-            <Shield size={24} className="text-red-500" />
-          </div>
-          <div>
-            <h2 className="text-2xl font-black text-white uppercase tracking-tighter italic">License Master</h2>
-            <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Protocol Administration</p>
-          </div>
+    <div className="p-4 space-y-6 pb-32 bg-black min-h-full">
+      {/* Header */}
+      <div className="flex items-center justify-between px-2">
+        <div className="flex items-center gap-3">
+          <Shield className="text-red-500" size={24} />
+          <h1 className="text-xl font-black text-white uppercase italic">Admin Terminal</h1>
         </div>
-
-        <div className="space-y-4">
-          <div className="space-y-2">
-            <label className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] px-1">Generate New Key</label>
-            <div className="flex gap-2">
-              <input 
-                type="text" 
-                readOnly 
-                value={licenseKey}
-                placeholder="Click Generate..."
-                className="flex-1 bg-black/40 border border-white/5 rounded-2xl px-5 py-4 text-white font-mono text-sm outline-none"
-              />
-              <button 
-                onClick={generateKey}
-                className="p-4 bg-zinc-800 text-white rounded-2xl border border-white/5 active:scale-90 transition-all"
-              >
-                <Plus size={20} />
-              </button>
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <label className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.2em] px-1">Duration (Days)</label>
-            <select 
-              value={days}
-              onChange={(e) => setDays(e.target.value)}
-              className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 text-white text-sm outline-none appearance-none"
-            >
-              <option value="7">7 Days (Trial)</option>
-              <option value="30">30 Days (Standard)</option>
-              <option value="90">90 Days (Quarterly)</option>
-              <option value="365">365 Days (Annual)</option>
-            </select>
-          </div>
-
-          <button 
-            onClick={handleCreateLicense}
-            disabled={loading || !licenseKey}
-            className="w-full py-5 bg-red-500 text-white font-black rounded-3xl hover:bg-red-600 active:scale-95 transition-all flex items-center justify-center gap-3 shadow-xl shadow-red-500/10 disabled:opacity-50"
-          >
-            {loading ? <Loader2 className="animate-spin" size={20} /> : <Key size={20} />}
-            INITIALIZE LICENSE KEY
-          </button>
+        <div className="flex gap-2 bg-zinc-900/50 p-1 rounded-2xl border border-white/5">
+          <button onClick={() => setActiveTab('licenses')} className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase transition-all ${activeTab === 'licenses' ? 'bg-red-500 text-white' : 'text-zinc-500'}`}>Keys</button>
+          <button onClick={() => setActiveTab('users')} className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase transition-all ${activeTab === 'users' ? 'bg-red-500 text-white' : 'text-zinc-500'}`}>Users</button>
+          <button onClick={() => setActiveTab('analytics')} className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase transition-all ${activeTab === 'analytics' ? 'bg-red-500 text-white' : 'text-zinc-500'}`}>Stats</button>
         </div>
       </div>
 
-      <div className="space-y-4">
-        <h3 className="text-[10px] font-black text-zinc-600 uppercase tracking-[0.3em] px-2">Recent Allocations</h3>
-        <div className="space-y-3">
-          {recentLicenses.map((lic, i) => (
-            <div key={i} className="bg-zinc-900/30 border border-white/5 p-4 rounded-3xl flex items-center justify-between gap-4">
-              <div className="flex items-center gap-3 overflow-hidden">
-                <div className="w-10 h-10 rounded-xl bg-zinc-800 flex items-center justify-center shrink-0">
-                  <UserIcon size={18} className="text-zinc-500" />
-                </div>
-                <div className="overflow-hidden">
-                  <p className="text-xs font-black text-white truncate">{lic.username || lic.email}</p>
-                  <p className="text-[9px] font-mono text-zinc-500 truncate">{lic.license_key}</p>
+      {activeTab === 'licenses' && (
+        <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4">
+          <div className="bg-zinc-900/50 border border-white/5 rounded-[2.5rem] p-8 space-y-6">
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <label className="text-[10px] font-black text-zinc-500 uppercase px-1">Generate Key</label>
+                <div className="flex gap-2">
+                  <input type="text" readOnly value={licenseKey} className="flex-1 bg-black/40 border border-white/5 rounded-2xl px-5 py-4 text-white font-mono text-sm" />
+                  <button onClick={generateKey} className="p-4 bg-zinc-800 text-white rounded-2xl border border-white/5"><Plus size={20} /></button>
                 </div>
               </div>
-              <button 
-                onClick={() => copyToClipboard(lic.license_key)}
-                className="p-2 text-zinc-500 hover:text-white transition-colors"
-              >
-                <Copy size={16} />
+              <select value={days} onChange={(e) => setDays(e.target.value)} className="w-full bg-black/40 border border-white/5 rounded-2xl px-5 py-4 text-white text-sm outline-none">
+                <option value="7">7 Days</option>
+                <option value="30">30 Days</option>
+                <option value="365">365 Days</option>
+              </select>
+              <button onClick={handleCreateLicense} disabled={loading || !licenseKey} className="w-full py-5 bg-red-500 text-white font-black rounded-3xl flex items-center justify-center gap-3">
+                {loading ? <Loader2 className="animate-spin" size={20} /> : <Key size={20} />} CREATE LICENSE
               </button>
             </div>
-          ))}
-          {recentLicenses.length === 0 && (
-            <p className="text-center text-[10px] text-zinc-700 uppercase font-black py-8 tracking-widest">No Recent Activity</p>
-          )}
+          </div>
+
+          <div className="space-y-3">
+            <h3 className="text-[10px] font-black text-zinc-600 uppercase px-2">Recent Keys</h3>
+            {recentLicenses.map((lic, i) => (
+              <div key={i} className="bg-zinc-900/30 border border-white/5 p-4 rounded-3xl flex items-center justify-between">
+                <div>
+                  <p className="text-xs font-mono text-white">{lic.key}</p>
+                  <p className="text-[9px] text-zinc-500 uppercase">{lic.is_used ? 'USED' : 'ACTIVE'} • {lic.duration_days} DAYS</p>
+                </div>
+                <button onClick={() => copyToClipboard(lic.key)} className="p-2 text-zinc-500 hover:text-white"><Copy size={16} /></button>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
+
+      {activeTab === 'users' && (
+        <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4">
+          <div className="relative px-2">
+            <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-zinc-500" size={18} />
+            <input 
+              type="text" 
+              placeholder="Search users..." 
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && fetchUsers()}
+              className="w-full bg-zinc-900/50 border border-white/5 rounded-2xl pl-12 pr-6 py-4 text-sm text-white outline-none" 
+            />
+          </div>
+          <div className="space-y-3">
+            {users.map((user, i) => (
+              <div key={i} className="bg-zinc-900/30 border border-white/5 p-4 rounded-3xl flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${user.is_premium ? 'bg-yellow-500/10 border border-yellow-500/20' : 'bg-zinc-800'}`}>
+                    <UserIcon size={18} className={user.is_premium ? 'text-yellow-500' : 'text-zinc-500'} />
+                  </div>
+                  <div>
+                    <p className="text-xs font-black text-white">{user.username || 'Anonymous'}</p>
+                    <p className="text-[9px] text-zinc-500">{user.email}</p>
+                  </div>
+                </div>
+                <button 
+                  onClick={() => togglePremium(user.id, user.is_premium)}
+                  className={`px-3 py-1.5 rounded-lg text-[9px] font-black uppercase transition-all ${user.is_premium ? 'bg-red-500/10 text-red-500 border border-red-500/20' : 'bg-green-500/10 text-green-500 border border-green-500/20'}`}
+                >
+                  {user.is_premium ? 'Revoke' : 'Grant'}
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {activeTab === 'analytics' && (
+        <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div className="bg-zinc-900/50 border border-white/5 p-6 rounded-3xl space-y-1">
+              <p className="text-[9px] font-black text-zinc-500 uppercase">Total Users</p>
+              <p className="text-2xl font-black text-white italic">{stats.totalUsers}</p>
+            </div>
+            <div className="bg-zinc-900/50 border border-white/5 p-6 rounded-3xl space-y-1">
+              <p className="text-[9px] font-black text-zinc-500 uppercase">Premium</p>
+              <p className="text-2xl font-black text-yellow-500 italic">{stats.premiumUsers}</p>
+            </div>
+            <div className="bg-zinc-900/50 border border-white/5 p-6 rounded-3xl space-y-1">
+              <p className="text-[9px] font-black text-zinc-500 uppercase">Total Keys</p>
+              <p className="text-2xl font-black text-blue-500 italic">{stats.totalLicenses}</p>
+            </div>
+            <div className="bg-zinc-900/50 border border-white/5 p-6 rounded-3xl space-y-1">
+              <p className="text-[9px] font-black text-zinc-500 uppercase">Used Keys</p>
+              <p className="text-2xl font-black text-green-500 italic">{stats.usedLicenses}</p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

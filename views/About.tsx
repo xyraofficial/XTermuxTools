@@ -257,17 +257,26 @@ const About: React.FC = () => {
       <div className="bg-zinc-900/50 border border-white/5 rounded-[2.5rem] p-6 text-center space-y-6 relative overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-accent/50 to-transparent" />
         <div className="relative inline-block group">
-          <div className="w-24 h-24 bg-zinc-900 rounded-[2rem] border-2 border-white/10 flex items-center justify-center overflow-hidden mx-auto shadow-2xl">
+          <div className={`w-24 h-24 bg-zinc-900 rounded-[2rem] flex items-center justify-center overflow-hidden mx-auto shadow-2xl transition-all duration-500 ${user?.profile?.role === 'admin' ? 'border-4 border-red-500 shadow-[0_0_20px_rgba(239,68,68,0.4)] animate-pulse' : 'border-2 border-white/10'}`}>
             {user?.profile?.avatar_url ? <img src={user.profile.avatar_url} className="w-full h-full object-cover" /> : <User size={40} className="text-zinc-700" />}
           </div>
-          <button onClick={() => fileInputRef.current?.click()} className="absolute -bottom-1 -right-1 p-2.5 bg-accent text-black rounded-xl shadow-xl active:scale-90"><Camera size={16} /></button>
+          <button onClick={() => fileInputRef.current?.click()} className="absolute -bottom-1 -right-1 p-2.5 bg-accent text-black rounded-xl shadow-xl active:scale-90 z-20"><Camera size={16} /></button>
           <input type="file" ref={fileInputRef} className="hidden" onChange={handleAvatarUpload} />
         </div>
 
         <div className="space-y-1">
           <div className="flex items-center justify-center gap-2">
             <h2 className="text-2xl font-black text-white uppercase tracking-tighter italic">{username}</h2>
-            {isPremium && (
+            {user?.profile?.role === 'admin' && (
+              <div className="relative flex items-center justify-center group/admin-badge shrink-0">
+                <div className="absolute inset-0 bg-red-500/30 rounded-full blur-md animate-pulse" />
+                <div className="relative bg-red-600 px-2 py-0.5 rounded-lg shadow-[0_0_15px_rgba(220,38,38,0.5)] border border-white/20 flex items-center justify-center gap-1">
+                  <Shield size={10} className="text-white fill-white" />
+                  <span className="text-[7px] font-black text-white uppercase tracking-tighter">Admin</span>
+                </div>
+              </div>
+            )}
+            {isPremium && user?.profile?.role !== 'admin' && (
               <div className="relative flex items-center justify-center group/badge shrink-0">
                 <div className="absolute inset-0 bg-amber-500/20 rounded-full blur-md" />
                 <div className="relative bg-amber-500 p-0.5 rounded-full shadow-[0_0_10px_rgba(245,158,11,0.3)] border border-white/10 flex items-center justify-center w-4 h-4">

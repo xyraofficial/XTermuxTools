@@ -65,7 +65,7 @@ const AdminView: React.FC = () => {
 
   if (activeTab === 'users') {
     return (
-      <div className="p-6 space-y-6 pb-32 bg-black min-h-full animate-in slide-in-from-right duration-300">
+      <div className="p-6 space-y-6 pb-32 bg-black min-h-full overflow-y-auto no-scrollbar animate-in slide-in-from-right duration-300">
         <button onClick={() => setActiveTab(null)} className="flex items-center gap-2 text-zinc-500 hover:text-white transition-colors">
           <ArrowLeft size={18} />
           <span className="text-[10px] font-black uppercase tracking-widest">Back to Control</span>
@@ -99,7 +99,7 @@ const AdminView: React.FC = () => {
 
   if (activeTab === 'audit') {
     return (
-      <div className="p-6 space-y-6 pb-32 bg-black min-h-full animate-in slide-in-from-right duration-300">
+      <div className="p-6 space-y-6 pb-32 bg-black min-h-full overflow-y-auto no-scrollbar animate-in slide-in-from-right duration-300">
         <button onClick={() => setActiveTab(null)} className="flex items-center gap-2 text-zinc-500 hover:text-white transition-colors">
           <ArrowLeft size={18} />
           <span className="text-[10px] font-black uppercase tracking-widest">Back to Control</span>
@@ -124,7 +124,7 @@ const AdminView: React.FC = () => {
   }
 
   return (
-    <div className="p-6 space-y-8 pb-32 bg-black min-h-full no-scrollbar">
+    <div className="p-6 space-y-8 pb-32 bg-black min-h-full overflow-y-auto no-scrollbar">
       <div className="space-y-2">
         <h1 className="text-3xl font-black text-white uppercase tracking-tighter italic">TEMPA (ADMIN)</h1>
         <p className="text-[10px] text-zinc-600 font-bold uppercase tracking-[0.3em]">Central System Control</p>

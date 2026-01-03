@@ -147,33 +147,6 @@ const Home: React.FC<HomeProps> = ({ onNavigate }) => {
         </div>
       </div>
 
-      {!isPremium && (
-        <div className="relative group overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-amber-500/20 via-yellow-500/10 to-transparent rounded-[2rem] blur-xl opacity-50 group-hover:opacity-100 transition-opacity" />
-          <div className="relative bg-zinc-900/50 border border-amber-500/20 rounded-[2rem] p-6 flex items-center justify-between gap-6 overflow-hidden">
-            <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:scale-110 transition-transform">
-              <Crown size={80} className="text-amber-500" />
-            </div>
-            <div className="space-y-2 relative z-10">
-              <div className="flex items-center gap-2">
-                <Crown size={16} className="text-amber-500" />
-                <span className="text-[10px] font-black text-amber-500 uppercase tracking-widest">Premium Protocol</span>
-              </div>
-              <h3 className="text-xl font-black text-white italic uppercase tracking-tighter">Buka Potensi Penuh</h3>
-              <p className="text-[10px] text-zinc-500 font-medium leading-relaxed max-w-[200px]">
-                Akses AI Builder, Script Khusus, dan fitur eksklusif lainnya untuk meningkatkan pengalaman terminal Anda.
-              </p>
-              <button 
-                onClick={() => setShowPremiumModal(true)}
-                className="mt-2 px-6 py-2.5 bg-amber-500 text-black text-[10px] font-black uppercase rounded-xl hover:bg-amber-400 active:scale-95 transition-all"
-              >
-                Upgrade Sekarang
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
       <div className="grid grid-cols-2 gap-3">
         <div className="p-4 bg-zinc-900/50 border border-white/5 rounded-2xl space-y-1">
           <div className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest text-center">{t.toolsCount}</div>
@@ -188,12 +161,44 @@ const Home: React.FC<HomeProps> = ({ onNavigate }) => {
       {/* Feature Grid - Optimized for Mobile All Menus */}
       <div className="space-y-4">
         <h3 className="text-[10px] font-black text-zinc-600 uppercase tracking-[0.3em] px-1">{t.coreSystems}</h3>
+        
+        {!isPremium && (
+          <div className="relative group overflow-hidden mb-4">
+            <div className="absolute inset-0 bg-gradient-to-br from-amber-500/20 via-yellow-500/10 to-transparent rounded-[2rem] blur-xl opacity-50 group-hover:opacity-100 transition-opacity" />
+            <div className="relative bg-zinc-900/50 border border-amber-500/20 rounded-[2rem] p-6 flex items-center justify-between gap-6 overflow-hidden">
+              <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:scale-110 transition-transform">
+                <Crown size={80} className="text-amber-500" />
+              </div>
+              <div className="space-y-2 relative z-10">
+                <div className="flex items-center gap-2">
+                  <Crown size={16} className="text-amber-500" />
+                  <span className="text-[10px] font-black text-amber-500 uppercase tracking-widest">Premium Protocol</span>
+                </div>
+                <h3 className="text-xl font-black text-white italic uppercase tracking-tighter">Buka Potensi Penuh</h3>
+                <p className="text-[10px] text-zinc-500 font-medium leading-relaxed max-w-[200px]">
+                  Akses AI Builder, Script Khusus, dan fitur eksklusif lainnya.
+                </p>
+                <button 
+                  onClick={() => setShowPremiumModal(true)}
+                  className="mt-2 px-6 py-2.5 bg-amber-500 text-black text-[10px] font-black uppercase rounded-xl hover:bg-amber-400 active:scale-95 transition-all"
+                >
+                  Upgrade Sekarang
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         <div className="grid grid-cols-2 gap-3">
           {[
             { id: 'AI_BUILDER', icon: PenTool, title: 'AI BUILDER', color: 'blue-500', premium: true },
             { id: 'SCRIPTS', icon: Terminal, title: t.scripts, color: 'blue-500', premium: true }
           ].map((item) => (
-            <button key={item.id} onClick={() => handleNavigate(item.id)} className="group relative w-full text-left active:scale-[0.98] transition-all duration-300">
+            <button 
+              key={item.id} 
+              onClick={() => handleNavigate(item.id)} 
+              className={`group relative w-full text-left active:scale-[0.98] transition-all duration-300 ${item.premium && !isPremium ? 'opacity-80' : ''}`}
+            >
               <div className="absolute inset-0 bg-zinc-900/40 backdrop-blur-sm border border-white/5 rounded-2xl group-hover:bg-zinc-900/60 transition-all" />
               <div className="relative p-4 flex flex-col items-center text-center gap-3">
                 <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-zinc-900 border border-white/5">

@@ -111,49 +111,48 @@ const Architect: React.FC = () => {
     setPendingResult(null);
 
     try {
-      const apiKey = import.meta.env.VITE_GROQ_API_KEY;
-      if (!apiKey) {
-        showToast('API Key missing', 'error');
-        setIsGenerating(false);
-        return;
-      }
-      
-      const response = await groq.chat.completions.create({
-        messages: [
-          { 
-            role: "system", 
-            content: `You are a professional Termux script architect. 
-            You MUST return ONLY a valid JSON object.
-            Ensure markdown content for instructions uses proper formatting but avoid double asterisks if they cause issues.
-            
-            JSON Structure:
-            {
-              "scriptName": "String",
-              "description": "Short explanation",
-              "language": "bash/python",
-              "dependencies": ["pkg1", "pkg2"],
-              "code": "The full code here",
-              "instructions": "Step-by-step markdown list on how to install and run this specific script. Use bold text sparingly.",
-              "sources": [
-                {
-                  "title": "Reputable Source Title",
-                  "domain": "domain.com",
-                  "url": "https://direct-link-to-source.com"
-                }
-              ]
+      const response = await fetch('/api/ai/chat/completions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          messages: [
+            { 
+              role: "system", 
+              content: `You are a professional Termux script architect. 
+              You MUST return ONLY a valid JSON object.
+              Ensure markdown content for instructions uses proper formatting but avoid double asterisks if they cause issues.
+              
+              JSON Structure:
+              {
+                "scriptName": "String",
+                "description": "Short explanation",
+                "language": "bash/python",
+                "dependencies": ["pkg1", "pkg2"],
+                "code": "The full code here",
+                "instructions": "Step-by-step markdown list on how to install and run this specific script. Use bold text sparingly.",
+                "sources": [
+                  {
+                    "title": "Reputable Source Title",
+                    "domain": "domain.com",
+                    "url": "https://direct-link-to-source.com"
+                  }
+                ]
+              }
+              Search and include at least 3-5 real reputable sources from GitHub or technical sites that are relevant to the requested script logic.`
+            },
+            { 
+              role: "user", 
+              content: `I need a professional script for Termux. User request: "${prompt}". Ensure "instructions" is NEVER empty and provides at least 3 clear steps.` 
             }
-            Search and include at least 3-5 real reputable sources from GitHub or technical sites that are relevant to the requested script logic.`
-          },
-          { 
-            role: "user", 
-            content: `I need a professional script for Termux. User request: "${prompt}". Ensure "instructions" is NEVER empty and provides at least 3 clear steps.` 
-          }
-        ],
-        model: "llama-3.3-70b-versatile",
-        response_format: { type: "json_object" }
+          ],
+          model: "deepseek/deepseek-chat",
+        })
       });
 
-      const content = response.choices[0]?.message?.content;
+      if (!response.ok) throw new Error("Build sequence failed.");
+
+      const resultData = await response.json();
+      const content = resultData.choices[0]?.message?.content;
       if (!content) throw new Error("No response from AI");
 
       const data = JSON.parse(content) as ArchitectResponse;

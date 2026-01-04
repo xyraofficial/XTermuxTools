@@ -6,21 +6,26 @@ import OpenAI from 'openai';
 const app = express();
 app.use(express.json());
 
-const openai = new OpenAI({
-  apiKey: process.env.AI_INTEGRATIONS_OPENAI_API_KEY || 'dummy_key',
-  baseURL: process.env.AI_INTEGRATIONS_OPENAI_BASE_URL,
+// OpenRouter Configuration
+const openrouter = new OpenAI({
+  apiKey: process.env.OPENROUTER_API_KEY,
+  baseURL: 'https://openrouter.ai/api/v1',
+  defaultHeaders: {
+    'HTTP-Referer': 'https://replit.com', // Optional, for OpenRouter rankings
+    'X-Title': 'XTermux Toolbox', // Optional
+  }
 });
 
 app.post('/api/ai/chat/completions', async (req, res) => {
   try {
-    const { messages, model = "gpt-4o" } = req.body;
-    const response = await openai.chat.completions.create({
+    const { messages, model = "deepseek/deepseek-chat" } = req.body;
+    const response = await openrouter.chat.completions.create({
       model,
       messages,
     });
     res.json(response);
   } catch (error) {
-    console.error("AI Proxy Error:", error);
+    console.error("OpenRouter Proxy Error:", error);
     res.status(500).json({ error: "AI Processing Failed" });
   }
 });

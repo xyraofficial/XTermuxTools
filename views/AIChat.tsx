@@ -197,7 +197,7 @@ const AIChat: React.FC = () => {
               })),
               { role: 'user', content: userMsg }
             ],
-            model: "gpt-4o",
+            model: "deepseek/deepseek-chat",
           })
         });
 

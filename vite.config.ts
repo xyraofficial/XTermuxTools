@@ -22,6 +22,7 @@ app.post('/api/ai/chat/completions', async (req, res) => {
     const response = await openrouter.chat.completions.create({
       model,
       messages,
+      max_tokens: 1024, // Further reduced to ensure affordability on free/low-credit accounts
     });
     res.json(response);
   } catch (error) {
